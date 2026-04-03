@@ -1,63 +1,71 @@
-/* Estilos específicos para a página de esqueci senha */
-.forgot-section {
+/* Recuperação de senha */
+.secao-recuperar-senha {
     min-height: 70vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 4rem 1rem;
-    background: linear-gradient(135deg, #fff5f7 0%, #ffffff 100%);
+    padding: clamp(2.75rem, 7vw, 4.25rem) var(--layout-page-px, 1rem);
+    background: var(--gray-50, #f9fafb);
 }
 
-.forgot-card {
-    background: white;
-    border-radius: 2rem;
-    box-shadow: 0 20px 35px -10px rgba(0, 0, 0, 0.1);
-    padding: 2rem;
+.cartao-recuperar {
+    background: #fff;
+    border-radius: 1.75rem;
+    box-shadow: var(--shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1));
+    border: 1px solid var(--gray-200);
+    padding: clamp(1.75rem, 4vw, 2.35rem);
     max-width: 480px;
     width: 100%;
     text-align: center;
 }
 
-.forgot-card h1 {
+.cartao-recuperar__icone {
+    font-size: 3rem;
+    color: var(--primary-red);
+    margin-bottom: 1rem;
+}
+
+.cartao-recuperar h1 {
     font-size: 1.8rem;
     margin-bottom: 0.5rem;
     color: var(--gray-900);
 }
 
-.forgot-card p {
+.cartao-recuperar p {
     color: var(--gray-600);
     margin-bottom: 1.5rem;
-    font-size: 0.9rem;
+    font-size: 0.95rem;
 }
 
-.form-group {
+.grupo-campo {
     margin-bottom: 1.5rem;
     text-align: left;
 }
 
-.form-group label {
+.grupo-campo label {
     display: block;
     margin-bottom: 0.5rem;
     font-weight: 500;
     color: var(--gray-800);
 }
 
-.form-group input {
+.grupo-campo input {
     width: 100%;
     padding: 0.75rem 1rem;
     border: 1px solid var(--gray-200);
     border-radius: 1rem;
     font-size: 1rem;
+    min-height: 48px;
     transition: all 0.2s;
 }
 
-.form-group input:focus {
+.grupo-campo input:focus {
     outline: none;
     border-color: var(--primary-blue);
     box-shadow: 0 0 0 3px rgba(68, 154, 255, 0.2);
 }
 
-.btn-recuperar {
+.botao-recuperar {
     width: 100%;
     background: var(--primary-red);
     color: white;
@@ -69,31 +77,34 @@
     cursor: pointer;
     transition: background 0.2s;
     margin-bottom: 1rem;
+    min-height: 48px;
 }
 
-.btn-recuperar:hover {
+.botao-recuperar:hover {
     background: #d41e42;
 }
 
-.back-link {
+.esqueci-acesso-login {
     font-size: 0.9rem;
+    margin: 0;
 }
 
-.back-link a {
+.esqueci-acesso-login a {
     color: var(--primary-blue);
-    text-decoration: none;
+    text-decoration: underline;
+    text-underline-offset: 3px;
 }
 
-.back-link a:hover {
-    text-decoration: underline;
+.esqueci-acesso-login a:hover {
+    color: var(--primary-darkblue);
 }
 
 @media (max-width: 640px) {
-    .forgot-card {
+    .cartao-recuperar {
         padding: 1.5rem;
     }
 
-    .forgot-card h1 {
+    .cartao-recuperar h1 {
         font-size: 1.5rem;
     }
 }

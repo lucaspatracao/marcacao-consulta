@@ -1,0 +1,18 @@
+Olá.
+
+Este arquivo registra alinhamento entre o relatório (sobreProjeto.txt), o protótipo HTML/CSS e as boas práticas do grupo.
+
+Situação atual
+- Fluxo de acesso: login em html/login/login.html e cadastro em html/login/telaCadastro.html (sempre paciente); perfis em html/telasAdmin/usuarios.html (seção 4 do relatório).
+- Credenciais de demonstração do admin: admin@vitacare.local · VitaCare2026 (login e painel admin).
+- Painel do funcionário: páginas em html/telasFuncionario/ com CSS em css/telasFuncionario/ (e css/telasFuncionario/inicioFuncionario.css compartilhado).
+- Painéis em html/telasAdmin/, html/telasPacientes/ e html/telasMedicos/; telas públicas extras em html/outrasTelas/ (agendar, contato). No login, links abrem os painéis no protótipo estático (sem back-end).
+- Cabeçalhos (site público e painéis): botão destacado "Entre em Contato" (ícones + texto) para html/outrasTelas/entreContato.html; na página de contato o mesmo botão rola até o formulário (#formulario-contato). Rodapé dos painéis: Início, Agendar e Contato.
+- Classes, ids e comentários no front-end estão padronizados em português brasileiro.
+
+Interface do protótipo: telas objetivas, menu lateral como navegação principal nos
+painéis (sem atalhos em cartão repetindo o mesmo menu), contato concentrado no rodapé
+nas áreas logadas, e CSS enxuto (poucos efeitos) para leitura e uso fáceis.
+
+Se algo novo for criado, mantenha: textos e identificadores em PT-BR, contraste e
+tipografia mínima do relatório (seção 8), e o fluxo da seção 7.

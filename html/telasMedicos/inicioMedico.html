@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>VitaCare | Médico — Início</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link rel="stylesheet" href="../../css/telasFuncionario/inicioFuncionario.css">
+    <link rel="stylesheet" href="../../css/telasMedicos/inicio.css">
+</head>
+
+<body>
+    <main class="painel-funcionario">
+        <div class="limite-conteudo painel-funcionario__corpo">
+            <aside class="painel-funcionario__menu" aria-label="Menu do médico">
+                <a href="../telaInicial.html" class="marca-vitacare marca-vitacare--sidebar" aria-label="VitaCare — início">
+                    <img class="marca-vitacare__img" src="../../img/projeto-logotipo.png" alt="" width="48" height="48" decoding="async">
+                    <span class="marca-vitacare__nome">VitaCare</span>
+                </a>
+                <ul class="menu-lateral">
+                    <li class="menu-lateral__item--ativo"><a href="inicioMedico.html"><i class="fas fa-home" aria-hidden="true"></i> Início</a></li>
+                    <li><a href="minhaAgenda.html"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Minha agenda</a></li>
+                    <li><a href="historicoPacientes.html"><i class="fas fa-file-medical" aria-hidden="true"></i> Histórico dos pacientes</a></li>
+                    <li><a href="perfilMedico.html"><i class="fas fa-user-md" aria-hidden="true"></i> Perfil</a></li>
+                </ul>
+                <div class="menu-lateral-saida">
+                    <a href="../login/login.html" class="menu-lateral-botao-sair"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sair</a>
+                </div>
+            </aside>
+
+            <div class="painel-funcionario__principal">
+                <header class="painel-funcionario__topo">
+                    <div class="painel-funcionario__saudacao">
+                        <span class="painel-funcionario__saudacao-icone" aria-hidden="true"><i class="fas fa-user-md"></i></span>
+                        <h2 class="painel-funcionario__saudacao-titulo">Médico</h2>
+                    </div>
+                    <a href="../outrasTelas/entreContato.html" class="cabecalho-botao-contato" aria-label="Entre em contato">
+                        <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <span class="cabecalho-botao-contato__texto">Entre em Contato</span>
+                    </a>
+                </header>
+
+                <nav class="painel-funcionario__atalhos painel-medico-atalhos" aria-label="Atalhos do médico">
+                    <a href="minhaAgenda.html" class="painel-atalho"><span class="painel-atalho__icone" aria-hidden="true"><i class="fas fa-calendar-alt"></i></span><span class="painel-atalho__texto">Minha agenda</span></a>
+                    <a href="historicoPacientes.html" class="painel-atalho"><span class="painel-atalho__icone" aria-hidden="true"><i class="fas fa-file-medical"></i></span><span class="painel-atalho__texto">Histórico</span></a>
+                    <a href="perfilMedico.html" class="painel-atalho"><span class="painel-atalho__icone" aria-hidden="true"><i class="fas fa-id-card"></i></span><span class="painel-atalho__texto">Perfil</span></a>
+                </nav>
+            </div>
+        </div>
+    </main>
+
+    <footer class="rodape rodape--simples">
+        <div class="limite-conteudo rodape-simples">
+            <a href="../telaInicial.html" class="rodape-simples__marca" aria-label="VitaCare — início">
+                <img src="../../img/projeto-logotipo.png" class="rodape-logotipo rodape-logotipo--compacto" alt="" width="120" height="36" decoding="async">
+            </a>
+            <nav class="rodape-simples__links" aria-label="Links do rodapé">
+                <a href="../telaInicial.html">Início</a>
+                <a href="../outrasTelas/agendar.html">Agendar</a>
+                <a href="../outrasTelas/entreContato.html">Contato</a>
+            </nav>
+            <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>
+        </div>
+    </footer>
+
+    <nav class="fab-fixo-dupla" aria-label="Ajuda e acessibilidade">
+        <a href="../outrasTelas/tutorial.html" class="fab-fixo fab-fixo--tutorial"><i class="fas fa-book-open" aria-hidden="true"></i><span>Tutorial</span></a>
+        <a href="../outrasTelas/acessibilidade.html" class="fab-fixo fab-fixo--a11y"><i class="fas fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span></a>
+    </nav>
+    <script src="../../js/vitacare-a11y.js" defer></script>
+</body>
+
+</html>

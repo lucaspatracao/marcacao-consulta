@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VitaCare | Tutorial</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link rel="stylesheet" href="../../css/outrasTelas/tutorial-acessibilidade.css">
+</head>
+
+<body class="pagina-ajuda">
+    <header class="cabecalho">
+        <div class="limite-conteudo cabecalho__interno">
+            <a href="../telaInicial.html" class="marca-vitacare" aria-label="VitaCare — início">
+                <img class="marca-vitacare__img" src="../../img/projeto-logotipo.png" alt="" width="48" height="48" decoding="async">
+                <span class="marca-vitacare__nome">VitaCare</span>
+            </a>
+            <nav class="cabecalho__acoes" aria-label="Navegação">
+                <a href="../telaInicial.html">Início</a>
+                <a href="../login/login.html">Entrar</a>
+                <a href="entreContato.html" class="cabecalho-botao-contato" aria-label="Entre em contato">
+                    <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                    <span class="cabecalho-botao-contato__texto">Entre em Contato</span>
+                </a>
+            </nav>
+        </div>
+    </header>
+
+    <main id="conteudo-principal" class="pagina-ajuda__main">
+        <div class="limite-conteudo tutorial-wrap">
+            <div class="secao-cabecalho secao-cabecalho--alinhado-esquerda tutorial-cabecalho">
+                <h1>Como usar o site</h1>
+            </div>
+
+            <section class="tutorial-carrossel tutorial-carrossel--css" aria-label="Passo a passo VitaCare — use os pontos ou Anterior e Próximo">
+                <input class="tutorial-radio" type="radio" name="tutorial-slide" id="tutorial-s0" checked>
+                <input class="tutorial-radio" type="radio" name="tutorial-slide" id="tutorial-s1">
+                <input class="tutorial-radio" type="radio" name="tutorial-slide" id="tutorial-s2">
+                <input class="tutorial-radio" type="radio" name="tutorial-slide" id="tutorial-s3">
+                <input class="tutorial-radio" type="radio" name="tutorial-slide" id="tutorial-s4">
+
+                <div class="tutorial-viewport">
+                    <div class="tutorial-track">
+                        <article class="tutorial-slide" aria-labelledby="tutorial-t0">
+                            <h2 id="tutorial-t0"><i class="fas fa-heartbeat" aria-hidden="true"></i> Bem-vindo</h2>
+                            <p>O VitaCare reúne agendamento, contato e painéis por perfil (paciente, funcionário, médico e administrador).</p>
+                            <p>Em qualquer página, use os botões fixos à <strong>direita da tela</strong>, <strong>ao centro na vertical</strong>: <strong>Tutorial</strong> (esta tela) e <strong>Acessibilidade</strong> (tamanho do texto, contraste e mais).</p>
+                            <div class="tutorial-slide-acoes">
+                                <span class="tutorial-seta tutorial-seta--vazio" aria-hidden="true"></span>
+                                <label class="tutorial-seta tutorial-seta--btn" for="tutorial-s1"><span class="tutorial-seta__txt">Próximo</span><i class="fas fa-chevron-right" aria-hidden="true"></i></label>
+                            </div>
+                        </article>
+                        <article class="tutorial-slide" aria-labelledby="tutorial-t1">
+                            <h2 id="tutorial-t1"><i class="fas fa-home" aria-hidden="true"></i> Página inicial</h2>
+                            <p>Em <strong>Entrar</strong> você acessa login e cadastro. Em <strong>Agendar</strong> abre o fluxo de escolha de especialidade, data e horários.</p>
+                            <p>O cabeçalho também leva a <strong>Contato</strong> para mensagens à equipe.</p>
+                            <div class="tutorial-slide-acoes">
+                                <label class="tutorial-seta tutorial-seta--btn" for="tutorial-s0"><i class="fas fa-chevron-left" aria-hidden="true"></i><span class="tutorial-seta__txt">Anterior</span></label>
+                                <label class="tutorial-seta tutorial-seta--btn" for="tutorial-s2"><span class="tutorial-seta__txt">Próximo</span><i class="fas fa-chevron-right" aria-hidden="true"></i></label>
+                            </div>
+                        </article>
+                        <article class="tutorial-slide" aria-labelledby="tutorial-t2">
+                            <h2 id="tutorial-t2"><i class="fas fa-user-lock" aria-hidden="true"></i> Conta e perfis</h2>
+                            <p>O cadastro público cria conta com perfil de <strong>paciente</strong>. Quem administra a unidade pode alterar o tipo de usuário no painel do administrador.</p>
+                            <p>Para testar o painel administrativo neste protótipo: <code>admin@vitacare.local</code> e senha <code>VitaCare2026</code>. Nos painéis, use também os atalhos em quadrados na primeira tela de cada perfil.</p>
+                            <div class="tutorial-slide-acoes">
+                                <label class="tutorial-seta tutorial-seta--btn" for="tutorial-s1"><i class="fas fa-chevron-left" aria-hidden="true"></i><span class="tutorial-seta__txt">Anterior</span></label>
+                                <label class="tutorial-seta tutorial-seta--btn" for="tutorial-s3"><span class="tutorial-seta__txt">Próximo</span><i class="fas fa-chevron-right" aria-hidden="true"></i></label>
+                            </div>
+                        </article>
+                        <article class="tutorial-slide" aria-labelledby="tutorial-t3">
+                            <h2 id="tutorial-t3"><i class="fas fa-calendar-check" aria-hidden="true"></i> Agendamento</h2>
+                            <p>Preencha especialidade, opcionalmente o profissional, e a data. Depois use <strong>Buscar horários disponíveis</strong> e escolha um horário na grade.</p>
+                            <div class="tutorial-slide-acoes">
+                                <label class="tutorial-seta tutorial-seta--btn" for="tutorial-s2"><i class="fas fa-chevron-left" aria-hidden="true"></i><span class="tutorial-seta__txt">Anterior</span></label>
+                                <label class="tutorial-seta tutorial-seta--btn" for="tutorial-s4"><span class="tutorial-seta__txt">Próximo</span><i class="fas fa-chevron-right" aria-hidden="true"></i></label>
+                            </div>
+                        </article>
+                        <article class="tutorial-slide" aria-labelledby="tutorial-t4">
+                            <h2 id="tutorial-t4"><i class="fas fa-th-large" aria-hidden="true"></i> Painéis</h2>
+                            <p>Cada perfil tem menu à esquerda e, na tela inicial, cartões de atalho para as mesmas funções.</p>
+                            <p>No topo há <strong>Entre em Contato</strong>. Para encerrar a sessão de demonstração, use o botão vermelho <strong>Sair</strong> no rodapé do menu.</p>
+                            <div class="tutorial-slide-acoes">
+                                <label class="tutorial-seta tutorial-seta--btn" for="tutorial-s3"><i class="fas fa-chevron-left" aria-hidden="true"></i><span class="tutorial-seta__txt">Anterior</span></label>
+                                <span class="tutorial-seta tutorial-seta--vazio" aria-hidden="true"></span>
+                            </div>
+                        </article>
+                    </div>
+                </div>
+
+                <div class="tutorial-dots" role="tablist" aria-label="Ir para o slide">
+                    <label class="tutorial-dot" for="tutorial-s0"><span class="apenas-leitor-tela">Slide 1 — Bem-vindo</span></label>
+                    <label class="tutorial-dot" for="tutorial-s1"><span class="apenas-leitor-tela">Slide 2 — Página inicial</span></label>
+                    <label class="tutorial-dot" for="tutorial-s2"><span class="apenas-leitor-tela">Slide 3 — Conta e perfis</span></label>
+                    <label class="tutorial-dot" for="tutorial-s3"><span class="apenas-leitor-tela">Slide 4 — Agendamento</span></label>
+                    <label class="tutorial-dot" for="tutorial-s4"><span class="apenas-leitor-tela">Slide 5 — Painéis</span></label>
+                </div>
+            </section>
+
+            <a href="../telaInicial.html" class="tutorial-voltar"><i class="fas fa-arrow-left" aria-hidden="true"></i> Voltar ao início</a>
+        </div>
+    </main>
+
+    <footer class="rodape rodape--simples">
+        <div class="limite-conteudo rodape-simples">
+            <a href="../telaInicial.html" class="rodape-simples__marca" aria-label="VitaCare — início">
+                <img src="../../img/projeto-logotipo.png" class="rodape-logotipo rodape-logotipo--compacto" alt="" width="120" height="36" decoding="async">
+            </a>
+            <nav class="rodape-simples__links" aria-label="Links do rodapé">
+                <a href="../telaInicial.html">Início</a>
+                <a href="../login/login.html">Entrar</a>
+                <a href="entreContato.html">Contato</a>
+            </nav>
+            <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>
+        </div>
+    </footer>
+
+    <nav class="fab-fixo-dupla" aria-label="Ajuda e acessibilidade">
+        <a href="tutorial.html" class="fab-fixo fab-fixo--tutorial" aria-current="page"><i class="fas fa-book-open" aria-hidden="true"></i><span>Tutorial</span></a>
+        <a href="acessibilidade.html" class="fab-fixo fab-fixo--a11y"><i class="fas fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span></a>
+    </nav>
+    <script src="../../js/vitacare-a11y.js" defer></script>
+</body>
+
+</html>

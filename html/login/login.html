@@ -4,11 +4,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitaCare | Recuperar senha</title>
+    <title>VitaCare | Entrar</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/estilo.css">
-    <link rel="stylesheet" href="../../css/login/esqueciSenha.css">
+    <link rel="stylesheet" href="../../css/login/login.css">
 </head>
 
 <body>
@@ -19,7 +19,7 @@
                 <span class="marca-vitacare__nome">VitaCare</span>
             </a>
             <nav class="cabecalho__acoes" aria-label="Links">
-                <a href="login.html">Entrar</a>
+                <a href="telaCadastro.html">Criar conta</a>
                 <a href="../outrasTelas/entreContato.html" class="cabecalho-botao-contato" aria-label="Entre em contato">
                     <i class="fas fa-phone-alt" aria-hidden="true"></i>
                     <i class="fas fa-envelope" aria-hidden="true"></i>
@@ -30,20 +30,39 @@
     </header>
 
     <main id="conteudo-principal">
-        <section class="secao-recuperar-senha" aria-labelledby="titulo-esqueci">
-            <div class="cartao-recuperar">
-                <i class="fas fa-key cartao-recuperar__icone" aria-hidden="true"></i>
-                <h1 id="titulo-esqueci">Esqueci a senha</h1>
-                <form id="formularioRecuperarSenha" action="#" method="post">
+        <p class="titulo-pagina-login">Entrar no VitaCare</p>
+        <section class="secao-autenticacao" aria-labelledby="titulo-form-login">
+            <div class="cartao-autenticacao">
+                <h1 id="titulo-form-login" class="apenas-leitor-tela">Login</h1>
+                <form id="formularioLogin" action="#" method="post">
                     <div class="grupo-campo">
-                        <label for="emailRecuperacao">E-mail</label>
-                        <input type="email" id="emailRecuperacao" name="email" required placeholder="seuemail@exemplo.com" autocomplete="email">
+                        <label for="emailLogin">E-mail</label>
+                        <input type="email" id="emailLogin" name="email" required placeholder="seuemail@exemplo.com" autocomplete="username">
                     </div>
-                    <button type="submit" class="botao-recuperar">Enviar link de recuperação</button>
+                    <div class="grupo-campo">
+                        <label for="senhaLogin">Senha</label>
+                        <input type="password" id="senhaLogin" name="senha" required placeholder="••••••••" autocomplete="current-password">
+                    </div>
+                    <div class="login-rodape-form">
+                        <div class="login-links-secundarios">
+                            <a href="esqueciSenha.html">Esqueci a senha</a>
+                            <span class="login-links-sep" aria-hidden="true">·</span>
+                            <a href="telaCadastro.html">Criar conta</a>
+                        </div>
+                        <button type="submit" class="botao-confirmar-acesso botao-confirmar-acesso--em-linha">Entrar</button>
+                    </div>
                 </form>
-                <p class="esqueci-acesso-login">
-                    <a href="login.html">Ir para a tela de login</a>
-                </p>
+
+                <div class="login-acessar-como" role="group" aria-labelledby="login-acessar-titulo">
+                    <p id="login-acessar-titulo" class="login-acessar-como__titulo">Acessar como…</p>
+                    <p class="login-acessar-como__nota">Sem back-end no momento: links diretos para cada painel do protótipo.</p>
+                    <nav class="login-acessar-como__nav" aria-label="Abrir painel por perfil">
+                        <a href="../telasAdmin/inicioAdmin.html" class="login-acessar-como__link">Administrador</a>
+                        <a href="../telasFuncionario/inicioFuncionario.html" class="login-acessar-como__link">Funcionário</a>
+                        <a href="../telasPacientes/inicioPaciente.html" class="login-acessar-como__link">Paciente</a>
+                        <a href="../telasMedicos/inicioMedico.html" class="login-acessar-como__link">Médico</a>
+                    </nav>
+                </div>
             </div>
         </section>
     </main>
@@ -60,16 +79,6 @@
             <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>
         </div>
     </footer>
-
-    <div id="modalConfirmacao" class="modal-fundo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-recuperacao">
-        <div class="modal-conteudo">
-            <h2 id="titulo-modal-recuperacao" class="modal-conteudo__titulo"><i class="fas fa-envelope" aria-hidden="true"></i> Solicitação enviada</h2>
-            <p id="textoModalRecuperacao">Um link de recuperação foi enviado para o e-mail informado.</p>
-            <div class="modal-acoes modal-acoes--centralizada">
-                <button type="button" class="modal-botao modal-botao--confirmar" id="botaoModalOk">Confirmar</button>
-            </div>
-        </div>
-    </div>
 
     <nav class="fab-fixo-dupla" aria-label="Ajuda e acessibilidade">
         <a href="../outrasTelas/tutorial.html" class="fab-fixo fab-fixo--tutorial"><i class="fas fa-book-open" aria-hidden="true"></i><span>Tutorial</span></a>

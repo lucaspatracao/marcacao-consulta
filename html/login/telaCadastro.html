@@ -4,143 +4,115 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitaCare | Cadastro de Paciente</title>
-    <link rel="stylesheet" href="estilo.css">
+    <title>VitaCare | Cadastro</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <!-- CSS da Tela -->
-    <link rel="stylesheet" href="/css/estilo.css">
-    <link rel="stylesheet" href="/css/login/telaCadastro.css">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link rel="stylesheet" href="../../css/login/telaCadastro.css">
 </head>
 
 <body>
-    <header class="header">
-        <div class="container header-container">
-            <div class="logo">
-                <i class="fas fa-calendar-check" style="color: #EE2A4F;"></i>
-                <span>Vita<span style="color:#EE2A4F;">Agenda</span></span>
-            </div>
-            <nav class="nav-links">
-                <a href="/html/telaInicial.html">Início</a>
-                <a href="agendar.html">Agendar</a>
-                <a href="minhas-consultas.html">Minhas Consultas</a>
-                <a href="/html/login/escolhaLogin.html">Área do Admin</a>
-                <a href="#">Contato</a>
+    <header class="cabecalho">
+        <div class="limite-conteudo cabecalho__interno">
+            <a href="../telaInicial.html" class="marca-vitacare" aria-label="VitaCare — início">
+                <img class="marca-vitacare__img" src="../../img/projeto-logotipo.png" alt="" width="48" height="48" decoding="async">
+                <span class="marca-vitacare__nome">VitaCare</span>
+            </a>
+            <nav class="cabecalho__acoes" aria-label="Links">
+                <a href="login.html">Entrar</a>
+                <a href="../outrasTelas/entreContato.html" class="cabecalho-botao-contato" aria-label="Entre em contato">
+                    <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                    <i class="fas fa-envelope" aria-hidden="true"></i>
+                    <span class="cabecalho-botao-contato__texto">Entre em Contato</span>
+                </a>
             </nav>
-            <div class="mobile-menu-icon">
-                <i class="fas fa-bars"></i>
-            </div>
         </div>
     </header>
 
-    <main>
-        <section class="cadastro-section">
-            <div class="cadastro-card">
-                <h1>CRIE SUA CONTA</h1>
-                <form id="formCadastro" action="#" method="post">
-                    <!-- Primeira parte: dados básicos -->
-                    <div class="form-group">
-                        <label for="nome">Nome completo</label>
-                        <input type="text" id="nome" name="nome" required placeholder="Digite seu nome completo">
+    <main id="conteudo-principal">
+        <p class="titulo-pagina-login">Nova conta</p>
+        <section class="secao-cadastro" aria-labelledby="titulo-cadastro">
+            <div class="cartao-cadastro">
+                <h1 id="titulo-cadastro" class="apenas-leitor-tela">Formulário de cadastro</h1>
+                <form id="formularioCadastro" action="#" method="post">
+                    <div class="grupo-campo">
+                        <label for="nomeCadastro">Nome completo</label>
+                        <input type="text" id="nomeCadastro" name="nome" required placeholder="Nome completo" autocomplete="name">
                     </div>
-                    <div class="form-group">
-                        <label for="email">E-mail</label>
-                        <input type="email" id="email" name="email" required placeholder="seuemail@exemplo.com">
+                    <div class="grupo-campo">
+                        <label for="emailCadastro">E-mail</label>
+                        <input type="email" id="emailCadastro" name="email" required placeholder="seuemail@exemplo.com" autocomplete="email">
                     </div>
-                    <div class="form-group">
-                        <label for="senha">Senha</label>
-                        <input type="password" id="senha" name="senha" required placeholder="Crie uma senha">
+                    <div class="grupo-campo">
+                        <label for="senhaCadastro">Senha</label>
+                        <input type="password" id="senhaCadastro" name="senha" required placeholder="Crie uma senha" autocomplete="new-password">
                     </div>
-                    <div class="form-group">
-                        <label for="confirmaSenha">Confirme a senha</label>
-                        <input type="password" id="confirmaSenha" name="confirmaSenha" required
-                            placeholder="Digite a senha novamente">
+                    <div class="grupo-campo">
+                        <label for="confirmaSenhaCadastro">Confirmar senha</label>
+                        <input type="password" id="confirmaSenhaCadastro" name="confirmaSenha" required placeholder="Digite a senha novamente" autocomplete="new-password">
                     </div>
 
                     <hr>
 
-                    <!-- Segunda parte: contato e dados adicionais -->
-                    <div class="form-group">
-                        <label for="telefone">Telefone/Celular</label>
-                        <div class="phone-group">
-                            <input type="tel" id="ddd" name="ddd" placeholder="(DDD)" maxlength="2"
-                                style="width: 70px;">
-                            <input type="tel" id="telefone" name="telefone" placeholder="00000-0000" required>
+                    <p class="cadastro-secao-rotulo">Dados adicionais</p>
+                    <div class="grupo-campo">
+                        <label for="telefoneCadastro">Telefone/Celular</label>
+                        <div class="grupo-telefone">
+                            <input type="tel" id="campoDdd" name="ddd" placeholder="DDD" maxlength="2" class="campo-ddd" inputmode="numeric" aria-label="DDD">
+                            <input type="tel" id="telefoneCadastro" name="telefone" placeholder="00000-0000" required autocomplete="tel-national">
                         </div>
                     </div>
-                    <div class="form-group">
-                        <label for="nascimento">Data de Nascimento</label>
-                        <input type="date" id="nascimento" name="nascimento" required>
+                    <div class="grupo-campo">
+                        <label for="nascimentoCadastro">Data de nascimento</label>
+                        <input type="date" id="nascimentoCadastro" name="nascimento" required autocomplete="bday">
+                    </div>
+                    <div class="grupo-checkbox-linha">
+                        <input type="checkbox" id="confirmarDadosCadastro" name="confirmarDados">
+                        <label for="confirmarDadosCadastro">Seus dados estão corretos?</label>
+                    </div>
+                    <div class="grupo-checkbox-linha">
+                        <input type="checkbox" id="manterConectadoCadastro" name="manterConectado">
+                        <label for="manterConectadoCadastro">Manter-se conectado?</label>
                     </div>
 
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="confirmarDados" name="confirmarDados">
-                        <label for="confirmarDados" style="margin-bottom: 0;">Seus dados estão corretos?</label>
+                    <div class="cadastro-rodape">
+                        <a href="login.html" class="cadastro-link-login">Já possui cadastro?</a>
+                        <button type="submit" class="botao-cadastro-continuar">Continuar</button>
                     </div>
-                    <div class="checkbox-group">
-                        <input type="checkbox" id="manterConectado" name="manterConectado">
-                        <label for="manterConectado" style="margin-bottom: 0;">Manter-se conectado</label>
-                    </div>
-
-                    <button type="submit" class="btn-cadastro">CONFIRMAR CADASTRO</button>
                 </form>
-                <div class="login-link">
-                    Já possui cadastro? <a href="/html/login/loginPaciente.html">Faça login</a>
-                </div>
             </div>
         </section>
     </main>
 
-    <footer class="footer">
-        <div class="container footer-container">
-            <div class="footer-col">
-                <h4>VitaCare</h4>
-                <p>Agendamento inteligente que reduz o tempo entre solicitação e confirmação.</p>
-                <div class="social">
-                    <a href="#"><i class="fab fa-instagram"></i></a>
-                    <a href="#"><i class="fab fa-whatsapp"></i></a>
-                    <a href="#"><i class="fab fa-linkedin-in"></i></a>
-                </div>
-            </div>
-            <div class="footer-col">
-                <h4>Links Rápidos</h4>
-                <ul>
-                    <li><a href="/html/telaInicial.html">Início</a></li>
-                    <li><a href="#">Agendar Consulta</a></li>
-                    <li><a href="#">Minhas Consultas</a></li>
-                    <li><a href="/html/login/escolhaLogin.html">Área do Admin</a></li>
-                </ul>
-            </div>
-            <div class="footer-col">
-                <h4>Contato</h4>
-                <p><i class="fas fa-envelope"></i> contato@vitacare.com</p>
-                <p><i class="fas fa-phone-alt"></i> (11) 4002-8922</p>
-                <p><i class="fas fa-clock"></i> Atendimento: 24h (online)</p>
-            </div>
-            <div class="footer-col">
-                <h4>Projeto</h4>
-                <p>Redução de absenteísmo com lembretes ativos.<br>Centralização de histórico e padronização de fluxo.
-                </p>
-            </div>
-        </div>
-        <div class="footer-bottom">
-            <div class="container">
-                <p>&copy; 2026 VitaCare - Todos os direitos reservados. | Solução em agendamento de consultas</p>
-            </div>
+    <footer class="rodape rodape--simples">
+        <div class="limite-conteudo rodape-simples">
+            <a href="../telaInicial.html" class="rodape-simples__marca" aria-label="VitaCare — início">
+                <img src="../../img/projeto-logotipo.png" class="rodape-logotipo rodape-logotipo--compacto" alt="" width="120" height="36" decoding="async">
+            </a>
+            <nav class="rodape-simples__links" aria-label="Links do rodapé">
+                <a href="../outrasTelas/agendar.html">Agendar</a>
+                <a href="../outrasTelas/entreContato.html">Contato</a>
+            </nav>
+            <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>
         </div>
     </footer>
 
-    <div id="confirmModal" class="modal-overlay">
-        <div class="modal-container">
-            <h3><i class="fas fa-question-circle"></i> TEM CERTEZA?</h3>
+    <div id="modalConfirmacao" class="modal-fundo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-cadastro">
+        <div class="modal-conteudo">
+            <h2 id="titulo-modal-cadastro" class="modal-conteudo__titulo"><i class="fas fa-question-circle" aria-hidden="true"></i> Tem certeza?</h2>
             <p>Os dados estão corretos? Deseja finalizar o cadastro?</p>
-            <div class="modal-buttons">
-                <button class="modal-btn modal-btn-cancel" id="cancelBtn">NÃO</button>
-                <button class="modal-btn modal-btn-confirm" id="confirmBtn">SIM</button>
+            <div class="modal-acoes">
+                <button type="button" class="modal-botao modal-botao--cancelar" id="botaoModalCancelar">Não</button>
+                <button type="button" class="modal-botao modal-botao--confirmar" id="botaoModalConfirmar">Sim</button>
             </div>
         </div>
     </div>
+
+    <nav class="fab-fixo-dupla" aria-label="Ajuda e acessibilidade">
+        <a href="../outrasTelas/tutorial.html" class="fab-fixo fab-fixo--tutorial"><i class="fas fa-book-open" aria-hidden="true"></i><span>Tutorial</span></a>
+        <a href="../outrasTelas/acessibilidade.html" class="fab-fixo fab-fixo--a11y"><i class="fas fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span></a>
+    </nav>
+    <script src="../../js/vitacare-a11y.js" defer></script>
 </body>
 
 </html>

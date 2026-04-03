@@ -1,0 +1,7 @@
+/* html/telasPacientes/historicoConsultas.html */
+.pagina-titulo-paciente {
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    font-weight: 700;
+    margin: 0;
+    color: var(--gray-900);
+}
