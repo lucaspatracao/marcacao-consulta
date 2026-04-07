@@ -13,7 +13,7 @@
 
 ---
 
-## 1. Resumo Executivo
+## 1. Resumo
 
 O presente projeto visa desenvolver um sistema digital de agendamento de consultas médicas que atenda às necessidades de pacientes, médicos, funcionários administrativos e administradores, com foco em acessibilidade, redução de absenteísmo e eficiência operacional. A solução foi concebida para respeitar as restrições do contratante (SagaSENAI), incluindo baixo custo, funcionamento offline, compatibilidade com sistemas legados e não exclusão digital.
 
