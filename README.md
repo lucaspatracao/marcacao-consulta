@@ -22,7 +22,7 @@
 
 ## 📁 Drive - Documentação
 
-[![Google Drive](https://img.shields.io/badge/Google%20Drive-Documentação-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1qvHUsGlULXYvHcsf3mBO38dPqwBa6gj7/view?usp=sharing)
+[![Google Drive](https://img.shields.io/badge/Google%20Drive-Documentação-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1D_quSWgk3pWBXbv5N-NpaJ0JHVbaDDTe?usp=drive_link)
 
 ---
 
