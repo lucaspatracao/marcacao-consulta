@@ -7,7 +7,7 @@
   <img 
     src="https://github.com/user-attachments/assets/bb729cb1-f162-4b34-938a-b229404115df" 
     alt="Logotipo Conecta Saúde" 
-    style="max-width: 100%; height: auto; width: 500px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 20px;"
+    style="max-width: 100%; height: auto; width: 400px; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.1); margin-bottom: 20px;"
   >
 </div>
 
