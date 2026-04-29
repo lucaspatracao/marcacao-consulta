@@ -11,10 +11,7 @@
   >
 </div>
 
-# Projeto Integrador: VitaCare
-## Sistema de Marcação de Consultas Acessível
-
----
+# VitaCare - Sistema de Marcação de Consultas Acessível
 
 ## 🎨 Figma - Protótipo do Projeto
 
