@@ -1,0 +1,19 @@
+/* html/admin/parametros.html */
+.pagina-titulo-func {
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    font-weight: 700;
+    margin: 0;
+    color: var(--gray-900);
+}
+
+.parametros-grid {
+    display: grid;
+    gap: 1.25rem;
+    max-width: 36rem;
+}
+
+.parametros-ajuda {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    margin-top: 1rem;
+}

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+    <title>VitaCare | Administrador — Usuários</title>
+    <link rel="icon" type="image/png" href="../../img/projeto-logotipo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../../css/estilo.css">
+    <link rel="stylesheet" href="../../css/funcionario/inicio-funcionario.css">
+    <link rel="stylesheet" href="../../css/admin/usuarios.css">
+</head>
+
+<body>
+    <main class="painel-funcionario">
+        <div class="limite-conteudo painel-funcionario__corpo">
+            <aside class="painel-funcionario__menu" aria-label="Menu do administrador">
+                <a href="..\..\index.html" class="marca-vitacare marca-vitacare--sidebar" aria-label="VitaCare — início">
+                    <img class="marca-vitacare__img" src="../../img/projeto-logotipo.png" alt="" width="48" height="48" decoding="async">
+                    <span class="marca-vitacare__nome">VitaCare</span>
+                </a>
+                <ul class="menu-lateral">
+                    <li><a href="inicio-admin.html"><i class="fas fa-home" aria-hidden="true"></i> Início</a></li>
+                    <li class="menu-lateral__item--ativo"><a href="usuarios.html"><i class="fas fa-users-cog" aria-hidden="true"></i> Usuários e perfis</a></li>
+                    <li><a href="parametros.html"><i class="fas fa-sliders-h" aria-hidden="true"></i> Parâmetros globais</a></li>
+                </ul>
+                <div class="menu-lateral-saida">
+                    <a href="../login/login.html" class="menu-lateral-botao-sair"><i class="fas fa-sign-out-alt" aria-hidden="true"></i> Sair</a>
+                </div>
+            </aside>
+
+            <div class="painel-funcionario__principal">
+                <header class="painel-funcionario__topo">
+                    <h2 class="pagina-titulo-func"><i class="fas fa-users-cog" aria-hidden="true"></i> Usuários                    </h2>
+                    <a href="../outros/entre-contato.html" class="cabecalho-botao-contato" aria-label="Entre em contato">
+                        <i class="fas fa-phone-alt" aria-hidden="true"></i>
+                        <i class="fas fa-envelope" aria-hidden="true"></i>
+                        <span class="cabecalho-botao-contato__texto">Entre em Contato</span>
+                    </a>
+                </header>
+
+                <div class="painel-bloco">
+                    <div class="painel-bloco-cabecalho">
+                        <h3><i class="fas fa-id-badge" aria-hidden="true"></i> Perfis</h3>
+                    </div>
+                    <div class="tabela-envoltorio">
+                        <table class="tabela-dados">
+                            <thead>
+                                <tr>
+                                    <th>Nome</th>
+                                    <th>E-mail</th>
+                                    <th>Tipo atual</th>
+                                    <th>Definir tipo</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Maria Souza</td>
+                                    <td>maria@email.com</td>
+                                    <td><span class="etiqueta etiqueta--confirmada">Paciente</span></td>
+                                    <td>
+                                        <label class="apenas-leitor-tela" for="tipo1">Tipo de usuário</label>
+                                        <select id="tipo1" class="seletor-tipo-usuario" name="tipo-1" aria-label="Tipo para Maria Souza">
+                                            <option value="paciente" selected>Paciente</option>
+                                            <option value="funcionario">Funcionário</option>
+                                            <option value="medico">Médico</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>João Oliveira</td>
+                                    <td>joao@email.com</td>
+                                    <td><span class="etiqueta etiqueta--pendente">Funcionário</span></td>
+                                    <td>
+                                        <label class="apenas-leitor-tela" for="tipo2">Tipo de usuário</label>
+                                        <select id="tipo2" class="seletor-tipo-usuario" name="tipo-2" aria-label="Tipo para João Oliveira">
+                                            <option value="paciente">Paciente</option>
+                                            <option value="funcionario" selected>Funcionário</option>
+                                            <option value="medico">Médico</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <td>Dra. Ana Beatriz</td>
+                                    <td>ana.beatriz@vitacare.local</td>
+                                    <td><span class="etiqueta etiqueta--confirmada">Médico</span></td>
+                                    <td>
+                                        <label class="apenas-leitor-tela" for="tipo3">Tipo de usuário</label>
+                                        <select id="tipo3" class="seletor-tipo-usuario" name="tipo-3" aria-label="Tipo para Dra. Ana Beatriz">
+                                            <option value="paciente">Paciente</option>
+                                            <option value="funcionario">Funcionário</option>
+                                            <option value="medico" selected>Médico</option>
+                                        </select>
+                                    </td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <footer class="rodape rodape--simples">
+        <div class="limite-conteudo rodape-simples">
+            <a href="..\..\index.html" class="rodape-simples__marca" aria-label="VitaCare — início">
+                <img src="../../img/projeto-logotipo.png" class="rodape-logotipo rodape-logotipo--compacto" alt="" width="120" height="36" decoding="async">
+            </a>
+            <nav class="rodape-simples__links" aria-label="Links do rodapé">
+                <a href="..\..\index.html">Início</a>
+                <a href="../outros/agendar.html">Agendar</a>
+                <a href="../outros/entre-contato.html">Contato</a>
+            </nav>
+            <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>
+        </div>
+    </footer>
+
+    <nav class="fab-fixo-dupla" aria-label="Ajuda e acessibilidade">
+        <a href="../outros/tutorial.html" class="fab-fixo fab-fixo--tutorial"><i class="fas fa-book-open" aria-hidden="true"></i><span>Tutorial</span></a>
+        <a href="../outros/acessibilidade.html" class="fab-fixo fab-fixo--a11y"><i class="fas fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span></a>
+    </nav>
+    
+</body>
+
+</html>

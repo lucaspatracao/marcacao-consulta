@@ -1,0 +1,177 @@
+/* Cadastro de paciente */
+.secao-cadastro {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.85rem, 2vw, 1.1rem);
+    padding: clamp(1.75rem, 5vw, 3rem) var(--layout-page-px, 1rem) clamp(2.5rem, 6vw, 4rem);
+    background: var(--gray-50, #f9fafb);
+}
+
+.cartao-cadastro {
+    background: #fff;
+    border-radius: 1.75rem;
+    box-shadow: var(--shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1));
+    border: 1px solid var(--gray-200);
+    padding: clamp(1.75rem, 4vw, 2.35rem);
+    max-width: 560px;
+    width: 100%;
+}
+
+.cartao-cadastro h1 {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    text-align: center;
+    color: var(--gray-900);
+}
+
+.cadastro-aviso-tipo {
+    font-size: 0.9rem;
+    color: var(--gray-600);
+    text-align: center;
+    margin: -0.75rem 0 1.25rem;
+    line-height: 1.45;
+}
+
+.cadastro-secao-rotulo {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--gray-500);
+    margin-bottom: 1rem;
+}
+
+.cadastro-rodape {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.cadastro-link-login {
+    font-size: 0.95rem;
+    color: var(--primary-blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.cadastro-link-login:hover {
+    color: var(--primary-darkblue);
+}
+
+.campo-ddd {
+    width: 4.5rem !important;
+    flex-shrink: 0;
+}
+
+.grupo-campo {
+    margin-bottom: 1.25rem;
+}
+
+.grupo-campo label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--gray-800);
+}
+
+.grupo-campo input,
+.grupo-campo select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--gray-200);
+    border-radius: 1rem;
+    font-size: 1rem;
+    min-height: 48px;
+    transition: all 0.2s;
+}
+
+.grupo-campo input:focus,
+.grupo-campo select:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(68, 154, 255, 0.2);
+}
+
+.grupo-telefone {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    align-items: stretch;
+}
+
+.grupo-telefone .campo-ddd {
+    flex-shrink: 0;
+}
+
+.grupo-telefone input:not(.campo-ddd) {
+    flex: 1;
+    min-width: 8rem;
+}
+
+.grupo-checkbox-linha {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 1rem 0;
+}
+
+.grupo-checkbox-linha input {
+    width: auto;
+    margin: 0;
+    min-width: 1.1rem;
+    min-height: 1.1rem;
+}
+
+.botao-cadastro-continuar {
+    width: auto;
+    min-width: 160px;
+    background: var(--primary-blue);
+    color: #fff;
+    border: none;
+    padding: 0.65rem 1.75rem;
+    border-radius: 2rem;
+    font-weight: 700;
+    font-size: 1rem;
+    letter-spacing: 0.02em;
+    cursor: pointer;
+    transition: background-color 0.15s ease;
+    min-height: 48px;
+    box-shadow: var(--shadow-sm);
+}
+
+.botao-cadastro-continuar:hover {
+    background: #3385e0;
+}
+
+@media (max-width: 520px) {
+    .cadastro-rodape {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .botao-cadastro-continuar {
+        width: 100%;
+    }
+}
+
+hr {
+    margin: 1.5rem 0;
+    border: none;
+    border-top: 1px solid var(--gray-200);
+}
+
+@media (max-width: 640px) {
+    .cartao-cadastro {
+        padding: 1.5rem;
+    }
+
+    .cartao-cadastro h1 {
+        font-size: 1.6rem;
+    }
+}

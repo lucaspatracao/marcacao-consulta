@@ -1,0 +1,29 @@
+/* html/admin/inicio-admin.html */
+.painel-admin-badge {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    color: var(--primary-darkblue);
+    background: rgba(68, 154, 255, 0.12);
+    padding: 0.35rem 0.65rem;
+    border-radius: 999px;
+    margin-bottom: 0.75rem;
+}
+
+.painel-admin-lead {
+    color: var(--gray-600);
+    margin: 0 0 1.75rem;
+    max-width: 42rem;
+    line-height: 1.55;
+}
+
+.painel-admin-titulo-bloco {
+    margin: 0;
+}
+
+.painel-admin-atalhos {
+    grid-template-columns: repeat(2, 1fr);
+    max-width: 36rem;
+}

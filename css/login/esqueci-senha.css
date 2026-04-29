@@ -1,0 +1,118 @@
+/* Recuperação de senha */
+.secao-recuperar-senha {
+    min-height: 70vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: clamp(0.85rem, 2vw, 1.1rem);
+    padding: clamp(1.75rem, 5vw, 3rem) var(--layout-page-px, 1rem) clamp(2.5rem, 6vw, 4rem);
+    background: var(--gray-50, #f9fafb);
+}
+
+.cartao-recuperar {
+    background: #fff;
+    border-radius: 1.75rem;
+    box-shadow: var(--shadow-md, 0 4px 6px -1px rgb(0 0 0 / 0.1));
+    border: 1px solid var(--gray-200);
+    padding: clamp(1.75rem, 4vw, 2.35rem);
+    max-width: 480px;
+    width: 100%;
+    text-align: center;
+}
+
+.cartao-recuperar__icone {
+    font-size: 3rem;
+    color: var(--primary-red);
+    margin-bottom: 1rem;
+}
+
+.cartao-recuperar h1 {
+    font-size: 1.8rem;
+    margin-bottom: 0.5rem;
+    color: var(--gray-900);
+}
+
+.cartao-recuperar p {
+    color: var(--gray-600);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.cartao-recuperar__descricao {
+    color: var(--gray-600);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+.grupo-campo {
+    margin-bottom: 1.5rem;
+    text-align: left;
+}
+
+.grupo-campo label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: var(--gray-800);
+}
+
+.grupo-campo input {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--gray-200);
+    border-radius: 1rem;
+    font-size: 1rem;
+    min-height: 48px;
+    transition: all 0.2s;
+}
+
+.grupo-campo input:focus {
+    outline: none;
+    border-color: var(--primary-blue);
+    box-shadow: 0 0 0 3px rgba(68, 154, 255, 0.2);
+}
+
+.botao-recuperar {
+    width: 100%;
+    background: var(--primary-red);
+    color: white;
+    border: none;
+    padding: 0.75rem;
+    border-radius: 2rem;
+    font-weight: 600;
+    font-size: 1rem;
+    cursor: pointer;
+    transition: background 0.2s;
+    margin-bottom: 1rem;
+    min-height: 48px;
+}
+
+.botao-recuperar:hover {
+    background: #d41e42;
+}
+
+.esqueci-acesso-login {
+    font-size: 0.9rem;
+    margin: 0;
+}
+
+.esqueci-acesso-login a {
+    color: var(--primary-blue);
+    text-decoration: underline;
+    text-underline-offset: 3px;
+}
+
+.esqueci-acesso-login a:hover {
+    color: var(--primary-darkblue);
+}
+
+@media (max-width: 640px) {
+    .cartao-recuperar {
+        padding: 1.5rem;
+    }
+
+    .cartao-recuperar h1 {
+        font-size: 1.5rem;
+    }
+}

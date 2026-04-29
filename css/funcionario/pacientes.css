@@ -1,0 +1,7 @@
+/* html/funcionario/pacientes.html */
+.pagina-titulo-func {
+    font-size: clamp(1.15rem, 2vw, 1.35rem);
+    font-weight: 700;
+    margin: 0 0 1rem;
+    color: var(--gray-900);
+}

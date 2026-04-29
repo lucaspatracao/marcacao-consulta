@@ -1,0 +1,245 @@
+================================================================================
+PROJETO INTEGRADOR: VitaCare
+SISTEMA DE MARCAÇÃO DE CONSULTAS ACESSÍVEL
+================================================================================
+
+--------------------------------------------------------------------------------
+1. RESUMO EXECUTIVO
+--------------------------------------------------------------------------------
+O presente projeto visa desenvolver um sistema digital de agendamento de consultas 
+médicas que atenda às necessidades de pacientes, médicos, funcionários administrativos 
+e administradores, com foco em acessibilidade, redução de absenteísmo e eficiência 
+operacional. A solução foi concebida para respeitar as restrições do contratante 
+(SagaSENAI), incluindo baixo custo, funcionamento offline, compatibilidade com 
+sistemas legados e não exclusão digital.
+
+--------------------------------------------------------------------------------
+2. CONTEXTO E PROBLEMA
+--------------------------------------------------------------------------------
+Atualmente, o agendamento de consultas é realizado de forma híbrida (presencial, 
+telefone, WhatsApp, e-mail), com etapas manuais, planilhas desconectadas e alta 
+dependência de comunicação informal. Isso gera:
+- Longos tempos de espera entre solicitação e confirmação.
+- Falta de padronização entre canais.
+- Dificuldade de acesso para idosos e pessoas com baixa familiaridade digital.
+- Alta taxa de absenteísmo (pacientes não comparecem).
+- Sobrecarga da equipe administrativa.
+- Ausência de histórico centralizado do paciente.
+
+--------------------------------------------------------------------------------
+3. OBJETIVOS DO PROJETO
+--------------------------------------------------------------------------------
+3.1 Objetivos Estratégicos (alinhados ao SagaSENAI)
+- Reduzir o tempo médio entre a solicitação e a confirmação da consulta.
+- Melhorar a experiência do paciente com acesso facilitado e informações claras.
+- Garantir acessibilidade para idosos e pessoas com baixa escolaridade digital.
+- Diminuir o absenteísmo por meio de lembretes automáticos e confirmação ativa.
+- Centralizar histórico de consultas e disponibilidade médica.
+- Padronizar o processo de agendamento, eliminando retrabalho e falhas.
+- Otimizar o uso da equipe administrativa, reduzindo sobrecarga.
+- Garantir sustentabilidade (fim do uso de papéis e planilhas manuais).
+
+3.2 Objetivos Específicos
+- Desenvolver uma interface web responsiva e acessível (WCAG 2.1 nível AA).
+- Implementar modo offline para uso em áreas sem conectividade.
+- Permitir agendamento tanto pelo paciente (online) quanto por atendente (presencial/telefone).
+- Gerar lembretes automáticos via WhatsApp/SMS (integração com gateway de baixo custo).
+- Disponibilizar painel administrativo para gestão de usuários e permissões.
+
+--------------------------------------------------------------------------------
+4. PERFIS DE USUÁRIO E FUNCIONALIDADES
+--------------------------------------------------------------------------------
+O sistema possui quatro tipos de usuário. O ADMIN é pré-cadastrado. Todos os demais 
+são criados como PACIENTE; o ADMIN pode promovê-los a FUNCIONÁRIO ou MÉDICO.
+
+4.1 ADMIN (pré-definido)
+- Acesso total ao sistema.
+- Visualizar lista completa de usuários cadastrados.
+- Alterar tipo de usuário (Paciente ↔ Funcionário ↔ Médico).
+- Configurar parâmetros globais (horários padrão, especialidades, convênios).
+
+4.2 FUNCIONÁRIO (Recepcionista / RH)
+- Validar consultas solicitadas por pacientes.
+- Ver e definir o calendário/agenda do médico (disponibilidade).
+- Realizar agendamento offline (em nome do paciente, sem internet).
+- Gerenciar perfil próprio.
+- Visualizar histórico de consultas de pacientes (quando necessário para triagem).
+
+4.3 MÉDICO
+- Ver e definir seu próprio calendário/consultas.
+- Acessar histórico de consultas dos seus pacientes.
+- Registrar informações clínicas pós-consulta (se aplicável).
+- Gerenciar perfil próprio.
+
+4.4 PACIENTE
+- Solicitar agendamento de consultas online.
+- Consultar horários disponíveis em tempo real (quando online).
+- Visualizar histórico de suas próprias consultas.
+- Confirmar presença via link (WhatsApp/SMS).
+- Gerenciar perfil próprio.
+- Caso não tenha acesso digital, pode solicitar agendamento presencial ou telefônico 
+  a um funcionário.
+
+--------------------------------------------------------------------------------
+5. FUNCIONALIDADES TRANSVERSAIS (INTELIGENTES)
+--------------------------------------------------------------------------------
+- Lembretes automáticos: envio de mensagem 48h e 2h antes da consulta.
+- Confirmação ativa de presença: paciente responde SIM/NÃO. Se não confirmar em até 
+  24h antes, a vaga é liberada automaticamente.
+- Liberação automática de vagas não confirmadas para a lista de espera.
+- Lista de espera inteligente: notifica o próximo paciente da fila assim que uma 
+  vaga é liberada (por WhatsApp/SMS).
+- Sincronização offline-first: os dados locais são armazenados no navegador 
+  (IndexedDB) e sincronizados com o servidor quando a conexão é restabelecida.
+
+--------------------------------------------------------------------------------
+6. RESTRIÇÕES OBRIGATÓRIAS (ATENDENDO AO SAGASENAI)
+--------------------------------------------------------------------------------
+- Baixo custo: utilização de infraestrutura existente (computadores da recepção, 
+  servidor local ou cloud gratuita como Firebase, Supabase ou PouchDB). Software 
+  livre e código aberto priorizado.
+- Baixa complexidade de uso: interface com botões grandes, fontes legíveis (mínimo 
+  16px), passo a passo guiado, ícones associados a textos. Testes de usabilidade 
+  com idosos e pessoas com baixa escolaridade.
+- Não dependência total de internet: o sistema deve funcionar completamente offline 
+  (modo local) e sincronizar quando a conexão retornar. A recepção deve poder 
+  agendar mesmo sem internet.
+- Compatibilidade com sistemas legados: prever importação/exportação de dados 
+  (CSV, JSON) para agendas médicas e cadastros de pacientes existentes. API REST 
+  leve para integração futura.
+- Não exclusão digital: manter canais presenciais e telefônicos como alternativas. 
+  O sistema permite que um atendente realize o agendamento em nome do paciente 
+  que não tem acesso digital.
+
+--------------------------------------------------------------------------------
+7. FLUXO COMPLETO DO SISTEMA (MODO HÍBRIDO)
+--------------------------------------------------------------------------------
+1. Solicitação: 
+   - Paciente acessa o portal web (se tiver acesso) OU contata a recepção 
+     (presencial/telefone).
+2. Validação dos dados: 
+   - Sistema verifica dados cadastrais e elegibilidade (convênio). Em modo offline, 
+     usa cópia local sincronizada.
+3. Exibição de horários disponíveis: 
+   - Mostra agenda médica conforme especialidade e data. Offline: mostra última 
+     agenda sincronizada, com aviso de "dados podem não estar atualizados".
+4. Seleção do horário: 
+   - Paciente (ou atendente) escolhe data e horário.
+5. Confirmação do agendamento: 
+   - Registro salvo localmente e marcado para sincronização. Se online, enviado 
+     imediatamente ao servidor. Comprovante gerado (exibido na tela, enviado por 
+     e-mail/WhatsApp quando possível). Em modo offline, o comprovante pode ser 
+     impresso ou anotado manualmente.
+6. Lembretes automáticos: 
+   - 48h e 2h antes da consulta, sistema envia mensagem (WhatsApp/SMS) com link 
+     para confirmar presença.
+7. Confirmação de presença: 
+   - Paciente clica em "Confirmar" ou "Cancelar". Se não houver resposta até 24h 
+     antes, a vaga é liberada para a lista de espera.
+8. Pós-consulta: 
+   - Histórico atualizado com registro de comparecimento ou falta. Médico pode 
+     adicionar anotações clínicas.
+
+--------------------------------------------------------------------------------
+8. DIRETRIZES DE DESIGN E IDENTIDADE VISUAL
+--------------------------------------------------------------------------------
+Cores principais (fornecidas pelo cliente):
+- Vermelho: #EE2A4F (ações destrutivas, cancelamento, exclusão)
+- Rosa: #FF689E (destaques, mensagens de sucesso)
+- Azul: #449AFF (botões primários, links)
+- Azul escuro: #5F92F4 (cabeçalhos, navegação principal)
+- Marrom: #E45E4C (avisos, erros, campos obrigatórios)
+
+Acessibilidade:
+- Contraste mínimo de 4.5:1 entre texto e fundo.
+- Fonte padrão sem serifa (Arial, Helvetica, sistema).
+- Tamanho mínimo de 16px em dispositivos móveis.
+- Suporte a leitores de tela (ARIA labels, roles, keyboard navigation).
+- Modo de alto contraste opcional.
+- Espaçamento clicável mínimo de 44x44px para botões em touch.
+
+--------------------------------------------------------------------------------
+9. CONCLUSÃO
+--------------------------------------------------------------------------------
+O Sistema de Marcação de Consultas Acessível atende integralmente aos requisitos 
+do desafio SagaSENAI, combinando inovação digital com respeito às restrições de 
+baixo custo, inclusão digital e resiliência offline. A solução proposta reduzirá 
+significativamente o tempo de espera, o absenteísmo e a carga administrativa, 
+proporcionando uma experiência mais humanizada e eficiente para todos os envolvidos.
+
+--------------------------------------------------------------------------------
+10. MAPA DO FRONT-END (PROTÓTIPO HTML/CSS) — FLUXO COM INÍCIO, MEIO E FIM
+--------------------------------------------------------------------------------
+O protótipo estático segue o fluxo híbrido da seção 7, com caminhos claros:
+
+  INÍCIO
+    html/index.html — Boas-vindas; topo: Entrar e Contato; centro: Entrar e Agendar.
+
+  ACESSO (login e cadastro únicos — seção 4)
+    html/login/login.html — Login único (e-mail/senha). Administrador pré-cadastrado
+      no protótipo: admin@vitacare.local / VitaCare2026. O ADMIN define tipo de usuário
+      (paciente, funcionário, médico); cadastro público cria apenas PACIENTE.
+    html/login/esqueciSenha.html — Recuperação de senha (quando aplicável).
+    html/login/telaCadastro.html — Novo usuário como PACIENTE (único fluxo de cadastro).
+
+  AGENDAMENTO (paciente ou visitante vendo horários — alinhado às etapas 3–5)
+    html/outros/agendar.html — Especialidade, profissional opcional, data, busca de horários;
+      lembretes 48h/2h citados como no projeto. Conclusão do agendamento, em produção,
+      exigiria sessão do paciente ou atendimento pelo FUNCIONÁRIO (recepção).
+
+  CANAL NÃO DIGITAL / SUPORTE
+    html/outros/entreContato.html — Mensagens (dúvidas, erros, sugestões); reforça não
+      exclusão digital e contato humano.
+
+  ÁREA DO ADMINISTRADOR (seção 4.1)
+    html/admin/inicioAdmin.html — Resumo do painel; grade de atalhos (cartões) para
+      Usuários e Parâmetros; menu lateral; botão Entre em Contato no topo.
+    html/admin/usuarios.html — Lista de usuários e alteração de tipo de perfil.
+    html/admin/parametros.html — Horários padrão, especialidades e convênios (protótipo).
+
+  ÁREA DO FUNCIONÁRIO (seção 4.2) — uma página por função
+    html/funcionario/inicioFuncionario.html — Início do painel; grade de atalhos para
+      Pacientes, Calendário, Validar, Médicos e Perfil; menu lateral; Contato no topo.
+    html/funcionario/pacientes.html — Pacientes e histórico para triagem.
+    html/funcionario/calendario.html — Calendário / disponibilidade dos médicos.
+    html/funcionario/validar.html — Validar consultas solicitadas.
+    html/funcionario/medicos.html — Médicos da unidade.
+    html/funcionario/perfil.html — Perfil do funcionário.
+
+  ÁREA DO PACIENTE (seção 4.4)
+    html/paciente/inicioPaciente.html — Início com atalhos (Agendar, Histórico, Perfil),
+      bloco de lembretes; menu lateral e Contato no topo.
+    html/paciente/historicoConsultas.html — Histórico de consultas do paciente.
+    html/paciente/perfilPaciente.html — Dados e preferências.
+
+  ÁREA DO MÉDICO (seção 4.3)
+    html/medico/inicioMedico.html — Início do painel médico com atalhos (Agenda,
+      Histórico, Perfil); menu lateral e Contato no topo.
+    html/medico/minhaAgenda.html — Consultas agendadas.
+    html/medico/historicoPacientes.html — Histórico e notas pós-consulta (protótipo).
+    html/medico/perfilMedico.html — Perfil profissional (CRM, especialidade).
+
+Estilos espelham a organização: css/login/, css/outrasTelas/, css/admin/,
+css/funcionario/ (inclui inicioFuncionario.css compartilhado pelos painéis),
+css/medico/, css/paciente/ e css/estilo.css (global).
+
+Nomes de classes, identificadores e comentários no código estão em português brasileiro,
+para manter o repositório coerente com o relatório e com a equipe.
+
+--------------------------------------------------------------------------------
+11. STATUS DO PROTÓTIPO (SOMENTE HTML/CSS — ABRIL/2026)
+--------------------------------------------------------------------------------
+Em termos de front-end estático previsto para o PI, o protótipo está concluído: todas
+as páginas do mapa da seção 10, navegação por links entre fluxos públicos (início,
+login, cadastro, recuperação de senha, agendar, contato), painéis por perfil com menu
+lateral e, em cada tela de início de painel, grade de atalhos em cartão (mesmas rotas
+do menu), credenciais de demonstração do administrador na tela de login, paleta e
+legibilidade alinhadas à seção 8, textos e identificadores em português brasileiro.
+Formulários, modais e botões de ação são ilustrativos (sem envio real de dados).
+
+Ainda não implementado (escopo futuro do sistema completo): banco de dados, back-end,
+autenticação real, API REST, modo offline com sincronização, integração WhatsApp/SMS,
+lembretes e confirmação de presença automatizados. O arquivo orientacaoProjeto.txt
+registra o alinhamento entre este relatório e o protótipo estático.
+
+================================================================================
