@@ -1,0 +1,814 @@
+[
+    {
+        "id": "0cf7741318acbd08",
+        "type": "tab",
+        "label": "Sistema VitaCare",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "config-ws",
+        "type": "websocket-listener",
+        "path": "/ws/leituras",
+        "wholemsg": "false"
+    },
+    {
+        "id": "4d80ae29261f3e80",
+        "type": "serial-port",
+        "name": "",
+        "serialport": "COM7",
+        "serialbaud": "115200",
+        "databits": 8,
+        "parity": "none",
+        "stopbits": 1,
+        "waitfor": "",
+        "dtr": "none",
+        "rts": "none",
+        "cts": "none",
+        "dsr": "none",
+        "newline": "\\n",
+        "bin": "false",
+        "out": "char",
+        "addchar": "",
+        "responsetimeout": 10000
+    },
+    {
+        "id": "config-mysql",
+        "type": "MySQLdatabase",
+        "name": "Sensora DB",
+        "host": "localhost",
+        "port": "3306",
+        "db": "sensora_db",
+        "tz": "",
+        "charset": ""
+    },
+    {
+        "id": "2ef5a3d6803a164a",
+        "type": "MySQLdatabase",
+        "name": "vitacare",
+        "host": "127.0.0.1",
+        "port": "3306",
+        "db": "vitacare",
+        "tz": "",
+        "charset": "UTF8"
+    },
+    {
+        "id": "cadastro-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "POST /api/cadastro",
+        "url": "/api/cadastro",
+        "method": "post",
+        "x": 270,
+        "y": 80,
+        "wires": [
+            [
+                "cadastro-func"
+            ]
+        ]
+    },
+    {
+        "id": "cadastro-func",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Processar Cadastro",
+        "func": "const bcrypt = global.get('bcrypt') || require('bcryptjs');\nmsg.payload = msg.req.body;\nif (!msg.payload.nome || !msg.payload.email || !msg.payload.senha) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Dados incompletos' };\n    return [null, msg];\n}\nconst saltRounds = 10;\nconst senhaHash = bcrypt.hashSync(msg.payload.senha, saltRounds);\nmsg.topic = `INSERT INTO usuarios (nome_completo, email, senha_hash, telefone, data_nascimento, tipo) VALUES (?, ?, ?, ?, ?, 'paciente')`;\nmsg.params = [msg.payload.nome, msg.payload.email, senhaHash, msg.payload.telefone || null, msg.payload.nascimento || null];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 540,
+        "y": 80,
+        "wires": [
+            [
+                "cadastro-db"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "cadastro-db",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Cadastro",
+        "x": 770,
+        "y": 80,
+        "wires": [
+            [
+                "cadastro-success"
+            ]
+        ]
+    },
+    {
+        "id": "cadastro-success",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Success Response",
+        "func": "msg.statusCode = 201;\nmsg.payload = { success: true, message: 'Cadastro realizado com sucesso', userId: msg.results.insertId };\nreturn msg;",
+        "outputs": 1,
+        "x": 990,
+        "y": 80,
+        "wires": [
+            [
+                "cadastro-response"
+            ]
+        ]
+    },
+    {
+        "id": "cadastro-response",
+        "type": "http response",
+        "z": "0cf7741318acbd08",
+        "name": "Response",
+        "x": 1190,
+        "y": 80,
+        "wires": []
+    },
+    {
+        "id": "login-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "POST /api/login",
+        "url": "/api/login",
+        "method": "post",
+        "x": 390,
+        "y": 180,
+        "wires": [
+            [
+                "login-query"
+            ]
+        ]
+    },
+    {
+        "id": "login-query",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Buscar Usuário",
+        "func": "msg.payload = msg.req.body;\nmsg.topic = \"SELECT id, nome_completo, email, senha_hash, tipo FROM usuarios WHERE email = ? AND ativo = 1\";\nmsg.params = [msg.payload.email];\nreturn msg;",
+        "outputs": 1,
+        "x": 590,
+        "y": 180,
+        "wires": [
+            [
+                "login-db"
+            ]
+        ]
+    },
+    {
+        "id": "login-db",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Login",
+        "x": 790,
+        "y": 180,
+        "wires": [
+            [
+                "login-verify"
+            ]
+        ]
+    },
+    {
+        "id": "login-verify",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Verificar Senha",
+        "func": "const bcrypt = global.get('bcrypt') || require('bcryptjs');\nconst results = msg.results;\nconst senhaEnviada = msg.req?.body?.senha;\nif (!results || results.length === 0) {\n    msg.statusCode = 401;\n    msg.payload = { error: 'Usuário não encontrado' };\n    return [null, msg];\n}\nconst usuario = results[0];\nconst senhaValida = bcrypt.compareSync(senhaEnviada, usuario.senha_hash);\nif (!senhaValida) {\n    msg.statusCode = 401;\n    msg.payload = { error: 'Senha incorreta' };\n    return [null, msg];\n}\nconst token = Buffer.from(`${usuario.id}:${Date.now()}`).toString('base64');\nmsg.payload = { success: true, user: { id: usuario.id, nome: usuario.nome_completo, email: usuario.email, tipo: usuario.tipo }, token: token, redirect: usuario.tipo === 'admin' ? '/admin/inicio-admin.html' : usuario.tipo === 'medico' ? '/medico/inicio-medico.html' : usuario.tipo === 'funcionario' ? '/funcionario/inicio-funcionario.html' : '/paciente/inicio-paciente.html' };\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 990,
+        "y": 180,
+        "wires": [
+            [
+                "login-response"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "login-response",
+        "type": "http response",
+        "z": "0cf7741318acbd08",
+        "name": "Response",
+        "x": 1190,
+        "y": 180,
+        "wires": []
+    },
+    {
+        "id": "horarios-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "GET /api/horarios",
+        "url": "/api/horarios",
+        "method": "get",
+        "x": 390,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "horarios-query",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Montar Query Horários",
+        "func": "const data = msg.req.query.data;\nconst especialidade = msg.req.query.especialidade;\nconst medico = msg.req.query.medico;\nlet sql = `SELECT h.id, h.data_disponivel, h.horario, m.nome as medico_nome, m.especialidade FROM horarios_disponiveis h JOIN medicos m ON h.medico_id = m.id WHERE h.disponivel = 1`;\nlet params = [];\nif (data) { sql += ` AND h.data_disponivel = ?`; params.push(data); }\nif (especialidade && especialidade !== '') { sql += ` AND m.especialidade = ?`; params.push(especialidade); }\nif (medico && medico !== '') { sql += ` AND m.id = ?`; params.push(medico); }\nsql += ` ORDER BY h.data_disponivel, h.horario`;\nmsg.topic = sql;\nmsg.params = params;\nreturn msg;",
+        "outputs": 1,
+        "x": 590,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "horarios-db",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Horários",
+        "x": 790,
+        "y": 280,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "horarios-response",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Formatar Response",
+        "func": "msg.payload = { success: true, horarios: msg.results.map(h => ({ id: h.id, data: h.data_disponivel, horario: h.horario.substring(0, 5), medico: h.medico_nome, especialidade: h.especialidade })) };\nreturn msg;",
+        "outputs": 1,
+        "x": 990,
+        "y": 280,
+        "wires": [
+            [
+                "horarios-response-http"
+            ]
+        ]
+    },
+    {
+        "id": "horarios-response-http",
+        "type": "http response",
+        "z": "0cf7741318acbd08",
+        "name": "Response",
+        "x": 1190,
+        "y": 280,
+        "wires": []
+    },
+    {
+        "id": "agendar-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "POST /api/agendar",
+        "url": "/api/agendar",
+        "method": "post",
+        "x": 250,
+        "y": 380,
+        "wires": [
+            [
+                "agendar-func"
+            ]
+        ]
+    },
+    {
+        "id": "agendar-func",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Processar Agendamento",
+        "func": "const body = msg.req.body;\nif (!body.horario_id || !body.paciente_id) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Dados incompletos' };\n    return [null, msg];\n}\nmsg.topic = `SELECT h.medico_id, h.data_disponivel, h.horario, m.especialidade FROM horarios_disponiveis h JOIN medicos m ON h.medico_id = m.id WHERE h.id = ? AND h.disponivel = 1`;\nmsg.params = [body.horario_id];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 490,
+        "y": 380,
+        "wires": [
+            [
+                "agendar-db-busca"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "agendar-db-busca",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Buscar Horário",
+        "x": 740,
+        "y": 380,
+        "wires": [
+            [
+                "agendar-criar"
+            ]
+        ]
+    },
+    {
+        "id": "agendar-criar",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Criar Consulta",
+        "func": "const horario = msg.results[0];\nconst body = msg.req.body;\nif (!horario) {\n    msg.statusCode = 404;\n    msg.payload = { error: 'Horário não disponível' };\n    return [null, msg];\n}\nmsg.topic = `INSERT INTO consultas (paciente_id, medico_id, especialidade, data_consulta, horario, status, convenio) VALUES (?, ?, ?, ?, ?, 'pendente', ?)`;\nmsg.params = [body.paciente_id, horario.medico_id, horario.especialidade, horario.data_disponivel, horario.horario, body.convenio || null];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 960,
+        "y": 380,
+        "wires": [
+            [
+                "agendar-db-inserir"
+            ],
+            []
+        ]
+    },
+    {
+        "id": "agendar-db-inserir",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Criar Consulta",
+        "x": 1160,
+        "y": 380,
+        "wires": [
+            [
+                "agendar-atualizar"
+            ]
+        ]
+    },
+    {
+        "id": "agendar-atualizar",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Atualizar Disponibilidade",
+        "func": "const horarioId = msg.req.body.horario_id;\nmsg.topic = `UPDATE horarios_disponiveis SET disponivel = 0 WHERE id = ?`;\nmsg.params = [horarioId];\nreturn msg;",
+        "outputs": 1,
+        "x": 1410,
+        "y": 380,
+        "wires": [
+            [
+                "agendar-db-update"
+            ]
+        ]
+    },
+    {
+        "id": "agendar-db-update",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Update Disponibilidade",
+        "x": 1670,
+        "y": 380,
+        "wires": [
+            [
+                "agendar-response"
+            ]
+        ]
+    },
+    {
+        "id": "agendar-response",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Success Response",
+        "func": "msg.payload = { success: true, message: 'Consulta agendada com sucesso', consulta_id: msg.results.insertId };\nreturn msg;",
+        "outputs": 1,
+        "x": 1930,
+        "y": 380,
+        "wires": [
+            [
+                "agendar-response-http"
+            ]
+        ]
+    },
+    {
+        "id": "agendar-response-http",
+        "type": "http response",
+        "z": "0cf7741318acbd08",
+        "name": "Response",
+        "x": 2140,
+        "y": 380,
+        "wires": []
+    },
+    {
+        "id": "historico-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "GET /api/historico/:paciente_id",
+        "url": "/api/historico/*",
+        "method": "get",
+        "x": 320,
+        "y": 480,
+        "wires": [
+            [
+                "historico-func"
+            ]
+        ]
+    },
+    {
+        "id": "historico-func",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Buscar Histórico",
+        "func": "const paciente_id = msg.req.params.paciente_id;\nmsg.topic = `SELECT c.id, c.data_consulta, c.horario, c.especialidade, c.status, m.nome as medico_nome FROM consultas c JOIN medicos m ON c.medico_id = m.id WHERE c.paciente_id = ? ORDER BY c.data_consulta DESC`;\nmsg.params = [paciente_id];\nreturn msg;",
+        "outputs": 1,
+        "x": 560,
+        "y": 480,
+        "wires": [
+            [
+                "historico-db"
+            ]
+        ]
+    },
+    {
+        "id": "historico-db",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Histórico",
+        "x": 790,
+        "y": 480,
+        "wires": [
+            [
+                "historico-response"
+            ]
+        ]
+    },
+    {
+        "id": "historico-response",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Formatar Response",
+        "func": "msg.payload = { success: true, consultas: msg.results.map(c => ({ id: c.id, data: c.data_consulta, horario: c.horario.substring(0, 5), especialidade: c.especialidade, medico: c.medico_nome, status: c.status })) };\nreturn msg;",
+        "outputs": 1,
+        "x": 1040,
+        "y": 480,
+        "wires": [
+            [
+                "historico-response-http"
+            ]
+        ]
+    },
+    {
+        "id": "historico-response-http",
+        "type": "http response",
+        "z": "0cf7741318acbd08",
+        "name": "Response",
+        "x": 1240,
+        "y": 480,
+        "wires": []
+    },
+    {
+        "id": "usuarios-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "GET /api/admin/usuarios",
+        "url": "/api/admin/usuarios",
+        "method": "get",
+        "x": 310,
+        "y": 580,
+        "wires": [
+            [
+                "usuarios-query"
+            ]
+        ]
+    },
+    {
+        "id": "usuarios-query",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Listar Usuários",
+        "func": "msg.topic = `SELECT u.id, u.nome_completo, u.email, u.tipo, u.telefone, COALESCE(m.crm, '') as crm, COALESCE(m.especialidade, '') as especialidade FROM usuarios u LEFT JOIN medicos m ON u.id = m.usuario_id ORDER BY u.id`;\nreturn msg;",
+        "outputs": 1,
+        "x": 560,
+        "y": 580,
+        "wires": [
+            [
+                "usuarios-db"
+            ]
+        ]
+    },
+    {
+        "id": "usuarios-db",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Usuários",
+        "x": 790,
+        "y": 580,
+        "wires": [
+            [
+                "usuarios-response"
+            ]
+        ]
+    },
+    {
+        "id": "usuarios-response",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Formatar Response",
+        "func": "msg.payload = { success: true, usuarios: msg.results };\nreturn msg;",
+        "outputs": 1,
+        "x": 1020,
+        "y": 580,
+        "wires": [
+            [
+                "usuarios-response-http"
+            ]
+        ]
+    },
+    {
+        "id": "usuarios-response-http",
+        "type": "http response",
+        "z": "0cf7741318acbd08",
+        "name": "Response",
+        "x": 1220,
+        "y": 580,
+        "wires": []
+    },
+    {
+        "id": "usuario-update-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "PUT /api/admin/usuarios/:id",
+        "url": "/api/admin/usuarios/*",
+        "method": "put",
+        "x": 280,
+        "y": 680,
+        "wires": [
+            [
+                "usuario-update-func"
+            ]
+        ]
+    },
+    {
+        "id": "usuario-update-func",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Atualizar Tipo Usuário",
+        "func": "const id = msg.req.params.id;\nconst tipo = msg.req.body.tipo;\nmsg.topic = `UPDATE usuarios SET tipo = ? WHERE id = ?`;\nmsg.params = [tipo, id];\nreturn msg;",
+        "outputs": 1,
+        "x": 590,
+        "y": 680,
+        "wires": [
+            [
+                "usuario-update-db"
+            ]
+        ]
+    },
+    {
+        "id": "usuario-update-db",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Update",
+        "x": 790,
+        "y": 680,
+        "wires": [
+            [
+                "usuario-update-response"
+            ]
+        ]
+    },
+    {
+        "id": "usuario-update-response",
+        "type": "http response",
+        "z": "0cf7741318acbd08",
+        "name": "Response",
+        "x": 990,
+        "y": 680,
+        "wires": []
+    },
+    {
+        "id": "parametros-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "GET /api/admin/parametros",
+        "url": "/api/admin/parametros",
+        "method": "get",
+        "x": 300,
+        "y": 780,
+        "wires": [
+            [
+                "parametros-query"
+            ]
+        ]
+    },
+    {
+        "id": "parametros-query",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Buscar Parâmetros",
+        "func": "msg.topic = `SELECT chave, valor FROM parametros_sistema`;\nreturn msg;",
+        "outputs": 1,
+        "x": 550,
+        "y": 780,
+        "wires": [
+            [
+                "parametros-db"
+            ]
+        ]
+    },
+    {
+        "id": "parametros-db",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Parâmetros",
+        "x": 750,
+        "y": 780,
+        "wires": [
+            [
+                "parametros-format"
+            ]
+        ]
+    },
+    {
+        "id": "parametros-format",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Formatar Parâmetros",
+        "func": "const params = {};\nmsg.results.forEach(p => { params[p.chave] = p.valor; });\nmsg.payload = { success: true, parametros: params };\nreturn msg;",
+        "outputs": 1,
+        "x": 990,
+        "y": 780,
+        "wires": [
+            [
+                "parametros-response"
+            ]
+        ]
+    },
+    {
+        "id": "parametros-response",
+        "type": "http response",
+        "z": "0cf7741318acbd08",
+        "name": "Response",
+        "x": 1200,
+        "y": 780,
+        "wires": []
+    },
+    {
+        "id": "parametros-update-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "POST /api/admin/parametros",
+        "url": "/api/admin/parametros",
+        "method": "post",
+        "x": 390,
+        "y": 880,
+        "wires": [
+            [
+                "parametros-update-func"
+            ]
+        ]
+    },
+    {
+        "id": "parametros-update-func",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Atualizar Parâmetros",
+        "func": "const params = msg.req.body;\nconst queries = [];\nfor (const [chave, valor] of Object.entries(params)) {\n    queries.push({ topic: `INSERT INTO parametros_sistema (chave, valor) VALUES (?, ?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)`, params: [chave, valor] });\n}\nmsg.queries = queries;\nreturn msg;",
+        "outputs": 1,
+        "x": 660,
+        "y": 880,
+        "wires": [
+            []
+        ]
+    },
+    {
+        "id": "validar-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "GET /api/validar/pendentes",
+        "url": "/api/validar/pendentes",
+        "method": "get",
+        "x": 290,
+        "y": 980,
+        "wires": [
+            [
+                "validar-query"
+            ]
+        ]
+    },
+    {
+        "id": "validar-query",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Buscar Pendentes",
+        "func": "msg.topic = `SELECT c.id, u.nome_completo as paciente, c.data_consulta, c.horario, m.nome as medico, c.especialidade FROM consultas c JOIN usuarios u ON c.paciente_id = u.id JOIN medicos m ON c.medico_id = m.id WHERE c.status = 'pendente' ORDER BY c.data_consulta, c.horario`;\nreturn msg;",
+        "outputs": 1,
+        "x": 550,
+        "y": 980,
+        "wires": [
+            [
+                "validar-db"
+            ]
+        ]
+    },
+    {
+        "id": "validar-db",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Pendentes",
+        "x": 770,
+        "y": 980,
+        "wires": [
+            [
+                "validar-response"
+            ]
+        ]
+    },
+    {
+        "id": "validar-response",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Formatar Response",
+        "func": "msg.payload = { success: true, pendentes: msg.results.map(c => ({ id: c.id, paciente: c.paciente, data: c.data_consulta, horario: c.horario.substring(0, 5), medico: c.medico, especialidade: c.especialidade })) };\nreturn msg;",
+        "outputs": 1,
+        "x": 990,
+        "y": 980,
+        "wires": [
+            [
+                "validar-response-http"
+            ]
+        ]
+    },
+    {
+        "id": "validar-response-http",
+        "type": "http response",
+        "z": "0cf7741318acbd08",
+        "name": "Response",
+        "x": 1190,
+        "y": 980,
+        "wires": []
+    },
+    {
+        "id": "validar-confirmar-endpoint",
+        "type": "http in",
+        "z": "0cf7741318acbd08",
+        "name": "POST /api/validar/confirmar",
+        "url": "/api/validar/confirmar",
+        "method": "post",
+        "x": 340,
+        "y": 1080,
+        "wires": [
+            [
+                "validar-confirmar-func"
+            ]
+        ]
+    },
+    {
+        "id": "validar-confirmar-func",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Confirmar Consulta",
+        "func": "const consulta_id = msg.req.body.consulta_id;\nconst acao = msg.req.body.acao;\nconst novoStatus = acao === 'confirmar' ? 'confirmada' : 'cancelada';\nmsg.topic = `UPDATE consultas SET status = ? WHERE id = ?`;\nmsg.params = [novoStatus, consulta_id];\nreturn msg;",
+        "outputs": 1,
+        "x": 590,
+        "y": 1080,
+        "wires": [
+            [
+                "validar-confirmar-db"
+            ]
+        ]
+    },
+    {
+        "id": "validar-confirmar-db",
+        "type": "mysql",
+        "z": "0cf7741318acbd08",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Update",
+        "x": 790,
+        "y": 1080,
+        "wires": [
+            [
+                "validar-confirmar-response"
+            ]
+        ]
+    },
+    {
+        "id": "validar-confirmar-response",
+        "type": "function",
+        "z": "0cf7741318acbd08",
+        "name": "Success Response",
+        "func": "msg.payload = { success: true, message: 'Consulta atualizada com sucesso' };\nreturn msg;",
+        "outputs": 1,
+        "x": 990,
+        "y": 1080,
+        "wires": [
+            [
+                "validar-confirmar-http"
+            ]
+        ]
+    },
+    {
+        "id": "validar-confirmar-http",
+        "type": "http response",
+        "z": "0cf7741318acbd08",
+        "name": "Response",
+        "x": 1190,
+        "y": 1080,
+        "wires": []
+    },
+    {
+        "id": "00bf9ff0e6fabce5",
+        "type": "global-config",
+        "env": [],
+        "modules": {
+            "node-red-node-serialport": "2.0.3",
+            "node-red-node-mysql": "3.0.0"
+        }
+    }
+]
