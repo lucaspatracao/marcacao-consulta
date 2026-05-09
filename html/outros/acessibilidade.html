@@ -103,62 +103,7 @@
         <a href="acessibilidade.html" class="fab-fixo fab-fixo--a11y" aria-current="page"><i class="fas fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span></a>
     </nav>
 
-    <script>
-        (function () {
-            function pct(scale) {
-                return Math.round(scale * 100) + '%';
-            }
-            function sync() {
-                var s = window.vitacareA11y.getFontScale();
-                document.getElementById('a11yTextoStatus').textContent = 'Tamanho atual: ' + pct(s);
-                var c = localStorage.getItem('vitacare-contrast') === '1';
-                var u = localStorage.getItem('vitacare-underline') === '1';
-                var m = localStorage.getItem('vitacare-reduce-motion') === '1';
-                var bc = document.getElementById('a11yContraste');
-                bc.setAttribute('aria-pressed', c ? 'true' : 'false');
-                bc.textContent = c ? 'Desativar alto contraste' : 'Ativar alto contraste';
-                bc.classList.toggle('a11y-botao--ativo', c);
-                var bu = document.getElementById('a11ySublinhar');
-                bu.setAttribute('aria-pressed', u ? 'true' : 'false');
-                bu.textContent = u ? 'Remover sublinhado dos links' : 'Sublinhar links';
-                bu.classList.toggle('a11y-botao--ativo', u);
-                var bm = document.getElementById('a11yMovimento');
-                bm.setAttribute('aria-pressed', m ? 'true' : 'false');
-                bm.textContent = m ? 'Permitir animações' : 'Reduzir movimento';
-                bm.classList.toggle('a11y-botao--ativo', m);
-            }
-            document.getElementById('a11yMenor').addEventListener('click', function () {
-                window.vitacareA11y.stepFont(-1);
-                sync();
-            });
-            document.getElementById('a11yMaior').addEventListener('click', function () {
-                window.vitacareA11y.stepFont(1);
-                sync();
-            });
-            document.getElementById('a11yTextoPadrao').addEventListener('click', function () {
-                localStorage.removeItem('vitacare-font-scale');
-                window.vitacareA11y.refresh();
-                sync();
-            });
-            document.getElementById('a11yContraste').addEventListener('click', function () {
-                window.vitacareA11y.toggleContrast();
-                sync();
-            });
-            document.getElementById('a11ySublinhar').addEventListener('click', function () {
-                window.vitacareA11y.toggleUnderline();
-                sync();
-            });
-            document.getElementById('a11yMovimento').addEventListener('click', function () {
-                window.vitacareA11y.toggleReduceMotion();
-                sync();
-            });
-            document.getElementById('a11yReset').addEventListener('click', function () {
-                window.vitacareA11y.reset();
-                sync();
-            });
-            sync();
-        })();
-    </script>
+    <script src="../../js/vitacare-acessibilidade.js" defer></script>
 </body>
 
 </html>

@@ -1,0 +1,1 @@
+console.log('Painel do paciente carregado.');
