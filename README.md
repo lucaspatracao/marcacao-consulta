@@ -18,13 +18,13 @@
 [![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
 [![Node‑RED](https://img.shields.io/badge/Node‑RED-8F0000?logo=nodered&logoColor=white)](https://nodered.org/)
 [![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
-[![Figma](https://img.shields.io/badge/Figma-FF4785?logo=figma&logoColor=white)](https://www.figma.com/design/nrJQBDVF8kQHMbw780XqR3/Projetos---Marca%C3%A7%C3%A3o-de-Consultas--Prot%C3%B3tipo-)
+[![Figma](https://img.shields.io/badge/Figma-FF4785?logo=figma&logoColor=white)](https://www.figma.com/)
 
 ---
 
 ## 🔗 Links Úteis
 
-[![Google Drive](https://img.shields.io/badge/Google%20Drive-Documentação-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1D_quSWgk3pWBXbv5N-NpaJ0JHVbaDDTe?usp=drive_link)
+[![Google Drive](https://img.shields.io/badge/Google%20Drive-Documentação-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1D_quSWgk3pWBXbv5N-NpaJ0JHVbaDDTe?usp=drive_link) [![Figma](https://img.shields.io/badge/Figma-Protótipo-FF4785?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/design/nrJQBDVF8kQHMbw780XqR3/Projetos---Marca%C3%A7%C3%A3o-de-Consultas--Prot%C3%B3tipo-?node-id=0-1&t=aZjA2XkYp24a31is-1)
 
 ---
 
