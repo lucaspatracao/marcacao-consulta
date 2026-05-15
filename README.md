@@ -11,163 +11,212 @@
   >
 </div>
 
-# VitaCare - Sistema de Marcação de Consultas Acessível
+# VitaCare – Sistema de Marcação de Consultas Acessível
 
-## 🎨 Figma - Protótipo do Projeto
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/HTML)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)](https://developer.mozilla.org/pt-BR/docs/Web/CSS)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](https://developer.mozilla.org/pt-BR/docs/Web/JavaScript)
+[![Node‑RED](https://img.shields.io/badge/Node‑RED-8F0000?logo=nodered&logoColor=white)](https://nodered.org/)
+[![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white)](https://www.mysql.com/)
+[![Figma](https://img.shields.io/badge/Figma-FF4785?logo=figma&logoColor=white)](https://www.figma.com/design/nrJQBDVF8kQHMbw780XqR3/Projetos---Marca%C3%A7%C3%A3o-de-Consultas--Prot%C3%B3tipo-)
 
-[![Figma](https://img.shields.io/badge/Figma-Protótipo-FF4785?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/design/nrJQBDVF8kQHMbw780XqR3/Projetos---Marca%C3%A7%C3%A3o-de-Consultas--Prot%C3%B3tipo-?node-id=0-1&t=aZjA2XkYp24a31is-1)
+---
 
-## 📁 Drive - Documentação
+## 🔗 Links Úteis
 
 [![Google Drive](https://img.shields.io/badge/Google%20Drive-Documentação-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1D_quSWgk3pWBXbv5N-NpaJ0JHVbaDDTe?usp=drive_link)
 
 ---
 
-## 1. Resumo
+## 🌐 Visão Geral
 
-O presente projeto visa desenvolver um sistema digital de agendamento de consultas médicas que atenda às necessidades de pacientes, médicos, funcionários administrativos e administradores, com foco em acessibilidade, redução de absenteísmo e eficiência operacional. A solução foi concebida para respeitar as restrições do contratante (SagaSENAI), incluindo baixo custo, funcionamento offline, compatibilidade com sistemas legados e não exclusão digital.
+O **VitaCare** é um sistema digital de agendamento de consultas médicas desenvolvido para atender pacientes, médicos, funcionários administrativos e administradores. Seu principal diferencial é unir **acessibilidade**, **redução de absenteísmo** e **eficiência operacional**, respeitando restrições como baixo custo, funcionamento offline e não exclusão digital.
 
----
-
-## 2. Contexto e Problema
-
-Atualmente, o agendamento de consultas é realizado de forma híbrida (presencial, telefone, WhatsApp, e-mail), com etapas manuais, planilhas desconectadas e alta dependência de comunicação informal. Isso gera:
-
-- Longos tempos de espera entre solicitação e confirmação.
-- Falta de padronização entre canais.
-- Dificuldade de acesso para idosos e pessoas com baixa familiaridade digital.
-- Alta taxa de absenteísmo (pacientes não comparecem).
-- Sobrecarga da equipe administrativa.
-- Ausência de histórico centralizado do paciente.
+A solução foi concebida no âmbito do desafio **SagaSENAI** e conta com uma arquitetura completa: **front-end responsivo** (HTML, CSS, JS), **back-end em Node‑RED** com API REST, e **banco de dados MySQL** para persistência. O sistema também oferece um **protótio no Figma** e documentação completa no Google Drive.
 
 ---
 
-## 3. Objetivos do Projeto
+## ⚙️ Como Funciona
 
-### 3.1 Objetivos Estratégicos (alinhados ao SagaSENAI)
+O sistema opera em modo híbrido, permitindo agendamento online (pelo paciente) ou presencial/telefônico (por um funcionário). O fluxo principal é:
 
-- Reduzir o tempo médio entre a solicitação e a confirmação da consulta.
-- Melhorar a experiência do paciente com acesso facilitado e informações claras.
-- Garantir acessibilidade para idosos e pessoas com baixa escolaridade digital.
-- Diminuir o absenteísmo por meio de lembretes automáticos e confirmação ativa.
-- Centralizar histórico de consultas e disponibilidade médica.
-- Padronizar o processo de agendamento, eliminando retrabalho e falhas.
-- Otimizar o uso da equipe administrativa, reduzindo sobrecarga.
-- Garantir sustentabilidade (fim do uso de papéis e planilhas manuais).
+1. **Solicitação** – Paciente acessa o portal web ou contata a recepção.
+2. **Validação** – Dados cadastrais e elegibilidade são verificados (offline usa cópia local sincronizada futuramente).
+3. **Exibição de horários** – Mostra agenda médica conforme especialidade e data.
+4. **Seleção** – Escolha do horário pelo paciente ou atendente.
+5. **Confirmação** – Registro salvo localmente e, se online, enviado ao servidor. Comprovante gerado.
+6. **Lembretes automáticos** – Mensagens 48h e 2h antes da consulta (WhatsApp/SMS – integração futura).
+7. **Confirmação de presença** – Paciente responde SIM/NÃO. Se não confirmar até 24h antes, a vaga é liberada.
+8. **Pós-consulta** – Histórico atualizado com comparecimento/falta e anotações clínicas.
 
-### 3.2 Objetivos Específicos
+### Perfis de usuário
 
-- Desenvolver uma interface web responsiva e acessível (WCAG 2.1 nível AA).
-- Implementar modo offline para uso em áreas sem conectividade.
-- Permitir agendamento tanto pelo paciente (online) quanto por atendente (presencial/telefone).
-- Gerar lembretes automáticos via WhatsApp/SMS (integração com gateway de baixo custo).
-- Disponibilizar painel administrativo para gestão de usuários e permissões.
-
----
-
-## 4. Perfis de Usuário e Funcionalidades
-
-O sistema possui quatro tipos de usuário. O **ADMIN** é pré-cadastrado. Todos os demais são criados como **PACIENTE**; o ADMIN pode promovê-los a **FUNCIONÁRIO** ou **MÉDICO**.
-
-### 4.1 ADMIN (pré-definido)
-
-- Acesso total ao sistema.
-- Visualizar lista completa de usuários cadastrados.
-- Alterar tipo de usuário (Paciente ↔ Funcionário ↔ Médico).
-- Configurar parâmetros globais (horários padrão, especialidades, convênios).
-
-### 4.2 FUNCIONÁRIO (Recepcionista / RH)
-
-- Validar consultas solicitadas por pacientes.
-- Ver e definir o calendário/agenda do médico (disponibilidade).
-- Realizar agendamento offline (em nome do paciente, sem internet).
-- Gerenciar perfil próprio.
-- Visualizar histórico de consultas de pacientes (quando necessário para triagem).
-
-### 4.3 MÉDICO
-
-- Ver e definir seu próprio calendário/consultas.
-- Acessar histórico de consultas dos seus pacientes.
-- Registrar informações clínicas pós-consulta (se aplicável).
-- Gerenciar perfil próprio.
-
-### 4.4 PACIENTE
-
-- Solicitar agendamento de consultas online.
-- Consultar horários disponíveis em tempo real (quando online).
-- Visualizar histórico de suas próprias consultas.
-- Confirmar presença via link (WhatsApp/SMS).
-- Gerenciar perfil próprio.
-- Caso não tenha acesso digital, pode solicitar agendamento presencial ou telefônico a um funcionário.
+- **ADMIN** – Acesso total, gerencia usuários e parâmetros globais (pré-cadastrado: `admin@vitacare.local` / `VitaCare2026`).
+- **FUNCIONÁRIO** – Valida consultas, define agendas, faz agendamentos offline.
+- **MÉDICO** – Gerencia própria agenda, visualiza histórico e registra evoluções.
+- **PACIENTE** – Solicita consultas online, confirma presença, acompanha histórico.
 
 ---
 
-## 5. Funcionalidades Transversais (Inteligentes)
+## 📦 Funcionalidades Implementadas
 
-- **Lembretes automáticos:** envio de mensagem 48h e 2h antes da consulta.
-- **Confirmação ativa de presença:** paciente responde SIM/NÃO. Se não confirmar em até 24h antes, a vaga é liberada automaticamente.
-- **Liberação automática de vagas não confirmadas** para a lista de espera.
-- **Lista de espera inteligente:** notifica o próximo paciente da fila assim que uma vaga é liberada (por WhatsApp/SMS).
-- **Sincronização offline-first:** os dados locais são armazenados no navegador (IndexedDB) e sincronizados com o servidor quando a conexão é restabelecida.
+### Front-end (protótipo estático + integração com API)
+- [x] Tela de **Login** com validação via API (`/api/login`).
+- [x] Tela de **Cadastro** para novos pacientes (`/api/cadastro`).
+- [x] Tela de **Recuperação de senha** (simulada).
+- [x] **Agendamento de consultas** – busca de horários e criação via API.
+- [x] **Histórico de consultas** por paciente (`/api/historico/:id`).
+- [x] **Painel do Administrador** – listagem de usuários, alteração de perfil e parâmetros globais.
+- [x] **Painel do Funcionário** – validação de consultas pendentes, calendário, médicos.
+- [x] **Painel do Médico** – visualização da agenda e histórico dos pacientes.
+- [x] **Painel do Paciente** – agendamento, histórico e perfil.
+- [x] **Páginas de acessibilidade** – ajuste de tamanho de texto, alto contraste e tutorial.
 
----
+### Back-end (Node‑RED + MySQL)
+- [x] API REST completa:
+  - `POST /api/cadastro` – cria novo usuário (tipo paciente).
+  - `POST /api/login` – autentica e retorna perfil + token.
+  - `GET /api/horarios` – lista horários disponíveis com filtros.
+  - `POST /api/agendar` – agenda uma consulta e bloqueia o horário.
+  - `GET /api/historico/:paciente_id` – histórico de consultas do paciente.
+  - `GET /api/admin/usuarios` – lista todos os usuários (admin).
+  - `PUT /api/admin/usuarios/:id` – altera o tipo de usuário.
+  - `GET /api/admin/parametros` – retorna parâmetros do sistema.
+  - `POST /api/admin/parametros` – atualiza parâmetros.
+  - `GET /api/validar/pendentes` – lista solicitações aguardando validação.
+  - `POST /api/validar/confirmar` – confirma ou cancela uma consulta pendente.
+- [x] **Persistência MySQL** com tabelas: `usuarios`, `medicos`, `consultas`, `historico_medico`, `horarios_disponiveis`, `parametros_sistema`.
+- [x] **Dados iniciais** – admin padrão, médicos, horários de exemplo.
 
-## 6. Restrições Obrigatórias (Atendendo ao SagaSENAI)
-
-- **Baixo custo:** utilização de infraestrutura existente (computadores da recepção, servidor local ou cloud gratuita como Firebase, Supabase ou PouchDB). Software livre e código aberto priorizado.
-- **Baixa complexidade de uso:** interface com botões grandes, fontes legíveis (mínimo 16px), passo a passo guiado, ícones associados a textos. Testes de usabilidade com idosos e pessoas com baixa escolaridade.
-- **Não dependência total de internet:** o sistema deve funcionar completamente offline (modo local) e sincronizar quando a conexão retornar. A recepção deve poder agendar mesmo sem internet.
-- **Compatibilidade com sistemas legados:** prever importação/exportação de dados (CSV, JSON) para agendas médicas e cadastros de pacientes existentes. API REST leve para integração futura.
-- **Não exclusão digital:** manter canais presenciais e telefônicos como alternativas. O sistema permite que um atendente realize o agendamento em nome do paciente que não tem acesso digital.
-
----
-
-## 7. Fluxo Completo do Sistema (Modo Híbrido)
-
-1. **Solicitação:**  
-   - Paciente acessa o portal web (se tiver acesso) OU contata a recepção (presencial/telefone).
-2. **Validação dos dados:**  
-   - Sistema verifica dados cadastrais e elegibilidade (convênio). Em modo offline, usa cópia local sincronizada.
-3. **Exibição de horários disponíveis:**  
-   - Mostra agenda médica conforme especialidade e data. Offline: mostra última agenda sincronizada, com aviso de "dados podem não estar atualizados".
-4. **Seleção do horário:**  
-   - Paciente (ou atendente) escolhe data e horário.
-5. **Confirmação do agendamento:**  
-   - Registro salvo localmente e marcado para sincronização. Se online, enviado imediatamente ao servidor. Comprovante gerado (exibido na tela, enviado por e-mail/WhatsApp quando possível). Em modo offline, o comprovante pode ser impresso ou anotado manualmente.
-6. **Lembretes automáticos:**  
-   - 48h e 2h antes da consulta, sistema envia mensagem (WhatsApp/SMS) com link para confirmar presença.
-7. **Confirmação de presença:**  
-   - Paciente clica em "Confirmar" ou "Cancelar". Se não houver resposta até 24h antes, a vaga é liberada para a lista de espera.
-8. **Pós-consulta:**  
-   - Histórico atualizado com registro de comparecimento ou falta. Médico pode adicionar anotações clínicas.
+### Acessibilidade e UX
+- [x] Contraste mínimo 4.5:1, fonte `Inter` (16px base), suporte a teclado (Tab, Enter).
+- [x] Botões grandes (44x44px), labels ARIA, layout responsivo.
+- [x] Modo de alto contraste e ajuste de tamanho de texto (JavaScript).
+- [x] Tutorial interativo com carrossel CSS puro.
 
 ---
 
-## 8. Diretrizes de Design e Identidade Visual
+## 📁 Estrutura do Projeto
 
-### Cores principais (fornecidas pelo cliente)
-
-| Cor         | HEX       | Uso                                                                 |
-|-------------|-----------|---------------------------------------------------------------------|
-| Vermelho    | `#EE2A4F` | Ações destrutivas, cancelamento, exclusão                          |
-| Rosa        | `#FF689E` | Destaques, mensagens de sucesso                                    |
-| Azul        | `#449AFF` | Botões primários, links                                             |
-| Azul escuro | `#5F92F4` | Cabeçalhos, navegação principal                                     |
-| Marrom      | `#E45E4C` | Avisos, erros, campos obrigatórios                                 |
-
-### Acessibilidade
-
-- Contraste mínimo de 4.5:1 entre texto e fundo.
-- Fonte padrão sem serifa (Arial, Helvetica, sistema).
-- Tamanho mínimo de 16px em dispositivos móveis.
-- Suporte a leitores de tela (ARIA labels, roles, keyboard navigation).
-- Modo de alto contraste opcional.
-- Espaçamento clicável mínimo de 44x44px para botões em touch.
+```
+vitacare/
+├── index.html                     # Página inicial
+├── img/                           # Logotipos e ícones
+├── html/
+│   ├── login/                     # Login, cadastro, recuperação de senha
+│   ├── admin/                     # Painel do administrador
+│   ├── funcionario/               # Painel do funcionário
+│   ├── medico/                    # Painel do médico
+│   ├── paciente/                  # Painel do paciente
+│   └── outros/                    # Agendamento público, contato, tutorial, acessibilidade
+├── css/                           # Estilos globais e específicos por módulo
+├── js/                            # Scripts por página e API base (vitacare-api.js)
+├── fluxo-node-red.json            # Arquivo de configuração do Node‑RED (endpoints)
+└── banco-vitacare.sql             # Script de criação do banco de dados e dados iniciais
+```
 
 ---
 
-## 9. Conclusão
+## 🛠️ Tecnologias Utilizadas
 
-O **Sistema de Marcação de Consultas Acessível** atende integralmente aos requisitos do desafio SagaSENAI, combinando inovação digital com respeito às restrições de baixo custo, inclusão digital e resiliência offline. A solução proposta reduzirá significativamente o tempo de espera, o absenteísmo e a carga administrativa, proporcionando uma experiência mais humanizada e eficiente para todos os envolvidos.
+| Tecnologia       | Ícone                                                                 | Finalidade                                  |
+|------------------|-----------------------------------------------------------------------|---------------------------------------------|
+| HTML5            | ![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white) | Estrutura semântica das páginas             |
+| CSS3             | ![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white) | Estilização responsiva e acessível          |
+| JavaScript (ES6) | ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black) | Interatividade, chamadas `fetch` e WebSocket |
+| Node‑RED         | ![Node‑RED](https://img.shields.io/badge/Node‑RED-8F0000?logo=nodered&logoColor=white) | Backend, API REST e lógica de negócios      |
+| MySQL            | ![MySQL](https://img.shields.io/badge/MySQL-4479A1?logo=mysql&logoColor=white) | Persistência de dados                       |
+| Font Awesome     | ![Font Awesome](https://img.shields.io/badge/Font%20Awesome-528DD7?logo=fontawesome&logoColor=white) | Ícones vetoriais                            |
+| Google Fonts     | ![Google Fonts](https://img.shields.io/badge/Google%20Fonts-4285F4?logo=googlefonts&logoColor=white) | Fonte "Inter"                               |
+| Figma            | ![Figma](https://img.shields.io/badge/Figma-FF4785?logo=figma&logoColor=white) | Prototipação de interfaces                  |
+
+---
+
+## 🚀 Guia de Instalação e Execução
+
+O sistema é composto por três partes principais: **front-end** (arquivos estáticos), **back-end** (Node‑RED) e **banco de dados** (MySQL). Pode ser executado em um único computador ou em máquinas separadas.
+
+### Pré-requisitos
+
+- **Node.js** (versão 14 ou superior) e **npm**.
+- **Node‑RED** (instalado globalmente ou localmente).
+- **MySQL Server** (versão 5.7 ou 8.0).
+- Navegador web moderno (Chrome, Firefox, Edge).
+
+### 1. Clone o Repositório
+
+```bash
+git clone https://github.com/seu-usuario/vitacare.git
+cd vitacare
+```
+
+### 2. Configure o Banco de Dados MySQL
+
+- Acesse o MySQL (ex.: `mysql -u root -p`).
+- Execute o script de criação do banco e das tabelas:
+
+```sql
+SOURCE caminho/para/banco-vitacare.sql;
+```
+
+Ou copie o conteúdo do arquivo `banco-vitacare.sql` e cole no cliente MySQL.
+
+- Verifique se o banco `vitacare` foi criado e as tabelas estão populadas com dados iniciais (admin, médicos, parâmetros).
+
+### 3. Importe e Configure o Node‑RED
+
+- Inicie o Node‑RED:
+
+```bash
+node-red
+```
+
+- Acesse o editor: `http://localhost:1880`.
+- Instale os nós complementares (se ainda não tiver):
+  - `node-red-node-mysql`
+  - (Opcional) `node-red-contrib-bcrypt` – para hashing de senhas. Caso não instale, substitua `bcrypt` no código por uma função de comparação simples (apenas para testes).
+- No menu, clique em **Importar** e cole o conteúdo do arquivo `fluxo-node-red.json` (disponível no repositório).
+- Configure a conexão com o MySQL:
+  - Localize o nó `MySQLdatabase` com nome `vitacare`.
+  - Ajuste os parâmetros (host, porta, usuário, senha) conforme sua instalação.
+- **Ajuste a porta de escuta**:
+  - Por padrão, o Node‑RED usa a porta 1880. O front-end espera a API na mesma origem (porta 1880). Se mudar, atualize a variável `API_BASE` no arquivo `js/vitacare-api.js`.
+- Clique em **Deploy** (canto superior direito).
+
+> **Importante:** Para que as senhas sejam validadas corretamente, o nó `bcrypt` deve estar disponível. No código do fluxo, a função `Processar Cadastro` e `Verificar Senha` utilizam `bcrypt`. Você pode instalar o pacote `bcryptjs` globalmente no Node‑RED ou substituir por uma comparação simples em ambiente de demonstração.
+
+### 4. Execute o Front-end
+
+Como o front-end é estático, você pode abrir o arquivo `index.html` diretamente no navegador ou usar um servidor local:
+
+```bash
+# Usando Python 3
+python -m http.server 8000
+
+# Ou com extensão Live Server do VS Code
+```
+
+Acesse `http://localhost:8000` (ou a porta escolhida).
+
+### 5. Teste o Sistema
+
+- **Acesse o login**: `admin@vitacare.local` / `VitaCare2026`. Após o login, você será redirecionado para o painel do administrador.
+- **Cadastre um novo paciente**: use o formulário de cadastro. Após cadastrar, faça login com o novo e-mail/senha para acessar o painel do paciente.
+- **Agende uma consulta**: no painel do paciente ou na página pública de agendamento, busque horários e confirme.
+- **Administrador**: na listagem de usuários, altere o tipo de um usuário para `funcionario` ou `medico` e veja os respectivos painéis.
+
+---
+
+## 👥 Equipe
+
+| Membro | Redes Sociais |
+|:------:|:-------------:|
+| **Lucas Patracão** | [![Instagram](https://img.shields.io/badge/Instagram-@lnpatracao-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/lnpatracao) |
+| **Nykolas Isler** | [![Instagram](https://img.shields.io/badge/Instagram-@maricosta-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/nykolasgi) |
+| **Otávio Garcia** | [![Instagram](https://img.shields.io/badge/Instagram-@maricosta-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/tavio.ftw) |
+| **Rafael Rubiá** | [![Instagram](https://img.shields.io/badge/Instagram-@rafaoliveira-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/rafa_rubia7) |
+| **Samuel Santana** | [![Instagram](https://img.shields.io/badge/Instagram-@camilarocha-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/_samusantana_) |
+
+**Equipe VitaCare – Projeto Integrador SENAI © 2026**
 
 ---
