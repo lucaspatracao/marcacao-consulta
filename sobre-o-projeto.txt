@@ -15,9 +15,8 @@ Google Drive (Documentação): https://drive.google.com/drive/folders/1D_quSWgk3
 1. RESUMO EXECUTIVO
 -------------------------------------------------------------------------------
 O presente projeto visa desenvolver um sistema digital de agendamento de consultas
-médicas que atenda às necessidades de pacientes, médicos, funcionários administrativos
-e administradores, com foco em acessibilidade, redução de absenteísmo e eficiência
-operacional. A solução foi concebida para respeitar as restrições do contratante
+médicas que atenda às necessidades de pacientes, médicos e funcionários, com foco em
+acessibilidade, redução de absenteísmo e eficiência operacional. A solução foi concebida para respeitar as restrições do contratante
 (SagaSENAI), incluindo baixo custo, funcionamento offline, compatibilidade com
 sistemas legados e não exclusão digital.
 
@@ -52,34 +51,30 @@ dependência de comunicação informal. Isso gera:
 - Implementar modo offline para uso em áreas sem conectividade.
 - Permitir agendamento tanto pelo paciente (online) quanto por atendente (presencial/telefone).
 - Gerar lembretes automáticos via WhatsApp/SMS (integração com gateway de baixo custo).
-- Disponibilizar painel administrativo para gestão de usuários e permissões.
+- Disponibilizar painel do funcionário para gestão de agendas, cadastros e permissões operacionais.
 
 -------------------------------------------------------------------------------
 4. PERFIS DE USUÁRIO E FUNCIONALIDADES
 -------------------------------------------------------------------------------
-O sistema possui quatro tipos de usuário. O ADMIN é pré-cadastrado. Todos os demais
-são criados como PACIENTE; o ADMIN pode promovê-los a FUNCIONÁRIO ou MÉDICO.
+O sistema possui três tipos de usuário: FUNCIONÁRIO, MÉDICO e PACIENTE. A conta de
+MÉDICO é criada por um FUNCIONÁRIO, enquanto o PACIENTE pode se cadastrar ou ser
+autenticado conforme o fluxo definido pelo projeto.
 
-4.1 ADMIN (pré-definido)
-- Acesso total ao sistema.
-- Visualizar lista completa de usuários cadastrados.
-- Alterar tipo de usuário (Paciente ↔ Funcionário ↔ Médico).
-- Configurar parâmetros globais (horários padrão, especialidades, convênios).
-
-4.2 FUNCIONÁRIO (Recepcionista / RH)
+4.1 FUNCIONÁRIO (Recepcionista / RH)
 - Validar consultas solicitadas por pacientes.
+- Cadastrar a conta de médico.
 - Ver e definir o calendário/agenda do médico (disponibilidade).
 - Realizar agendamento offline (em nome do paciente, sem internet).
 - Gerenciar perfil próprio.
 - Visualizar histórico de consultas de pacientes (quando necessário para triagem).
 
-4.3 MÉDICO
+4.2 MÉDICO
 - Ver e definir seu próprio calendário/consultas.
 - Acessar histórico de consultas dos seus pacientes.
 - Registrar informações clínicas pós-consulta (se aplicável).
 - Gerenciar perfil próprio.
 
-4.4 PACIENTE
+4.3 PACIENTE
 - Solicitar agendamento de consultas online.
 - Consultar horários disponíveis em tempo real (quando online).
 - Visualizar histórico de suas próprias consultas.
@@ -182,16 +177,16 @@ O protótipo estático segue o fluxo híbrido da seção 7, com caminhos organiz
 perfil e funcionalidade. Abaixo a lista completa de arquivos HTML com seus respectivos
 caminhos (a partir da raiz do projeto). Os arquivos CSS correspondentes estão na
 mesma estrutura de pastas, com o mesmo nome base (ex.: `login.css` para `login.html`,
-`inicio-admin.css` para `inicio-admin.html`, etc.).
+`inicio-funcionario.css` para `inicio-funcionario.html`, etc.).
 
 **PÁGINA INICIAL**
 - `index.html` — Boas‑vindas, acesso à área de login e agendamento público.
 
 **ÁREA DE ACESSO (login e cadastro)**
-- `html/login/escolha-login.html` — Tela de escolha do perfil (paciente / administração).
-- `html/login/login.html` — Login único (e‑mail/senha). Admin demonstração: `admin@vitacare.local` / `VitaCare2026`.
+- `html/login/escolha-login.html` — Tela de escolha do perfil (paciente / funcionário).
+- `html/login/login.html` — Login único (e‑mail/senha).
 - `html/login/login-paciente.html` — Login específico para pacientes.
-- `html/login/login-funcionario.html` — Login específico para funcionários/administradores.
+- `html/login/login-funcionario.html` — Login específico para funcionários.
 - `html/login/esqueci-senha.html` — Recuperação de senha.
 - `html/login/tela-cadastro.html` — Cadastro público (cria perfil PACIENTE).
 
@@ -203,10 +198,6 @@ mesma estrutura de pastas, com o mesmo nome base (ex.: `login.css` para `login.h
 - `html/outros/tutorial.html` — Carrossel com passo a passo de uso do sistema.
 - `html/outros/acessibilidade.html` — Ferramentas de ajuste (tamanho do texto, alto contraste, etc.).
 
-**PAINEL DO ADMINISTRADOR**
-- `html/admin/inicio-admin.html` — Dashboard com atalhos para usuários e parâmetros.
-- `html/admin/usuarios.html` — Lista de usuários e alteração de tipo (paciente/funcionário/médico).
-- `html/admin/parametros.html` — Configuração de horários padrão, especialidades, convênios.
 
 **PAINEL DO FUNCIONÁRIO**
 - `html/funcionario/inicio-funcionario.html` — Dashboard com atalhos para pacientes, calendário, validação, médicos e perfil.
@@ -228,7 +219,7 @@ mesma estrutura de pastas, com o mesmo nome base (ex.: `login.css` para `login.h
 - `html/paciente/perfil-paciente.html` — Dados cadastrais e preferências de contato.
 
 **OBSERVAÇÃO SOBRE CSS**  
-Cada arquivo HTML possui um ou mais CSS específicos na mesma estrutura de pastas, espelhando o nome do arquivo (ex.: `login.css` para `login.html`, `inicio-admin.css` para `inicio-admin.html`). O CSS global `estilo.css` está na raiz da pasta `css/` e é comum a todas as páginas.
+Cada arquivo HTML possui um ou mais CSS específicos na mesma estrutura de pastas, espelhando o nome do arquivo (ex.: `login.css` para `login.html`, `inicio-funcionario.css` para `inicio-funcionario.html`). O CSS global `estilo.css` está na raiz da pasta `css/` e é comum a todas as páginas.
 
 -------------------------------------------------------------------------------
 11. STATUS DO PROTÓTIPO (SOMENTE HTML/CSS — MAIO/2026)
