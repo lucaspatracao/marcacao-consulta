@@ -30,7 +30,7 @@
 
 ## O que é o VitaCare?
 
-O **VitaCare** é um sistema digital de agendamento de consultas médicas focado em **acessibilidade**, **redução de absenteísmo** e **eficiência operacional**. Ele atende pacientes, médicos, recepcionistas e administradores, respeitando requisitos como baixo custo, funcionamento offline e inclusão digital.
+O **VitaCare** é um sistema digital de agendamento de consultas médicas focado em **acessibilidade**, **redução de absenteísmo** e **eficiência operacional**. Ele atende pacientes, médicos e funcionários, respeitando requisitos como baixo custo, funcionamento offline e inclusão digital.
 
 ### Como Funciona
 
@@ -41,8 +41,7 @@ O paciente pode agendar online ou presencialmente com um funcionário. O sistema
 - Libera vagas não confirmadas para uma lista de espera inteligente.
 
 **Perfis:**
-- **ADMIN** – gerencia usuários e parâmetros globais.
-- **FUNCIONÁRIO** – valida consultas, define agendas, faz agendamento offline.
+- **FUNCIONÁRIO** – valida consultas, define agendas, cadastra médicos e faz agendamento offline.
 - **MÉDICO** – visualiza própria agenda e histórico dos pacientes.
 - **PACIENTE** – agenda consultas, confirma presença, acompanha histórico.
 
@@ -71,7 +70,7 @@ cd vitacare
   SOURCE caminho/para/banco-vitacare.sql;
   ```
   
-- Verifique se o banco `vitacare` foi criado e possui dados iniciais (admin, médicos, etc.).
+- Verifique se o banco `vitacare` foi criado e possui dados iniciais (médicos, funcionários, etc.).
 
 ### 3. Importe o fluxo no Node‑RED
 - Inicie o Node‑RED: `node-red`
@@ -89,8 +88,7 @@ python -m http.server 8000   # ou use Live Server no VS Code
 ```
 
 ### 5. Teste o sistema
-- **Login administrador:** `admin@vitacare.local` / `VitaCare2026`
-- Cadastre um novo paciente, faça login e agende uma consulta.
+- Faça login como paciente ou funcionário, crie uma conta de médico pelo funcionário e agende uma consulta.
 
 ---
 
