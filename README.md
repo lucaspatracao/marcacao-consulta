@@ -24,7 +24,7 @@
 
 ## 📺 Vídeos do Projeto
 
-### 🎤 Vídeo de Apresentação (Pitch)
+### 🎤 Vídeo de Apresentação
 
 [![Google Drive](https://img.shields.io/badge/Google%20Drive-Assistir%20Vídeo-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1cUzozwtJV62PzHQF0LNh0gfgFX66lybV/view?usp=sharing)
 
