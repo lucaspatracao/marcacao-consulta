@@ -22,6 +22,30 @@
 
 ---
 
+## 📺 Vídeos do Projeto
+
+### 🎤 Vídeo de Apresentação
+
+[![Em breve](https://img.shields.io/badge/Status-Em%20breve-yellow?style=for-the-badge)]()
+
+> O vídeo de apresentação do projeto ainda está em produção e será disponibilizado em breve.
+
+### 🏆 Vídeo SAGA SENAI
+
+[![Google Drive](https://img.shields.io/badge/Google%20Drive-Assistir%20Vídeo-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1E8UK9EJz2VhyuVBx2nI893ryInZBxZkb/view?usp=sharing)
+
+> Apresentação oficial do VitaCare para a plataforma SAGA SENAI, demonstrando a solução desenvolvida para o desafio de marcação de consultas acessível.
+
+---
+
+## 📄 Relatório Técnico
+
+[![Google Docs](https://img.shields.io/badge/Google%20Docs-Relatório%20Técnico-4285F4?style=for-the-badge&logo=googledocs&logoColor=white)](https://docs.google.com/document/d/13S5zdEDWgDui4Qkc7WLS9qaFGwi1lus4DIwgJ_at0YQ/edit?usp=sharing)
+
+> Documentação completa do projeto, incluindo introdução, fundamentação teórica, desenvolvimento e conclusões.
+
+---
+
 ## Links Úteis
 
 [![Google Drive](https://img.shields.io/badge/Google%20Drive-Documentação-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/drive/folders/1D_quSWgk3pWBXbv5N-NpaJ0JHVbaDDTe?usp=drive_link) [![Figma](https://img.shields.io/badge/Figma-Protótipo-FF4785?style=for-the-badge&logo=figma&logoColor=white)](https://www.figma.com/design/nrJQBDVF8kQHMbw780XqR3/Projetos---Marca%C3%A7%C3%A3o-de-Consultas--Prot%C3%B3tipo-?node-id=0-1&t=aZjA2XkYp24a31is-1)
@@ -103,5 +127,3 @@ python -m http.server 8000   # ou use Live Server no VS Code
 | **Samuel Santana** | [![Instagram](https://img.shields.io/badge/Instagram-@_samusantana_-E4405F?style=flat-square&logo=instagram&logoColor=white)](https://www.instagram.com/_samusantana_) |
 
 **Equipe VitaCare – Projeto Integrador SENAI © 2026**
-
----
