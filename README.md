@@ -22,15 +22,15 @@
 
 ---
 
-## 📺 Vídeos do Projeto
+## Vídeos do Projeto
 
-### 🎤 Vídeo de Apresentação
+### Vídeo de Apresentação
 
 [![Google Drive](https://img.shields.io/badge/Google%20Drive-Assistir%20Vídeo-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1cUzozwtJV62PzHQF0LNh0gfgFX66lybV/view?usp=sharing)
 
 > Apresentação do VitaCare demonstrando a solução completa, seus diferenciais e o modelo de negócio.
 
-### 🏆 Vídeo SAGA SENAI
+### Vídeo SAGA SENAI
 
 [![Google Drive](https://img.shields.io/badge/Google%20Drive-Assistir%20Vídeo-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1BZwAtJNAiGsuAukpfJHJMCvUSam6oQAr/view?usp=sharing)
 
@@ -38,7 +38,7 @@
 
 ---
 
-## 📄 Relatório Técnico
+## Relatório Técnico
 
 [![Google Docs](https://img.shields.io/badge/Google%20Docs-Relatório%20Técnico-4285F4?style=for-the-badge&logo=googledocs&logoColor=white)](https://docs.google.com/document/d/13S5zdEDWgDui4Qkc7WLS9qaFGwi1lus4DIwgJ_at0YQ/edit?usp=sharing)
 
