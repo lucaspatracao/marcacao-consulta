@@ -24,15 +24,15 @@
 
 ## 📺 Vídeos do Projeto
 
-### 🎤 Vídeo de Apresentação
+### 🎤 Vídeo de Apresentação (Pitch)
 
-[![Em breve](https://img.shields.io/badge/Status-Em%20breve-yellow?style=for-the-badge)]()
+[![Google Drive](https://img.shields.io/badge/Google%20Drive-Assistir%20Vídeo-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1cUzozwtJV62PzHQF0LNh0gfgFX66lybV/view?usp=sharing)
 
-> O vídeo de apresentação do projeto ainda está em produção e será disponibilizado em breve.
+> Apresentação do VitaCare demonstrando a solução completa, seus diferenciais e o modelo de negócio.
 
 ### 🏆 Vídeo SAGA SENAI
 
-[![Google Drive](https://img.shields.io/badge/Google%20Drive-Assistir%20Vídeo-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1E8UK9EJz2VhyuVBx2nI893ryInZBxZkb/view?usp=sharing)
+[![Google Drive](https://img.shields.io/badge/Google%20Drive-Assistir%20Vídeo-4285F4?style=for-the-badge&logo=googledrive&logoColor=white)](https://drive.google.com/file/d/1BZwAtJNAiGsuAukpfJHJMCvUSam6oQAr/view?usp=sharing)
 
 > Apresentação oficial do VitaCare para a plataforma SAGA SENAI, demonstrando a solução desenvolvida para o desafio de marcação de consultas acessível.
 
