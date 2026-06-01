@@ -6,6 +6,25 @@
     color: var(--gray-900);
 }
 
-.calendario-aviso-offline {
-    margin-bottom: 1rem;
+.painel-bloco-cabecalho__sub {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.painel-calendario-layout {
+    display: grid;
+    grid-template-columns: minmax(260px, 320px) 1fr;
+    gap: 1.5rem;
+    align-items: start;
+}
+
+.painel-calendario-detalhe {
+    min-width: 0;
+}
+
+@media (max-width: 900px) {
+    .painel-calendario-layout {
+        grid-template-columns: 1fr;
+    }
 }

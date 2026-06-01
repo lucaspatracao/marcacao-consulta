@@ -4,11 +4,12 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>VitaCare | Recuperar senha</title>
+    <title>VitaCare | Alterar senha</title>
     <link rel="icon" type="image/png" href="../../img/projeto-logotipo.png">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/estilo.css">
+    <script src="../../js/vitacare-acessibilidade.js"></script>
     <link rel="stylesheet" href="../../css/login/esqueci-senha.css">
 </head>
 
@@ -32,17 +33,26 @@
 
     <main id="conteudo-principal">
         <section class="secao-recuperar-senha" aria-labelledby="titulo-esqueci">
-            <p class="titulo-pagina-login">Recuperar senha</p>
+            <p class="titulo-pagina-login">Alterar senha</p>
             <div class="cartao-recuperar">
                 <i class="fas fa-key cartao-recuperar__icone" aria-hidden="true"></i>
-                <h1 id="titulo-esqueci" class="apenas-leitor-tela">Esqueci a senha</h1>
-                <p class="cartao-recuperar__descricao">Informe seu e-mail para receber o link de recuperação.</p>
+                <h1 id="titulo-esqueci" class="apenas-leitor-tela">Alterar senha</h1>
+                <p class="cartao-recuperar__descricao">Informe o e-mail cadastrado e defina uma nova senha.</p>
+                <p id="mensagemAlterarSenha" class="cartao-recuperar__erro" role="alert" hidden></p>
                 <form id="formularioRecuperarSenha" action="#" method="post">
                     <div class="grupo-campo">
                         <label for="emailRecuperacao">E-mail</label>
                         <input type="email" id="emailRecuperacao" name="email" required placeholder="seuemail@exemplo.com" autocomplete="email">
                     </div>
-                    <button type="submit" class="botao-recuperar">Enviar link de recuperação</button>
+                    <div class="grupo-campo">
+                        <label for="novaSenhaRecuperacao">Nova senha</label>
+                        <input type="password" id="novaSenhaRecuperacao" name="senha" required minlength="6" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+                    </div>
+                    <div class="grupo-campo">
+                        <label for="confirmaSenhaRecuperacao">Confirmar nova senha</label>
+                        <input type="password" id="confirmaSenhaRecuperacao" name="confirmaSenha" required minlength="6" placeholder="Repita a nova senha" autocomplete="new-password">
+                    </div>
+                    <button type="submit" class="botao-recuperar">Alterar senha</button>
                 </form>
                 <p class="esqueci-acesso-login">
                     <a href="login.html">Ir para a tela de login</a>
@@ -57,28 +67,18 @@
                 <img src="../../img/projeto-logotipo.png" class="rodape-logotipo rodape-logotipo--compacto" alt="" width="120" height="36" decoding="async">
             </a>
             <nav class="rodape-simples__links" aria-label="Links do rodapé">
-                <a href="../outros/agendar.html">Agendar</a>
                 <a href="../outros/entre-contato.html">Contato</a>
             </nav>
             <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>
         </div>
     </footer>
 
-    <div id="modalConfirmacao" class="modal-fundo" role="dialog" aria-modal="true" aria-labelledby="titulo-modal-recuperacao">
-        <div class="modal-conteudo">
-            <h2 id="titulo-modal-recuperacao" class="modal-conteudo__titulo"><i class="fas fa-envelope" aria-hidden="true"></i> Solicitação enviada</h2>
-            <p id="textoModalRecuperacao">Um link de recuperação foi enviado para o e-mail informado.</p>
-            <div class="modal-acoes modal-acoes--centralizada">
-                <button type="button" class="modal-botao modal-botao--confirmar" id="botaoModalOk">Confirmar</button>
-            </div>
-        </div>
-    </div>
-
     <nav class="fab-fixo-dupla" aria-label="Ajuda e acessibilidade">
         <a href="../outros/tutorial.html" class="fab-fixo fab-fixo--tutorial"><i class="fas fa-book-open" aria-hidden="true"></i><span>Tutorial</span></a>
         <a href="../outros/acessibilidade.html" class="fab-fixo fab-fixo--a11y"><i class="fas fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span></a>
     </nav>
 
+    <script src="../../js/vitacare-api.js" defer></script>
     <script src="../../js/login/esqueci-senha.js" defer></script>
 </body>
 

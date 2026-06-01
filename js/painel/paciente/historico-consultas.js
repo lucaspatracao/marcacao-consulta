@@ -1,19 +1,23 @@
-// =========================================
-// Histórico do paciente – busca pelo ID
-// =========================================
-document.addEventListener('DOMContentLoaded', async () => {
-    const tabela = document.querySelector('.tabela-dados tbody');
-    const pacienteId = 1; // demonstrativo
-    const resp = await apiRequisicao(`/api/historico/${pacienteId}`);
-    if (resp.consultas) {
-        tabela.innerHTML = resp.consultas.map(c => `
-      <tr>
-        <td>${c.data}</td>
-        <td>${c.horario}</td>
-        <td>${c.especialidade}</td>
-        <td>${c.medico}</td>
-        <td><span class="etiqueta etiqueta--${c.status === 'confirmada' ? 'confirmada' : 'pendente'}">${c.status}</span></td>
-      </tr>
-    `).join('');
+document.addEventListener('DOMContentLoaded', async function () {
+    const usuario = VitaCareAPI.exigirLogin(['paciente']);
+    if (!usuario) return;
+
+    const corpoTabela = document.querySelector('table tbody');
+    if (!corpoTabela) return;
+
+    try {
+        const dados = await VitaCareAPI.fetch('/historico/' + usuario.id);
+        const consultas = dados.consultas || [];
+        if (!consultas.length) {
+            corpoTabela.innerHTML = '<tr><td colspan="5">Nenhuma consulta agendada ainda.</td></tr>';
+            return;
+        }
+        corpoTabela.innerHTML = consultas.map(function (c) {
+            const dataFmt = VitaCareAPI.formatarDataBR(c.data);
+            const st = String(c.status || '');
+            return '<tr><td>' + dataFmt + '</td><td>' + VitaCareAPI.esc(c.horario) + '</td><td>' + VitaCareAPI.esc(c.especialidade) + '</td><td>' + VitaCareAPI.esc(c.medico) + '</td><td><span class="' + VitaCareAPI.classeEtiquetaStatus(st) + '">' + VitaCareAPI.esc(st) + '</span></td></tr>';
+        }).join('');
+    } catch (erro) {
+        corpoTabela.innerHTML = '<tr><td colspan="5">' + (erro.dados?.error || erro.message) + '</td></tr>';
     }
 });

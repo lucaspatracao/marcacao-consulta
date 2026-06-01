@@ -11,6 +11,7 @@
 
     <!-- CSS da Tela -->
     <link rel="stylesheet" href="../../css/estilo.css">
+    <script src="../../js/vitacare-acessibilidade.js"></script>
     <link rel="stylesheet" href="../../css/login/login-paciente.css">
 </head>
 
@@ -24,7 +25,7 @@
             <nav class="nav-links">
                 <a href="..\..\index.html">Início</a>
                 <a href="../outros/agendar.html">Agendar</a>
-                <a href="../paciente/historico-consultas.html">Minhas Consultas</a>
+                <a href="login-paciente.html">Entrar</a>
                 <a href="escolha-login.html">Área do Admin</a>
                 <a href="../outros/entre-contato.html">Contato</a>
             </nav>
@@ -48,8 +49,8 @@
                         <input type="password" id="senha" name="senha" required placeholder="••••••••">
                     </div>
                     <div class="login-options">
-                        <a href="#">Cadastre-se</a>
-                        <a href="#">Esqueci a Senha</a>
+                        <a href="tela-cadastro.html">Cadastre-se</a>
+                        <a href="esqueci-senha.html">Esqueci a Senha</a>
                     </div>
                     <button type="submit" class="btn-login">ENTRAR</button>
                 </form>
@@ -110,7 +111,8 @@
         </div>
     </div>
 
-    <script src="../../js/login/login-paciente.js" defer></script>
+    <script src="../../js/vitacare-api.js" defer></script>
+    <script src="../../js/login/login.js" defer></script>
 </body>
 
 </html>

@@ -11,6 +11,7 @@
         href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;14..32,400;14..32,500;14..32,600;14..32,700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../../css/estilo.css">
+    <script src="../../js/vitacare-acessibilidade.js"></script>
 </head>
 
 <body class="pagina-com-mesh">
@@ -36,7 +37,11 @@
     <main id="conteudo-principal">
         <section id="fluxo-agendamento" class="secao-agendamento" aria-labelledby="titulo-agendamento">
             <div class="limite-conteudo">
-                <div class="secao-cabecalho">
+                <div class="secao-cabecalho secao-cabecalho--agendamento">
+                    <a href="../paciente/inicio-paciente.html" id="voltarPainelPaciente" class="agendamento-voltar" hidden>
+                        <span class="agendamento-voltar__icone" aria-hidden="true"><i class="fas fa-arrow-left"></i></span>
+                        <span class="agendamento-voltar__texto">Voltar ao painel</span>
+                    </a>
                     <h1 id="titulo-agendamento">Agendar consulta</h1>
                 </div>
                 <div class="agendamento-linhas">
@@ -47,38 +52,38 @@
                             <div class="grupo-campo">
                                 <label for="campoEspecialidade">Especialidade</label>
                                 <select id="campoEspecialidade" class="campo-entrada">
-                                    <option value="cardiologia">Cardiologia</option>
-                                    <option value="dermatologia">Dermatologia</option>
-                                    <option value="ortopedia">Ortopedia</option>
-                                    <option value="clinico">Clínico Geral</option>
-                                    <option value="pediatria">Pediatria</option>
+                                    <option value="">Todas</option>
+                                    <option value="Cardiologia">Cardiologia</option>
+                                    <option value="Dermatologia">Dermatologia</option>
+                                    <option value="Ortopedia">Ortopedia</option>
+                                    <option value="Clínico Geral">Clínico Geral</option>
+                                    <option value="Pediatria">Pediatria</option>
                                 </select>
                             </div>
                             <div class="grupo-campo">
                                 <label for="campoMedico">Profissional (opcional)</label>
                                 <select id="campoMedico" class="campo-entrada">
                                     <option value="">Qualquer profissional</option>
-                                    <option value="dra_ana">Dra. Ana Beatriz (Cardio)</option>
-                                    <option value="dr_carlos">Dr. Carlos Mendes (Ortopedia)</option>
-                                    <option value="dra_juliana">Dra. Juliana Souza (Dermato)</option>
-                                    <option value="dr_roberto">Dr. Roberto Alves (Clínico)</option>
                                 </select>
                             </div>
-                            <div class="grupo-campo">
-                                <label for="campoData">Data desejada</label>
-                                <input type="date" id="campoData" class="campo-entrada" value="2026-04-15">
-                            </div>
+                            <p id="agendaAvisoGeral" class="agendamento-aviso" hidden role="alert"></p>
+                            <p class="agendamento-info-lembrete"><i class="fas fa-info-circle" aria-hidden="true"></i> Escolha o dia no calendário ao lado. Os horários vêm dos médicos cadastrados no sistema.</p>
                             <button type="button" id="botaoBuscarHorarios"
-                                class="botao botao-secundario botao--largura-total">Buscar horários disponíveis <i
-                                    class="fas fa-search" aria-hidden="true"></i></button>
+                                class="botao botao-secundario botao--largura-total">Atualizar calendário <i
+                                    class="fas fa-sync-alt" aria-hidden="true"></i></button>
                         </div>
                     </div>
                     <div class="agendamento-vagas">
-                        <div class="cartao-vagas">
+                        <div class="cartao-vagas cartao-vagas--calendario">
                             <h2 class="cartao-formulario__titulo"><i class="fas fa-calendar-alt" aria-hidden="true"></i>
-                                Horários disponíveis</h2>
+                                Calendário de vagas</h2>
+                            <div id="calendarioAgenda" aria-live="polite"></div>
+                            <h3 class="agendamento-dia-selecionado__titulo" id="tituloDiaSelecionado">
+                                <i class="fas fa-clock" aria-hidden="true"></i> Selecione um dia no calendário
+                            </h3>
                             <div id="areaHorarios" class="grade-horarios" role="group"
-                                aria-label="Horários disponíveis">
+                                aria-label="Horários do dia selecionado">
+                                <p class="agendamento-sem-vagas">Carregando...</p>
                             </div>
                         </div>
                     </div>
@@ -123,6 +128,7 @@
     </nav>
     
     <script src="../../js/vitacare-api.js" defer></script>
+    <script src="../../js/outros/calendario-vitacare.js" defer></script>
     <script src="../../js/outros/agendar.js" defer></script>
 </body>
 

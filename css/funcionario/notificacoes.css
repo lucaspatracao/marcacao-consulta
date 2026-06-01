@@ -1,0 +1,101 @@
+.menu-badge-notificacao {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-width: 1.25rem;
+    height: 1.25rem;
+    padding: 0 0.35rem;
+    margin-left: 0.35rem;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #fff;
+    background: var(--primary-red, #ee2a4f);
+    border-radius: 999px;
+    vertical-align: middle;
+}
+
+.alerta-notificacoes-contato {
+    display: block;
+    padding: 0.85rem 1rem;
+    margin-bottom: 1.25rem;
+    background: #eff6ff;
+    border: 1px solid #bfdbfe;
+    border-radius: 0.75rem;
+    color: #1e40af;
+    font-size: 0.95rem;
+}
+
+.alerta-notificacoes-contato a {
+    font-weight: 600;
+    color: var(--primary-blue);
+}
+
+.notificacoes-acoes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+
+.notificacoes-lista {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.notificacao-cartao {
+    padding: 1rem 1.15rem;
+    border: 1px solid var(--gray-200);
+    border-radius: var(--radius-card);
+    background: #fff;
+}
+
+.notificacao-cartao--nova {
+    border-color: #93c5fd;
+    background: #f0f9ff;
+    box-shadow: 0 0 0 1px rgba(59, 130, 246, 0.15);
+}
+
+.notificacao-cartao__cabecalho {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+    margin-bottom: 0.35rem;
+}
+
+.notificacao-cartao__motivo {
+    font-weight: 600;
+    color: var(--gray-900);
+}
+
+.notificacao-cartao__badge {
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: #fff;
+    background: var(--primary-red);
+    padding: 0.15rem 0.5rem;
+    border-radius: 999px;
+}
+
+.notificacao-cartao__meta {
+    font-size: 0.88rem;
+    color: var(--gray-600);
+    margin: 0 0 0.5rem;
+}
+
+.notificacao-cartao__texto {
+    margin: 0 0 0.5rem;
+    line-height: 1.5;
+    white-space: pre-wrap;
+}
+
+.notificacao-cartao__data {
+    font-size: 0.8rem;
+    color: var(--gray-500);
+    margin: 0 0 0.75rem;
+}
+
+.notificacao-cartao__ler {
+    margin-top: 0.25rem;
+}

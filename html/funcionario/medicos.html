@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/estilo.css">
+    <script src="../../js/vitacare-acessibilidade.js"></script>
     <link rel="stylesheet" href="../../css/funcionario/inicio-funcionario.css">
     <link rel="stylesheet" href="../../css/funcionario/medicos.css">
 </head>
@@ -27,6 +28,7 @@
                     <li><a href="calendario.html"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Calendário</a></li>
                     <li><a href="validar.html"><i class="fas fa-check-circle" aria-hidden="true"></i> Validar</a></li>
                     <li class="menu-lateral__item--ativo"><a href="medicos.html"><i class="fas fa-user-md" aria-hidden="true"></i> Médicos</a></li>
+                    <li><a href="mensagens-contato.html"><i class="fas fa-envelope-open-text" aria-hidden="true"></i> Mensagens <span class="menu-badge-notificacao" hidden>0</span></a></li>
                     <li><a href="perfil.html"><i class="fas fa-user-circle" aria-hidden="true"></i> Perfil</a></li>
                 </ul>
                 <div class="menu-lateral-saida">
@@ -46,38 +48,14 @@
 
                 <div class="painel-bloco">
                     <div class="painel-bloco-cabecalho">
-                        <h3><i class="fas fa-stethoscope" aria-hidden="true"></i> Equipe médica</h3>
-                        <button type="button" class="botao-contorno"><i class="fas fa-plus" aria-hidden="true"></i> Incluir</button>
+                        <div>
+                            <h3><i class="fas fa-stethoscope" aria-hidden="true"></i> Equipe médica</h3>
+                            <p class="painel-bloco-cabecalho__sub" id="contadorMedicos">Carregando...</p>
+                        </div>
+                        <button type="button" id="botaoIncluirMedico" class="botao-contorno"><i class="fas fa-plus" aria-hidden="true"></i> Incluir</button>
                     </div>
-                    <div class="grade-medicos">
-                        <div class="cartao-medico">
-                            <div class="cartao-medico__icone"><i class="fas fa-user-md" aria-hidden="true"></i></div>
-                            <div class="cartao-medico__info">
-                                <h4>Dra. Ana Beatriz</h4>
-                                <p>Cardiologia · CRM 12345</p>
-                            </div>
-                        </div>
-                        <div class="cartao-medico">
-                            <div class="cartao-medico__icone"><i class="fas fa-user-md" aria-hidden="true"></i></div>
-                            <div class="cartao-medico__info">
-                                <h4>Dr. Carlos Mendes</h4>
-                                <p>Ortopedia · CRM 67890</p>
-                            </div>
-                        </div>
-                        <div class="cartao-medico">
-                            <div class="cartao-medico__icone"><i class="fas fa-user-md" aria-hidden="true"></i></div>
-                            <div class="cartao-medico__info">
-                                <h4>Dra. Juliana Souza</h4>
-                                <p>Dermatologia · CRM 54321</p>
-                            </div>
-                        </div>
-                        <div class="cartao-medico">
-                            <div class="cartao-medico__icone"><i class="fas fa-user-md" aria-hidden="true"></i></div>
-                            <div class="cartao-medico__info">
-                                <h4>Dr. Roberto Alves</h4>
-                                <p>Clínico geral · CRM 98765</p>
-                            </div>
-                        </div>
+                    <div class="grade-medicos" id="listaMedicos">
+                        <p class="agendamento-sem-vagas">Carregando médicos...</p>
                     </div>
                 </div>
             </div>
@@ -91,20 +69,61 @@
             </a>
             <nav class="rodape-simples__links" aria-label="Links do rodapé">
                 <a href="..\..\index.html">Início</a>
-                <a href="../outros/agendar.html">Agendar</a>
                 <a href="../outros/entre-contato.html">Contato</a>
             </nav>
             <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>
         </div>
     </footer>
 
+    <div id="modalIncluirMedico" class="modal-fundo" aria-hidden="true" role="dialog" aria-labelledby="tituloModalMedico">
+        <div class="modal-conteudo modal-conteudo--form">
+            <h3 id="tituloModalMedico">Incluir médico na equipe</h3>
+            <p class="modal-conteudo__dica">Cria login do tipo médico e exibe na lista. Defina uma <strong>senha inicial obrigatória</strong> para o primeiro acesso do profissional.</p>
+            <form id="formIncluirMedico">
+                <div class="grupo-campo">
+                    <label for="medicoNome">Nome completo</label>
+                    <input type="text" id="medicoNome" class="campo-entrada" required autocomplete="name">
+                </div>
+                <div class="grupo-campo">
+                    <label for="medicoEmail">E-mail</label>
+                    <input type="email" id="medicoEmail" class="campo-entrada" required placeholder="nome.sobrenome@vitacare.local" autocomplete="email">
+                </div>
+                <div class="grupo-campo">
+                    <label for="medicoCrm">CRM</label>
+                    <input type="text" id="medicoCrm" class="campo-entrada" required placeholder="Ex.: 12345-SP">
+                </div>
+                <div class="grupo-campo">
+                    <label for="medicoEspecialidade">Especialidade</label>
+                    <input type="text" id="medicoEspecialidade" class="campo-entrada" required list="listaEspecialidadesMedico" placeholder="Ex.: Cardiologia">
+                    <datalist id="listaEspecialidadesMedico">
+                        <option value="Cardiologia"></option>
+                        <option value="Dermatologia"></option>
+                        <option value="Ortopedia"></option>
+                        <option value="Clínico Geral"></option>
+                        <option value="Pediatria"></option>
+                    </datalist>
+                </div>
+                <div class="grupo-campo">
+                    <label for="medicoSenha">Senha inicial <span aria-hidden="true">*</span></label>
+                    <input type="password" id="medicoSenha" class="campo-entrada" required minlength="6" placeholder="Mínimo 6 caracteres" autocomplete="new-password">
+                </div>
+                <div class="modal-conteudo__acoes">
+                    <button type="button" id="cancelarModalMedico" class="botao-contorno">Cancelar</button>
+                    <button type="submit" id="salvarModalMedico" class="botao-contorno botao-contorno--preenchido">Salvar</button>
+                </div>
+            </form>
+            <button type="button" id="fecharModalMedico" class="modal-fechar" aria-label="Fechar"><i class="fas fa-times"></i></button>
+        </div>
+    </div>
+
     <nav class="fab-fixo-dupla" aria-label="Ajuda e acessibilidade">
         <a href="../outros/tutorial.html" class="fab-fixo fab-fixo--tutorial"><i class="fas fa-book-open" aria-hidden="true"></i><span>Tutorial</span></a>
         <a href="../outros/acessibilidade.html" class="fab-fixo fab-fixo--a11y"><i class="fas fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span></a>
     </nav>
     
-    <script src="../../js/painel/funcionario/medicos.js" defer></script>
+    <script src="../../js/vitacare-api.js" defer></script>
     <script src="../../js/painel/base.js" defer></script>
+    <script src="../../js/painel/funcionario/medicos.js" defer></script>
 </body>
 
 </html>

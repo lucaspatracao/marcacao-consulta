@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/estilo.css">
+    <script src="../../js/vitacare-acessibilidade.js"></script>
     <link rel="stylesheet" href="../../css/login/tela-cadastro.css">
 </head>
 
@@ -35,7 +36,8 @@
             <p class="titulo-pagina-login">Nova conta</p>
             <div class="cartao-cadastro">
                 <h1 id="titulo-cadastro" class="apenas-leitor-tela">Formulário de cadastro</h1>
-                <form id="formularioCadastro" action="#" method="post">
+                <form id="formularioCadastro" action="javascript:void(0)" method="get" novalidate>
+                    <p id="cadastroMensagemErro" role="alert" hidden style="color:#b91c1c;background:#fef2f2;border:1px solid #fecaca;padding:0.75rem 1rem;border-radius:0.5rem;margin-bottom:1rem;"></p>
                     <div class="grupo-campo">
                         <label for="nomeCadastro">Nome completo</label>
                         <input type="text" id="nomeCadastro" name="nome" required placeholder="Nome completo" autocomplete="name">
@@ -52,7 +54,39 @@
                         <label for="confirmaSenhaCadastro">Confirmar senha</label>
                         <input type="password" id="confirmaSenhaCadastro" name="confirmaSenha" required placeholder="Digite a senha novamente" autocomplete="new-password">
                     </div>
-
+                    <fieldset class="cadastro-tipo-conta grupo-campo">
+                        <legend class="cadastro-tipo-conta__legenda">Tipo de conta</legend>
+                        <p class="cadastro-tipo-conta__dica">Escolha como você usará o VitaCare nesta unidade.</p>
+                        <div class="cadastro-tipo-opcoes" role="radiogroup" aria-label="Tipo de conta">
+                            <label class="cadastro-tipo-card">
+                                <input type="radio" name="tipoContaCadastro" id="tipoPaciente" value="paciente" class="cadastro-tipo-card__input" required>
+                                <span class="cadastro-tipo-card__corpo">
+                                    <span class="cadastro-tipo-card__icone" aria-hidden="true"><i class="fas fa-user"></i></span>
+                                    <span class="cadastro-tipo-card__textos">
+                                        <span class="cadastro-tipo-card__titulo">Paciente</span>
+                                        <span class="cadastro-tipo-card__desc">Agendar e acompanhar consultas</span>
+                                    </span>
+                                </span>
+                            </label>
+                            <label class="cadastro-tipo-card">
+                                <input type="radio" name="tipoContaCadastro" id="tipoFuncionario" value="funcionario" class="cadastro-tipo-card__input">
+                                <span class="cadastro-tipo-card__corpo">
+                                    <span class="cadastro-tipo-card__icone cadastro-tipo-card__icone--func" aria-hidden="true"><i class="fas fa-id-badge"></i></span>
+                                    <span class="cadastro-tipo-card__textos">
+                                        <span class="cadastro-tipo-card__titulo">Funcionário</span>
+                                        <span class="cadastro-tipo-card__desc">Recepção e gestão da unidade</span>
+                                    </span>
+                                </span>
+                            </label>
+                        </div>
+                    </fieldset>
+                    <div id="camposFuncionarioCadastro" class="cadastro-campos-extra" hidden>
+                        <div class="grupo-campo">
+                            <label for="codigoFuncionarioCadastro">Código de autorização (funcionário)</label>
+                            <input type="password" id="codigoFuncionarioCadastro" name="codigo_funcionario" placeholder="Senha fornecida pela unidade" autocomplete="off" aria-describedby="ajudaCodigoFuncionario">
+                            <p id="ajudaCodigoFuncionario" class="cadastro-campo-ajuda">Somente quem possui o código da unidade pode criar conta de funcionário.</p>
+                        </div>
+                    </div>
                     <hr>
 
                     <p class="cadastro-secao-rotulo">Dados adicionais</p>
@@ -91,7 +125,6 @@
                 <img src="../../img/projeto-logotipo.png" class="rodape-logotipo rodape-logotipo--compacto" alt="" width="120" height="36" decoding="async">
             </a>
             <nav class="rodape-simples__links" aria-label="Links do rodapé">
-                <a href="../outros/agendar.html">Agendar</a>
                 <a href="../outros/entre-contato.html">Contato</a>
             </nav>
             <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>

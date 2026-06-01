@@ -865,6 +865,65 @@ body.pagina-com-mesh {
     margin-bottom: clamp(2rem, 4vw, 3rem);
 }
 
+.secao-cabecalho--agendamento {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.85rem;
+}
+
+.agendamento-voltar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.55rem;
+    padding: 0.55rem 1.2rem 0.55rem 0.65rem;
+    font-weight: 600;
+    font-size: 0.9rem;
+    line-height: 1.2;
+    color: var(--primary-darkblue);
+    background: #fff;
+    border: 1.5px solid rgba(68, 154, 255, 0.45);
+    border-radius: 2rem;
+    box-shadow: 0 2px 8px rgba(15, 23, 42, 0.06);
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease, transform 0.15s ease;
+}
+
+.agendamento-voltar__icone {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 1.65rem;
+    height: 1.65rem;
+    border-radius: 50%;
+    background: rgba(68, 154, 255, 0.12);
+    color: var(--primary-blue);
+    font-size: 0.72rem;
+    transition: background 0.2s ease, color 0.2s ease;
+}
+
+.agendamento-voltar:hover {
+    background: rgba(68, 154, 255, 0.08);
+    border-color: var(--primary-blue);
+    box-shadow: 0 4px 12px rgba(68, 154, 255, 0.15);
+    text-decoration: none;
+    transform: translateX(-2px);
+}
+
+.agendamento-voltar:hover .agendamento-voltar__icone {
+    background: var(--primary-blue);
+    color: #fff;
+}
+
+.agendamento-voltar:focus-visible {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 3px;
+}
+
+.secao-cabecalho--agendamento h1 {
+    margin: 0;
+}
+
 .agendamento-linhas {
     display: flex;
     flex-wrap: wrap;
@@ -931,6 +990,13 @@ body.pagina-com-mesh {
     color: var(--gray-800);
     font-size: 1rem;
     line-height: 1.5;
+    margin-bottom: 1rem;
+}
+
+.agendamento-aviso--erro {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
 }
 
 .grade-horarios {
@@ -958,6 +1024,178 @@ body.pagina-com-mesh {
     background-color: var(--primary-blue);
     color: white;
 }
+
+.botao-horario--selecionado {
+    background-color: var(--primary-blue);
+    color: white;
+}
+
+.botao-horario--indisponivel,
+.botao-horario:disabled {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+    cursor: not-allowed;
+    opacity: 0.85;
+}
+
+.botao-horario--indisponivel:hover,
+.botao-horario:disabled:hover {
+    background-color: #e5e7eb;
+    color: #9ca3af;
+}
+
+.agendamento-dia {
+    width: 100%;
+    margin-bottom: 1.25rem;
+}
+
+.agendamento-dia__titulo {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--gray-700);
+    margin: 0 0 0.5rem;
+}
+
+.cartao-vagas--calendario {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.agendamento-dia-selecionado__titulo {
+    font-size: 1rem;
+    font-weight: 600;
+    color: var(--gray-800);
+    margin: 0.5rem 0 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid var(--gray-200);
+}
+
+.calendario-vitacare__nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 0.75rem;
+}
+
+.calendario-vitacare__mes-titulo {
+    font-weight: 600;
+    font-size: 1.05rem;
+    color: var(--gray-900);
+}
+
+.calendario-vitacare__nav-btn {
+    width: 2.25rem;
+    height: 2.25rem;
+    border: 1px solid var(--gray-200);
+    border-radius: 50%;
+    background: #fff;
+    color: var(--gray-700);
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.calendario-vitacare__nav-btn:hover {
+    border-color: var(--primary-blue);
+    color: var(--primary-blue);
+}
+
+.calendario-vitacare__cabecalho,
+.calendario-vitacare__grade {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 4px;
+}
+
+.calendario-vitacare__dia-semana {
+    text-align: center;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--gray-500);
+    padding: 0.25rem 0;
+}
+
+.calendario-vitacare__celula--vazia {
+    min-height: 2.5rem;
+}
+
+.calendario-vitacare__dia {
+    min-height: 2.5rem;
+    border: 1px solid var(--gray-200);
+    border-radius: 0.65rem;
+    background: #fff;
+    font-weight: 500;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: 0.15s;
+    position: relative;
+    color: var(--gray-800);
+}
+
+.calendario-vitacare__dia:hover:not(:disabled) {
+    border-color: var(--primary-blue);
+    background: #eff6ff;
+}
+
+.calendario-vitacare__dia--selecionado {
+    background: var(--primary-blue);
+    border-color: var(--primary-blue);
+    color: #fff;
+}
+
+.calendario-vitacare__dia--passado {
+    opacity: 0.35;
+    cursor: not-allowed;
+}
+
+.calendario-vitacare__dia--livre::after,
+.calendario-vitacare__dia--parcial::after,
+.calendario-vitacare__dia--cheio::after {
+    content: '';
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+}
+
+.calendario-vitacare__dia--livre::after { background: #22c55e; }
+.calendario-vitacare__dia--parcial::after { background: #f59e0b; }
+.calendario-vitacare__dia--cheio::after { background: #ef4444; }
+
+.calendario-vitacare__dia--selecionado.calendario-vitacare__dia--livre::after,
+.calendario-vitacare__dia--selecionado.calendario-vitacare__dia--parcial::after,
+.calendario-vitacare__dia--selecionado.calendario-vitacare__dia--cheio::after {
+    background: #fff;
+}
+
+.calendario-vitacare__legenda {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.75rem 1.25rem;
+    font-size: 0.75rem;
+    color: var(--gray-600);
+    margin-top: 0.5rem;
+}
+
+.calendario-vitacare__legenda span {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.calendario-vitacare__ponto {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.calendario-vitacare__ponto--livre { background: #22c55e; }
+.calendario-vitacare__ponto--parcial { background: #f59e0b; }
+.calendario-vitacare__ponto--cheio { background: #ef4444; }
 
 .agendamento-sem-vagas {
     background: #fff0f0;
@@ -1336,6 +1574,77 @@ body.pagina-com-mesh {
     background: #3385e0;
 }
 
+/* Modal global de avisos (substitui alert do navegador) */
+.vitacare-modal-global .modal-conteudo--aviso {
+    max-width: 420px;
+    padding: 2rem 1.75rem 1.75rem;
+}
+
+.vitacare-modal-icone {
+    width: 3.5rem;
+    height: 3.5rem;
+    margin: 0 auto 1rem;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 1.65rem;
+}
+
+.vitacare-modal--sucesso .vitacare-modal-icone {
+    background: #ecfdf5;
+    color: #059669;
+}
+
+.vitacare-modal--erro .vitacare-modal-icone {
+    background: #fef2f2;
+    color: var(--primary-red);
+}
+
+.vitacare-modal--aviso .vitacare-modal-icone {
+    background: #fffbeb;
+    color: #d97706;
+}
+
+.vitacare-modal--info .vitacare-modal-icone {
+    background: #eff6ff;
+    color: var(--primary-blue);
+}
+
+.vitacare-modal--sucesso .modal-botao--confirmar {
+    background: #059669;
+}
+
+.vitacare-modal--sucesso .modal-botao--confirmar:hover {
+    background: #047857;
+}
+
+.vitacare-modal--erro .modal-botao--confirmar {
+    background: var(--primary-red);
+}
+
+.vitacare-modal--erro .modal-botao--confirmar:hover {
+    background: #c91f3f;
+}
+
+.vitacare-modal-global .modal-conteudo__titulo {
+    font-size: 1.35rem;
+    font-weight: 700;
+    color: var(--gray-900);
+    margin-bottom: 0.65rem;
+}
+
+.vitacare-modal-global .modal-conteudo p {
+    font-size: 0.98rem;
+    line-height: 1.5;
+    margin-bottom: 1.35rem;
+    white-space: pre-line;
+}
+
+body.vitacare-modal-aberto {
+    overflow: hidden;
+}
+
 /* RESPONSIVIDADE */
 @media (max-width: 960px) {
     h1 { font-size: 2.5rem; }
@@ -1384,7 +1693,7 @@ body.pagina-com-mesh {
     }
 }
 
-/* Escala de texto (acessibilidade) — controlada por js/vitacare-a11y.js */
+/* Escala de texto (acessibilidade) — controlada por js/vitacare-acessibilidade.js */
 html {
     font-size: calc(100% * var(--vitacare-font-scale, 1));
 }
@@ -1392,14 +1701,6 @@ html {
 html.vitacare-links-sublinhados a:not(.fab-fixo):not(.menu-lateral-botao-sair) {
     text-decoration: underline;
     text-underline-offset: 0.15em;
-}
-
-.vitacare-reduzir-movimento *,
-.vitacare-reduzir-movimento *::before,
-.vitacare-reduzir-movimento *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
 }
 
 html.vitacare-alto-contraste {
@@ -1474,6 +1775,43 @@ html.vitacare-alto-contraste .login-acessar-como__link {
     background: #334155 !important;
     border-color: #64748b !important;
     color: #f8fafc !important;
+}
+
+html.vitacare-alto-contraste .campo-entrada,
+html.vitacare-alto-contraste .a11y-botao,
+html.vitacare-alto-contraste .botao-horario,
+html.vitacare-alto-contraste .botao-contorno,
+html.vitacare-alto-contraste .botao-primario,
+html.vitacare-alto-contraste select {
+    background: #334155 !important;
+    border-color: #94a3b8 !important;
+    color: #f8fafc !important;
+}
+
+html.vitacare-alto-contraste .a11y-botao--primario,
+html.vitacare-alto-contraste .botao-primario {
+    background: var(--primary-blue) !important;
+    border-color: var(--primary-blue) !important;
+    color: #fff !important;
+}
+
+html.vitacare-alto-contraste .tabela-dados th,
+html.vitacare-alto-contraste .tabela-dados td {
+    border-color: #475569 !important;
+    color: #f1f5f9 !important;
+}
+
+html.vitacare-alto-contraste .tabela-dados thead {
+    background: #334155 !important;
+}
+
+html.vitacare-alto-contraste a {
+    color: #93c5fd !important;
+}
+
+html.vitacare-alto-contraste :focus-visible {
+    outline: 3px solid #fbbf24 !important;
+    outline-offset: 2px;
 }
 
 /* Botões fixos: tutorial e acessibilidade (coluna, direita, centro vertical; rodapé cobre ao rolar — z-index menor) */

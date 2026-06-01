@@ -1,1 +1,3 @@
-console.log('Painel do médico carregado.');
+document.addEventListener('DOMContentLoaded', function () {
+    VitaCareAPI.exigirLogin(['medico']);
+});

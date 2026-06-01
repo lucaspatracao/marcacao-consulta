@@ -10,6 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap"
         rel="stylesheet">
     <link rel="stylesheet" href="../../css/estilo.css">
+    <script src="../../js/vitacare-acessibilidade.js"></script>
     <link rel="stylesheet" href="../../css/outros/entre-contato.css">
 </head>
 
@@ -23,7 +24,8 @@
             </a>
             <nav class="cabecalho__acoes" aria-label="Navegação">
                 <a href="..\..\index.html">Início</a>
-                <a href="../login/login.html">Entrar</a>
+                <a id="contatoVoltarPainel" href="../funcionario/inicio-funcionario.html" hidden>Voltar ao painel</a>
+                <a href="../login/login.html" id="contatoLinkEntrar">Entrar</a>
                 <a href="#formulario-contato" class="cabecalho-botao-contato" aria-label="Ir ao formulário de contato">
                     <i class="fas fa-phone-alt" aria-hidden="true"></i>
                     <i class="fas fa-envelope" aria-hidden="true"></i>
@@ -44,6 +46,8 @@
                         <select id="tipoCaso" name="tipoCaso" class="contato-selecao" form="formularioContato" required>
                             <option value="">Selecione…</option>
                             <option value="duvidas">Dúvidas</option>
+                            <option value="suporte">Suporte interno (funcionário)</option>
+                            <option value="agendamento">Agendamentos e consultas</option>
                             <option value="erros">Erros no site</option>
                             <option value="sugestoes">Sugestões</option>
                         </select>
@@ -55,6 +59,7 @@
                 <div class="contato-coluna contato-coluna--formulario" id="formulario-contato">
                     <p class="contato-eyebrow">Fale com a equipe</p>
                     <h1 id="titulo-contato" class="contato-titulo-formulario">Mensagem</h1>
+                    <p id="contatoMensagemSucesso" class="contato-alerta contato-alerta--ok" role="status" hidden></p>
                     <form id="formularioContato" action="#" method="post">
                         <div class="grupo-campo">
                             <label for="nomeContato">Nome</label>
@@ -101,7 +106,6 @@
             </a>
             <nav class="rodape-simples__links" aria-label="Links do rodapé">
                 <a href="..\..\index.html">Início</a>
-                <a href="agendar.html">Agendar</a>
                 <a href="../login/login.html">Entrar</a>
                 <a href="entre-contato.html">Contato</a>
             </nav>

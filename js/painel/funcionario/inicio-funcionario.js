@@ -1,1 +1,3 @@
-console.log('Painel do funcionário carregado.');
+document.addEventListener('DOMContentLoaded', function () {
+    VitaCareAPI.exigirLogin(['funcionario', 'admin']);
+});

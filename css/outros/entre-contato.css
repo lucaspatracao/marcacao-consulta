@@ -1,5 +1,25 @@
 /* Página de contato — layout em duas colunas */
 
+.contato-alerta {
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    margin-bottom: 1rem;
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+.contato-alerta--erro {
+    background: #fef2f2;
+    border: 1px solid #fecaca;
+    color: #b91c1c;
+}
+
+.contato-alerta--ok {
+    background: #ecfdf5;
+    border: 1px solid #a7f3d0;
+    color: #047857;
+}
+
 .secao-contato {
     min-height: auto;
     flex: 1 0 auto;

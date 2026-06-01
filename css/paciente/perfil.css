@@ -14,3 +14,7 @@
 .perfil-paciente-form > .painel-secao-config__texto {
     margin-bottom: 1.25rem;
 }
+
+.perfil-paciente-form .botao-contorno {
+    margin-top: 0.5rem;
+}

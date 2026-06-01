@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/estilo.css">
+    <script src="../../js/vitacare-acessibilidade.js"></script>
     <link rel="stylesheet" href="../../css/funcionario/inicio-funcionario.css">
     <link rel="stylesheet" href="../../css/funcionario/validar.css">
 </head>
@@ -27,6 +28,7 @@
                     <li><a href="calendario.html"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Calendário</a></li>
                     <li class="menu-lateral__item--ativo"><a href="validar.html"><i class="fas fa-check-circle" aria-hidden="true"></i> Validar</a></li>
                     <li><a href="medicos.html"><i class="fas fa-user-md" aria-hidden="true"></i> Médicos</a></li>
+                    <li><a href="mensagens-contato.html"><i class="fas fa-envelope-open-text" aria-hidden="true"></i> Mensagens <span class="menu-badge-notificacao" hidden>0</span></a></li>
                     <li><a href="perfil.html"><i class="fas fa-user-circle" aria-hidden="true"></i> Perfil</a></li>
                 </ul>
                 <div class="menu-lateral-saida">
@@ -47,7 +49,7 @@
                 <div class="painel-bloco">
                     <div class="painel-bloco-cabecalho">
                         <h3>Solicitações pendentes</h3>
-                        <span class="etiqueta etiqueta--pendente">5 pendentes</span>
+                        <span id="contadorPendentes" class="etiqueta etiqueta--pendente">—</span>
                     </div>
                     <div class="tabela-envoltorio">
                         <table class="tabela-dados">
@@ -61,40 +63,8 @@
                                     <th>Ações</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Carlos Alberto</td>
-                                    <td>27/03/2026</td>
-                                    <td>10:00</td>
-                                    <td>Dra. Ana Beatriz</td>
-                                    <td><span class="etiqueta etiqueta--pendente">Pendente</span></td>
-                                    <td class="celula-acoes">
-                                        <button type="button" class="botao-acao botao-acao--confirmar" title="Validar"><i class="fas fa-check" aria-hidden="true"></i></button>
-                                        <button type="button" class="botao-acao botao-acao--recusar" title="Cancelar"><i class="fas fa-times" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Fernanda Lima</td>
-                                    <td>28/03/2026</td>
-                                    <td>15:30</td>
-                                    <td>Dr. Carlos Mendes</td>
-                                    <td><span class="etiqueta etiqueta--pendente">Pendente</span></td>
-                                    <td class="celula-acoes">
-                                        <button type="button" class="botao-acao botao-acao--confirmar" title="Validar"><i class="fas fa-check" aria-hidden="true"></i></button>
-                                        <button type="button" class="botao-acao botao-acao--recusar" title="Cancelar"><i class="fas fa-times" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Roberto Nunes</td>
-                                    <td>29/03/2026</td>
-                                    <td>09:00</td>
-                                    <td>Dra. Juliana Souza</td>
-                                    <td><span class="etiqueta etiqueta--pendente">Pendente</span></td>
-                                    <td class="celula-acoes">
-                                        <button type="button" class="botao-acao botao-acao--confirmar" title="Validar"><i class="fas fa-check" aria-hidden="true"></i></button>
-                                        <button type="button" class="botao-acao botao-acao--recusar" title="Cancelar"><i class="fas fa-times" aria-hidden="true"></i></button>
-                                    </td>
-                                </tr>
+                            <tbody id="corpoValidar">
+                                <tr><td colspan="6">Carregando solicitações...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -110,7 +80,6 @@
             </a>
             <nav class="rodape-simples__links" aria-label="Links do rodapé">
                 <a href="..\..\index.html">Início</a>
-                <a href="../outros/agendar.html">Agendar</a>
                 <a href="../outros/entre-contato.html">Contato</a>
             </nav>
             <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>
@@ -123,8 +92,8 @@
     </nav>
     
     <script src="../../js/vitacare-api.js" defer></script>
-    <script src="../../js/painel/funcionario/validar.js" defer></script>
     <script src="../../js/painel/base.js" defer></script>
+    <script src="../../js/painel/funcionario/validar.js" defer></script>
 </body>
 
 </html>

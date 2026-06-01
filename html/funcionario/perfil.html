@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/estilo.css">
+    <script src="../../js/vitacare-acessibilidade.js"></script>
     <link rel="stylesheet" href="../../css/funcionario/inicio-funcionario.css">
     <link rel="stylesheet" href="../../css/funcionario/perfil.css">
 </head>
@@ -27,6 +28,7 @@
                     <li><a href="calendario.html"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Calendário</a></li>
                     <li><a href="validar.html"><i class="fas fa-check-circle" aria-hidden="true"></i> Validar</a></li>
                     <li><a href="medicos.html"><i class="fas fa-user-md" aria-hidden="true"></i> Médicos</a></li>
+                    <li><a href="mensagens-contato.html"><i class="fas fa-envelope-open-text" aria-hidden="true"></i> Mensagens <span class="menu-badge-notificacao" hidden>0</span></a></li>
                     <li class="menu-lateral__item--ativo"><a href="perfil.html"><i class="fas fa-user-circle" aria-hidden="true"></i> Perfil</a></li>
                 </ul>
                 <div class="menu-lateral-saida">
@@ -48,16 +50,21 @@
                     <div class="painel-bloco-cabecalho">
                         <h3><i class="fas fa-cog" aria-hidden="true"></i> Dados e preferências</h3>
                     </div>
-                    <form action="#" method="post">
+                    <form id="formPerfilFuncionario" action="#" method="post">
                         <div class="grupo-campo">
                             <label for="nomePerfilFunc">Nome exibido</label>
-                            <input type="text" id="nomePerfilFunc" class="campo-entrada" name="nome" value="Recepção — Unidade Central" autocomplete="name">
+                            <input type="text" id="nomePerfilFunc" class="campo-entrada" name="nome" required autocomplete="name">
                         </div>
                         <div class="grupo-campo">
                             <label for="emailPerfilFunc">E-mail</label>
-                            <input type="email" id="emailPerfilFunc" class="campo-entrada" name="email" value="recepcao@vitacare.local" autocomplete="email">
+                            <input type="email" id="emailPerfilFunc" class="campo-entrada" name="email" autocomplete="email" readonly aria-readonly="true">
                         </div>
-                        <button type="button" class="botao-contorno">Salvar alterações</button>
+                        <div class="grupo-campo">
+                            <label for="telPerfilFunc">Telefone / WhatsApp</label>
+                            <input type="tel" id="telPerfilFunc" class="campo-entrada" name="telefone" placeholder="(11) 99999-9999" autocomplete="tel">
+                        </div>
+                        <p class="cadastro-campo-ajuda">Você pode alterar nome e telefone. Para mudar e-mail ou senha, use <a href="../login/esqueci-senha.html">recuperar senha</a> ou contate a unidade.</p>
+                        <button type="submit" id="botaoSalvarPerfilFunc" class="botao-contorno botao-contorno--preenchido">Salvar alterações</button>
                     </form>
                 </div>
             </div>
@@ -71,7 +78,6 @@
             </a>
             <nav class="rodape-simples__links" aria-label="Links do rodapé">
                 <a href="..\..\index.html">Início</a>
-                <a href="../outros/agendar.html">Agendar</a>
                 <a href="../outros/entre-contato.html">Contato</a>
             </nav>
             <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>
@@ -83,6 +89,7 @@
         <a href="../outros/acessibilidade.html" class="fab-fixo fab-fixo--a11y"><i class="fas fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span></a>
     </nav>
     
+    <script src="../../js/vitacare-api.js" defer></script>
     <script src="../../js/painel/funcionario/perfil.js" defer></script>
     <script src="../../js/painel/base.js" defer></script>
 </body>

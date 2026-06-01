@@ -303,3 +303,14 @@
     border: 1px solid var(--gray-300);
     border-radius: 0.3rem;
 }
+
+html.vitacare-alto-contraste .a11y-cartao kbd {
+    background: #334155;
+    border-color: #64748b;
+    color: #f8fafc;
+}
+
+.a11y-botao:disabled {
+    opacity: 0.45;
+    cursor: not-allowed;
+}

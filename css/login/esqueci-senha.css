@@ -39,6 +39,15 @@
     font-size: 0.95rem;
 }
 
+.cartao-recuperar__erro {
+    color: #b42318;
+    font-size: 0.9rem;
+    margin: 0 0 1rem;
+    padding: 0.65rem 0.85rem;
+    background: #fef3f2;
+    border-radius: 8px;
+}
+
 .cartao-recuperar__descricao {
     color: var(--gray-600);
     margin-bottom: 1.5rem;

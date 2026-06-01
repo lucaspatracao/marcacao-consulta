@@ -1,2 +1,3 @@
-// Nenhuma interação específica. Apenas carrega a base.
-console.log('Painel administrador carregado.');
+document.addEventListener('DOMContentLoaded', function () {
+    VitaCareAPI.exigirLogin(['admin']);
+});

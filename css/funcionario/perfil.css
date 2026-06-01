@@ -14,3 +14,7 @@
 .perfil-form-func > .painel-secao-config__texto {
     margin-bottom: 1.25rem;
 }
+
+.perfil-form-func .botao-contorno {
+    margin-top: 0.5rem;
+}

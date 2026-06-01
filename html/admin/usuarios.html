@@ -9,6 +9,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/estilo.css">
+    <script src="../../js/vitacare-acessibilidade.js"></script>
     <link rel="stylesheet" href="../../css/funcionario/inicio-funcionario.css">
     <link rel="stylesheet" href="../../css/admin/usuarios.css">
 </head>
@@ -55,46 +56,8 @@
                                     <th>Definir tipo</th>
                                 </tr>
                             </thead>
-                            <tbody>
-                                <tr>
-                                    <td>Maria Souza</td>
-                                    <td>maria@email.com</td>
-                                    <td><span class="etiqueta etiqueta--confirmada">Paciente</span></td>
-                                    <td>
-                                        <label class="apenas-leitor-tela" for="tipo1">Tipo de usuário</label>
-                                        <select id="tipo1" class="seletor-tipo-usuario" name="tipo-1" aria-label="Tipo para Maria Souza">
-                                            <option value="paciente" selected>Paciente</option>
-                                            <option value="funcionario">Funcionário</option>
-                                            <option value="medico">Médico</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>João Oliveira</td>
-                                    <td>joao@email.com</td>
-                                    <td><span class="etiqueta etiqueta--pendente">Funcionário</span></td>
-                                    <td>
-                                        <label class="apenas-leitor-tela" for="tipo2">Tipo de usuário</label>
-                                        <select id="tipo2" class="seletor-tipo-usuario" name="tipo-2" aria-label="Tipo para João Oliveira">
-                                            <option value="paciente">Paciente</option>
-                                            <option value="funcionario" selected>Funcionário</option>
-                                            <option value="medico">Médico</option>
-                                        </select>
-                                    </td>
-                                </tr>
-                                <tr>
-                                    <td>Dra. Ana Beatriz</td>
-                                    <td>ana.beatriz@vitacare.local</td>
-                                    <td><span class="etiqueta etiqueta--confirmada">Médico</span></td>
-                                    <td>
-                                        <label class="apenas-leitor-tela" for="tipo3">Tipo de usuário</label>
-                                        <select id="tipo3" class="seletor-tipo-usuario" name="tipo-3" aria-label="Tipo para Dra. Ana Beatriz">
-                                            <option value="paciente">Paciente</option>
-                                            <option value="funcionario">Funcionário</option>
-                                            <option value="medico" selected>Médico</option>
-                                        </select>
-                                    </td>
-                                </tr>
+                            <tbody id="corpoUsuarios">
+                                <tr><td colspan="4">Carregando usuários...</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -110,7 +73,6 @@
             </a>
             <nav class="rodape-simples__links" aria-label="Links do rodapé">
                 <a href="..\..\index.html">Início</a>
-                <a href="../outros/agendar.html">Agendar</a>
                 <a href="../outros/entre-contato.html">Contato</a>
             </nav>
             <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>

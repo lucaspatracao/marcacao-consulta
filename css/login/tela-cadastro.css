@@ -44,6 +44,142 @@
     margin-bottom: 1rem;
 }
 
+.cadastro-tipo-conta {
+    border: none;
+    margin: 0 0 1.25rem;
+    padding: 0;
+    min-width: 0;
+}
+
+.cadastro-tipo-conta__legenda {
+    display: block;
+    margin-bottom: 0.35rem;
+    font-weight: 600;
+    font-size: 1rem;
+    color: var(--gray-800);
+    padding: 0;
+}
+
+.cadastro-tipo-conta__dica {
+    font-size: 0.875rem;
+    color: var(--gray-500);
+    margin: 0 0 0.85rem;
+    line-height: 1.45;
+}
+
+.cadastro-tipo-opcoes {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.75rem;
+}
+
+.cadastro-tipo-card {
+    cursor: pointer;
+    margin: 0;
+}
+
+.cadastro-tipo-card__input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.cadastro-tipo-card__corpo {
+    display: flex;
+    align-items: flex-start;
+    gap: 0.65rem;
+    padding: 0.9rem 0.85rem;
+    border: 1.5px solid var(--gray-200);
+    border-radius: 1rem;
+    background: #fff;
+    box-shadow: 0 1px 3px rgba(15, 23, 42, 0.04);
+    transition: border-color 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    min-height: 100%;
+}
+
+.cadastro-tipo-card__icone {
+    flex-shrink: 0;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 2.25rem;
+    height: 2.25rem;
+    border-radius: 0.65rem;
+    background: rgba(68, 154, 255, 0.12);
+    color: var(--primary-blue);
+    font-size: 1rem;
+}
+
+.cadastro-tipo-card__icone--func {
+    background: rgba(16, 185, 129, 0.12);
+    color: #059669;
+}
+
+.cadastro-tipo-card__textos {
+    display: flex;
+    flex-direction: column;
+    gap: 0.15rem;
+    min-width: 0;
+}
+
+.cadastro-tipo-card__titulo {
+    font-weight: 600;
+    font-size: 0.95rem;
+    color: var(--gray-900);
+    line-height: 1.25;
+}
+
+.cadastro-tipo-card__desc {
+    font-size: 0.78rem;
+    color: var(--gray-500);
+    line-height: 1.35;
+}
+
+.cadastro-tipo-card:hover .cadastro-tipo-card__corpo {
+    border-color: rgba(68, 154, 255, 0.45);
+    box-shadow: 0 4px 12px rgba(68, 154, 255, 0.1);
+}
+
+.cadastro-tipo-card__input:focus-visible + .cadastro-tipo-card__corpo {
+    outline: 2px solid var(--primary-blue);
+    outline-offset: 2px;
+}
+
+.cadastro-tipo-card__input:checked + .cadastro-tipo-card__corpo {
+    border-color: var(--primary-blue);
+    background: rgba(68, 154, 255, 0.06);
+    box-shadow: 0 0 0 3px rgba(68, 154, 255, 0.15);
+}
+
+.cadastro-tipo-card__input:checked + .cadastro-tipo-card__corpo .cadastro-tipo-card__icone {
+    background: var(--primary-blue);
+    color: #fff;
+}
+
+.cadastro-tipo-card__input:checked + .cadastro-tipo-card__corpo .cadastro-tipo-card__icone--func {
+    background: #059669;
+    color: #fff;
+}
+
+.cadastro-campos-extra {
+    margin-bottom: 0.5rem;
+    padding: 0.85rem 0 0;
+    border-top: 1px dashed var(--gray-200);
+}
+
+.cadastro-campo-ajuda {
+    font-size: 0.85rem;
+    color: var(--gray-500);
+    margin: 0.35rem 0 0;
+    line-height: 1.4;
+}
+
 .cadastro-rodape {
     display: flex;
     flex-wrap: wrap;
@@ -150,6 +286,10 @@
 }
 
 @media (max-width: 520px) {
+    .cadastro-tipo-opcoes {
+        grid-template-columns: 1fr;
+    }
+
     .cadastro-rodape {
         flex-direction: column;
         align-items: stretch;

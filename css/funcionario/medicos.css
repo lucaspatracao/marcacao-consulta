@@ -5,3 +5,54 @@
     margin: 0 0 1rem;
     color: var(--gray-900);
 }
+
+.painel-bloco-cabecalho__sub {
+    margin: 0.25rem 0 0;
+    font-size: 0.875rem;
+    color: var(--gray-600);
+}
+
+.modal-conteudo--form {
+    max-width: 28rem;
+    position: relative;
+}
+
+.modal-conteudo__dica {
+    font-size: 0.875rem;
+    color: var(--gray-600);
+    margin: 0 0 1rem;
+}
+
+.modal-conteudo__acoes {
+    display: flex;
+    gap: 0.75rem;
+    justify-content: flex-end;
+    margin-top: 1rem;
+}
+
+.modal-conteudo__acoes button {
+    font-family: inherit;
+}
+
+.modal-conteudo__acoes .botao-contorno--preenchido {
+    background: var(--primary-blue);
+    color: #fff;
+    border-color: var(--primary-blue);
+}
+
+.modal-conteudo__acoes .botao-contorno--preenchido:hover {
+    background: #3385e0;
+    border-color: #3385e0;
+    color: #fff;
+}
+
+.modal-fechar {
+    position: absolute;
+    top: 0.75rem;
+    right: 0.75rem;
+    border: none;
+    background: transparent;
+    font-size: 1.25rem;
+    cursor: pointer;
+    color: var(--gray-600);
+}

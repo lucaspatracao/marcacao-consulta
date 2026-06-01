@@ -9,8 +9,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../../css/estilo.css">
+    <script src="../../js/vitacare-acessibilidade.js"></script>
     <link rel="stylesheet" href="../../css/funcionario/inicio-funcionario.css">
     <link rel="stylesheet" href="../../css/funcionario/inicio.css">
+    <link rel="stylesheet" href="../../css/funcionario/notificacoes.css">
 </head>
 
 <body>
@@ -27,6 +29,7 @@
                     <li><a href="calendario.html"><i class="fas fa-calendar-alt" aria-hidden="true"></i> Calendário</a></li>
                     <li><a href="validar.html"><i class="fas fa-check-circle" aria-hidden="true"></i> Validar</a></li>
                     <li><a href="medicos.html"><i class="fas fa-user-md" aria-hidden="true"></i> Médicos</a></li>
+                    <li><a href="mensagens-contato.html"><i class="fas fa-envelope-open-text" aria-hidden="true"></i> Mensagens <span class="menu-badge-notificacao" hidden>0</span></a></li>
                     <li><a href="perfil.html"><i class="fas fa-user-circle" aria-hidden="true"></i> Perfil</a></li>
                 </ul>
                 <div class="menu-lateral-saida">
@@ -47,11 +50,14 @@
                     </a>
                 </header>
 
+                <p id="alertaNotificacoesContato" class="alerta-notificacoes-contato" role="status" hidden></p>
+
                 <nav class="painel-funcionario__atalhos" aria-label="Atalhos do funcionário">
                     <a href="pacientes.html" class="painel-atalho"><span class="painel-atalho__icone" aria-hidden="true"><i class="fas fa-user-injured"></i></span><span class="painel-atalho__texto">Pacientes</span></a>
                     <a href="calendario.html" class="painel-atalho"><span class="painel-atalho__icone" aria-hidden="true"><i class="fas fa-calendar-alt"></i></span><span class="painel-atalho__texto">Calendário</span></a>
                     <a href="validar.html" class="painel-atalho"><span class="painel-atalho__icone" aria-hidden="true"><i class="fas fa-check-circle"></i></span><span class="painel-atalho__texto">Validar</span></a>
                     <a href="medicos.html" class="painel-atalho"><span class="painel-atalho__icone" aria-hidden="true"><i class="fas fa-user-md"></i></span><span class="painel-atalho__texto">Médicos</span></a>
+                    <a href="mensagens-contato.html" class="painel-atalho"><span class="painel-atalho__icone" aria-hidden="true"><i class="fas fa-envelope-open-text"></i></span><span class="painel-atalho__texto">Mensagens</span></a>
                     <a href="perfil.html" class="painel-atalho"><span class="painel-atalho__icone" aria-hidden="true"><i class="fas fa-user-circle"></i></span><span class="painel-atalho__texto">Perfil</span></a>
                 </nav>
             </div>
@@ -65,7 +71,6 @@
             </a>
             <nav class="rodape-simples__links" aria-label="Links do rodapé">
                 <a href="..\..\index.html">Início</a>
-                <a href="../outros/agendar.html">Agendar</a>
                 <a href="../outros/entre-contato.html">Contato</a>
             </nav>
             <p class="rodape-simples__autoria">&copy; 2026 VitaCare</p>
@@ -77,8 +82,9 @@
         <a href="../outros/acessibilidade.html" class="fab-fixo fab-fixo--a11y"><i class="fas fa-universal-access" aria-hidden="true"></i><span>Acessibilidade</span></a>
     </nav>
     
-    <script src="../../js/painel/funcionario/inicio-funcionario.js" defer></script>
+    <script src="../../js/vitacare-api.js" defer></script>
     <script src="../../js/painel/base.js" defer></script>
+    <script src="../../js/painel/funcionario/inicio-funcionario.js" defer></script>
 </body>
 
 </html>

@@ -1,11 +1,14 @@
-// =========================================
-// Escolha de perfil – redireciona para os logins
-// =========================================
-document.addEventListener('DOMContentLoaded', () => {
-    document.querySelector('.botao-paciente').addEventListener('click', () => {
-        window.location.href = 'login-paciente.html';
-    });
-    document.querySelector('.botao-admin').addEventListener('click', () => {
-        window.location.href = 'login-funcionario.html'; // admin usa o mesmo login de funcionário
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('[data-role]').forEach(function (btn) {
+        btn.addEventListener('click', function () {
+            const role = btn.getAttribute('data-role');
+            if (role === 'paciente') {
+                window.location.href = 'login-paciente.html';
+            } else if (role === 'admin') {
+                window.location.href = 'login.html';
+            } else {
+                window.location.href = 'login.html';
+            }
+        });
     });
 });

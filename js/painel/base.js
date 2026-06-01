@@ -1,21 +1,36 @@
-// =========================================
-// Comportamentos padrão dos painéis
-// =========================================
-document.addEventListener('DOMContentLoaded', () => {
-    // Destaca o item de menu ativo
-    const paginaAtual = window.location.pathname.split('/').pop();
-    document.querySelectorAll('.menu-lateral a').forEach(link => {
-        const href = link.getAttribute('href');
-        if (href === paginaAtual) {
-            link.parentElement.classList.add('menu-lateral__item--ativo');
-        }
+document.addEventListener('DOMContentLoaded', function () {
+    if (typeof VitaCareAPI === 'undefined') return;
+
+    const perfil = VitaCareAPI.detectarPerfilPagina();
+    if (perfil) {
+        const usuario = VitaCareAPI.exigirLogin(perfil);
+        if (!usuario) return;
+        window.__vitacareUsuario = usuario;
+    }
+
+    document.querySelectorAll('.menu-lateral-botao-sair').forEach(function (link) {
+        link.addEventListener('click', function (e) {
+            e.preventDefault();
+            VitaCareAPI.logout();
+        });
     });
 
-    // (Opcional) Alternar menu em telas menores
-    const menuToggle = document.getElementById('menu-toggle');
-    if (menuToggle) {
-        menuToggle.addEventListener('click', () => {
-            document.querySelector('.painel-funcionario__menu').classList.toggle('expandido');
+    const usuario = VitaCareAPI.obterUsuario();
+    document.querySelectorAll('[data-vitacare-usuario]').forEach(function (el) {
+        if (usuario && usuario.nome) el.textContent = usuario.nome;
+    });
+
+    if (perfil && perfil.includes('funcionario') && !document.querySelector('script[data-vitacare-notificacoes]')) {
+        const script = document.createElement('script');
+        script.src = '../../js/painel/funcionario/notificacoes-contato.js';
+        script.defer = true;
+        script.setAttribute('data-vitacare-notificacoes', '1');
+        document.body.appendChild(script);
+        script.addEventListener('load', function () {
+            if (global.VitaCareNotificacoes) {
+                if (global.VitaCareNotificacoes.iniciar) global.VitaCareNotificacoes.iniciar();
+                else global.VitaCareNotificacoes.atualizarBadgeMenu();
+            }
         });
     }
 });
