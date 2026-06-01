@@ -42,7 +42,7 @@
 
 [![Google Docs](https://img.shields.io/badge/Google%20Docs-Relatório%20Técnico-4285F4?style=for-the-badge&logo=googledocs&logoColor=white)](https://docs.google.com/document/d/13S5zdEDWgDui4Qkc7WLS9qaFGwi1lus4DIwgJ_at0YQ/edit?usp=sharing)
 
-> Documentação completa do projeto, incluindo introdução, fundamentação teórica, desenvolvimento e conclusões.
+> Documentação completa do projeto, incluindo introdução, fundamentação teórica, manuais, desenvolvimento e conclusões.
 
 ---
 
