@@ -1,0 +1,20 @@
+{
+    "name": "node-red-project",
+    "description": "A Node-RED Project",
+    "version": "0.0.1",
+    "private": true,
+    "scripts": {
+        "prestart": "node scripts/merge-flows-perfil.js",
+        "start": "node-red -u . --settings settings.js",
+        "verify:perfil": "node scripts/verificar-rotas-perfil.js"
+    },
+    "dependencies": {
+        "bcryptjs": "^2.4.3",
+        "mysql": "^2.18.1",
+        "mysql2": "^3.22.4",
+        "node-red": "^4.0.0",
+        "node-red-contrib-bcrypt": "~0.1.6",
+        "node-red-node-mysql": "^3.0.0",
+        "node-red-node-serialport": "~2.0.3"
+    }
+}
