@@ -1,47 +1,11 @@
 [
     {
-        "id": "0cf7741318acbd08",
+        "id": "e7926830b1bd7c7d",
         "type": "tab",
         "label": "Sistema VitaCare",
         "disabled": false,
         "info": "",
         "env": []
-    },
-    {
-        "id": "config-ws",
-        "type": "websocket-listener",
-        "path": "/ws/leituras",
-        "wholemsg": "false"
-    },
-    {
-        "id": "4d80ae29261f3e80",
-        "type": "serial-port",
-        "name": "",
-        "serialport": "COM7",
-        "serialbaud": "115200",
-        "databits": 8,
-        "parity": "none",
-        "stopbits": 1,
-        "waitfor": "",
-        "dtr": "none",
-        "rts": "none",
-        "cts": "none",
-        "dsr": "none",
-        "newline": "\\n",
-        "bin": "false",
-        "out": "char",
-        "addchar": "",
-        "responsetimeout": 10000
-    },
-    {
-        "id": "config-mysql",
-        "type": "MySQLdatabase",
-        "name": "Sensora DB",
-        "host": "localhost",
-        "port": "3306",
-        "db": "sensora_db",
-        "tz": "",
-        "charset": ""
     },
     {
         "id": "2ef5a3d6803a164a",
@@ -51,423 +15,510 @@
         "port": "3306",
         "db": "vitacare",
         "tz": "",
-        "charset": "UTF8"
+        "charset": "utf8mb4"
     },
     {
-        "id": "cadastro-endpoint",
+        "id": "bc74eca3388ea61f",
         "type": "http in",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "POST /api/cadastro",
-        "url": "/api/cadastro",
+        "url": "/cadastro",
         "method": "post",
-        "x": 270,
+        "x": 190,
         "y": 80,
         "wires": [
             [
-                "cadastro-func"
+                "3a5ee1261c9ac51c"
             ]
         ]
     },
     {
-        "id": "cadastro-func",
+        "id": "3a5ee1261c9ac51c",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Processar Cadastro",
-        "func": "const bcrypt = global.get('bcrypt') || require('bcryptjs');\nmsg.payload = msg.req.body;\nif (!msg.payload.nome || !msg.payload.email || !msg.payload.senha) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Dados incompletos' };\n    return [null, msg];\n}\nconst saltRounds = 10;\nconst senhaHash = bcrypt.hashSync(msg.payload.senha, saltRounds);\nmsg.topic = `INSERT INTO usuarios (nome_completo, email, senha_hash, telefone, data_nascimento, tipo) VALUES (?, ?, ?, ?, ?, 'paciente')`;\nmsg.params = [msg.payload.nome, msg.payload.email, senhaHash, msg.payload.telefone || null, msg.payload.nascimento || null];\nreturn [msg, null];",
+        "func": "const bcrypt = global.get('bcrypt') || global.get('bcryptjs');\nif (!bcrypt) {\n    msg.statusCode = 500;\n    msg.payload = { error: 'bcryptjs nao carregado. Reinicie o Node-RED apos npm install.' };\n    return [null, msg];\n}\nconst body = msg.req.body || {};\nconst tipos = ['paciente', 'funcionario', 'medico'];\nconst tipo = String(body.tipo || 'paciente').toLowerCase();\nif (!body.nome || !body.email || !body.senha) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Dados incompletos' };\n    return [null, msg];\n}\nif (!tipos.includes(tipo)) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Tipo de conta invalido.' };\n    return [null, msg];\n}\nif (tipo === 'medico' && (!body.crm || !body.especialidade)) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Para medico, informe CRM e especialidade.' };\n    return [null, msg];\n}\nif (tipo === 'funcionario') {\n    const codigo = String(body.codigo_funcionario || '').trim();\n    if (codigo !== 'funcionario123') {\n        msg.statusCode = 403;\n        msg.payload = { error: 'Codigo de autorizacao para funcionario incorreto.' };\n        return [null, msg];\n    }\n}\nflow.set('cadastro_http_' + msg._msgid, { res: msg.res, req: msg.req });\nflow.set('cadastro_ctx_' + msg._msgid, { tipo, nome: body.nome, email: body.email, crm: body.crm || null, especialidade: body.especialidade || null });\nconst senhaHash = bcrypt.hashSync(String(body.senha), 10);\nmsg.topic = \"INSERT INTO usuarios (nome_completo, email, senha_hash, telefone, data_nascimento, tipo, crm, especialidade) VALUES (?, ?, ?, ?, ?, ?, ?, ?)\";\nmsg.payload = [body.nome, body.email, senhaHash, body.telefone || null, body.nascimento || null, tipo, body.crm || null, body.especialidade || null];\nreturn [msg, null];",
         "outputs": 2,
-        "x": 540,
+        "timeout": "",
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
         "y": 80,
         "wires": [
             [
-                "cadastro-db"
+                "01fda05918b6aa34"
             ],
-            []
+            [
+                "97905b4146e2fdea"
+            ]
         ]
     },
     {
-        "id": "cadastro-db",
+        "id": "01fda05918b6aa34",
         "type": "mysql",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "mydb": "2ef5a3d6803a164a",
         "name": "MySQL Cadastro",
-        "x": 770,
+        "x": 650,
         "y": 80,
         "wires": [
             [
-                "cadastro-success"
+                "cd66165693fbe6d3"
             ]
         ]
     },
     {
-        "id": "cadastro-success",
+        "id": "b7e4a1c9d2f30852",
+        "type": "catch",
+        "z": "e7926830b1bd7c7d",
+        "name": "Catch MySQL Cadastro",
+        "scope": [
+            "01fda05918b6aa34",
+            "3a5ee1261c9ac51c"
+        ],
+        "uncaught": false,
+        "x": 800,
+        "y": 220,
+        "wires": [
+            [
+                "a8f3c2d1e9b04761"
+            ]
+        ]
+    },
+    {
+        "id": "a8f3c2d1e9b04761",
         "type": "function",
-        "z": "0cf7741318acbd08",
-        "name": "Success Response",
-        "func": "msg.statusCode = 201;\nmsg.payload = { success: true, message: 'Cadastro realizado com sucesso', userId: msg.results.insertId };\nreturn msg;",
+        "z": "e7926830b1bd7c7d",
+        "name": "Erro Cadastro",
+        "func": "const err = msg.error || {};\nconst text = String(err.message || err.sqlMessage || err.sqlState || msg.payload || '');\nconst saved = flow.get('cadastro_http_' + msg._msgid);\nif (saved) {\n    if (!msg.res && saved.res) msg.res = saved.res;\n    if (!msg.req && saved.req) msg.req = saved.req;\n    flow.set('cadastro_http_' + msg._msgid, null);\n}\nlet statusCode = 500;\nlet message = 'Erro ao realizar cadastro';\nif (text.includes('Duplicate entry') || err.code === 'ER_DUP_ENTRY') {\n    statusCode = 409;\n    message = 'Este e-mail ja esta cadastrado. Faca login ou use outro e-mail.';\n} else if (err.code === 'ER_ACCESS_DENIED_ERROR' || err.code === 'ECONNREFUSED' || text.includes('Access denied')) {\n    statusCode = 503;\n    message = 'Banco de dados indisponivel. Verifique MySQL e as credenciais do no vitacare.';\n} else if (err.code === 'ER_BAD_DB_ERROR') {\n    statusCode = 503;\n    message = 'Banco vitacare nao encontrado. Execute vitacare-setup.sql no MySQL.';\n} else if (err.code === 'ER_NO_SUCH_TABLE' || text.includes(\"doesn't exist\")) {\n    statusCode = 503;\n    message = 'Tabelas do VitaCare ausentes. Execute vitacare-setup.sql no MySQL.';\n}\nmsg.statusCode = statusCode;\nmsg.headers = Object.assign({}, msg.headers, { 'Content-Type': 'application/json' });\nmsg.payload = { success: false, error: message };\nreturn msg;",
         "outputs": 1,
-        "x": 990,
-        "y": 80,
+        "x": 1000,
+        "y": 220,
         "wires": [
             [
-                "cadastro-response"
+                "97905b4146e2fdea"
             ]
         ]
     },
     {
-        "id": "cadastro-response",
-        "type": "http response",
-        "z": "0cf7741318acbd08",
-        "name": "Response",
-        "x": 1190,
+        "id": "cd66165693fbe6d3",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Success Response",
+        "func": "const ctx = flow.get('cadastro_ctx_' + msg._msgid) || {};\nconst r = msg.payload;\nconst userId = (r && r.insertId) || (Array.isArray(r) && r[0] && r[0].insertId) || null;\nif (ctx.tipo === 'medico' && userId) {\n    flow.set('cadastro_ctx_' + msg._msgid, null);\n    msg._cadastroUserId = userId;\n    msg.topic = 'INSERT INTO medicos (usuario_id, nome, especialidade, crm, email, ativo) VALUES (?, ?, ?, ?, ?, 1)';\n    msg.payload = [userId, ctx.nome, ctx.especialidade, ctx.crm, ctx.email];\n    return [msg, null];\n}\nflow.set('cadastro_ctx_' + msg._msgid, null);\nflow.set('cadastro_http_' + msg._msgid, null);\nmsg.statusCode = 201;\nmsg.headers = Object.assign({}, msg.headers, { 'Content-Type': 'application/json' });\nmsg.payload = { success: true, message: 'Cadastro realizado com sucesso', userId };\nreturn [null, msg];",
+        "outputs": 2,
+        "x": 850,
         "y": 80,
+        "wires": [
+            [
+                "cadastro-medico-db"
+            ],
+            [
+                "97905b4146e2fdea"
+            ]
+        ]
+    },
+    {
+        "id": "cadastro-medico-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Médico Cadastro",
+        "x": 1210,
+        "y": 100,
+        "wires": [
+            [
+                "cadastro-medico-ok"
+            ]
+        ]
+    },
+    {
+        "id": "cadastro-medico-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Resposta Cadastro Médico",
+        "func": "flow.set('cadastro_http_' + msg._msgid, null);\nmsg.statusCode = 201;\nmsg.headers = Object.assign({}, msg.headers, { 'Content-Type': 'application/json' });\nmsg.payload = { success: true, message: 'Médico cadastrado com sucesso', userId: msg._cadastroUserId };\nreturn msg;",
+        "outputs": 1,
+        "x": 1500,
+        "y": 40,
+        "wires": [
+            [
+                "97905b4146e2fdea"
+            ]
+        ]
+    },
+    {
+        "id": "97905b4146e2fdea",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response",
+        "x": 1120,
+        "y": 40,
         "wires": []
     },
     {
-        "id": "login-endpoint",
+        "id": "e928eda183ddea38",
         "type": "http in",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "POST /api/login",
-        "url": "/api/login",
+        "url": "/login",
         "method": "post",
         "x": 390,
         "y": 180,
         "wires": [
             [
-                "login-query"
+                "3a1721cf2894b786"
             ]
         ]
     },
     {
-        "id": "login-query",
+        "id": "3a1721cf2894b786",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Buscar Usuário",
-        "func": "msg.payload = msg.req.body;\nmsg.topic = \"SELECT id, nome_completo, email, senha_hash, tipo FROM usuarios WHERE email = ? AND ativo = 1\";\nmsg.params = [msg.payload.email];\nreturn msg;",
+        "func": "const body = msg.req.body || {};\nmsg.topic = \"SELECT id, nome_completo, email, senha_hash, tipo FROM usuarios WHERE email = ? AND ativo = 1\";\nmsg.payload = [body.email];\nreturn msg;",
         "outputs": 1,
         "x": 590,
         "y": 180,
         "wires": [
             [
-                "login-db"
+                "3891d7b1ee9c6fae"
             ]
         ]
     },
     {
-        "id": "login-db",
+        "id": "3891d7b1ee9c6fae",
         "type": "mysql",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "mydb": "2ef5a3d6803a164a",
         "name": "MySQL Login",
-        "x": 790,
+        "x": 800,
         "y": 180,
         "wires": [
             [
-                "login-verify"
+                "8b75640daa6353e3"
             ]
         ]
     },
     {
-        "id": "login-verify",
+        "id": "8b75640daa6353e3",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Verificar Senha",
-        "func": "const bcrypt = global.get('bcrypt') || require('bcryptjs');\nconst results = msg.results;\nconst senhaEnviada = msg.req?.body?.senha;\nif (!results || results.length === 0) {\n    msg.statusCode = 401;\n    msg.payload = { error: 'Usuário não encontrado' };\n    return [null, msg];\n}\nconst usuario = results[0];\nconst senhaValida = bcrypt.compareSync(senhaEnviada, usuario.senha_hash);\nif (!senhaValida) {\n    msg.statusCode = 401;\n    msg.payload = { error: 'Senha incorreta' };\n    return [null, msg];\n}\nconst token = Buffer.from(`${usuario.id}:${Date.now()}`).toString('base64');\nmsg.payload = { success: true, user: { id: usuario.id, nome: usuario.nome_completo, email: usuario.email, tipo: usuario.tipo }, token: token, redirect: usuario.tipo === 'admin' ? '/admin/inicio-admin.html' : usuario.tipo === 'medico' ? '/medico/inicio-medico.html' : usuario.tipo === 'funcionario' ? '/funcionario/inicio-funcionario.html' : '/paciente/inicio-paciente.html' };\nreturn [msg, null];",
+        "func": "const bcrypt = global.get('bcrypt') || global.get('bcryptjs');\nconst results = Array.isArray(msg.payload) ? msg.payload : [];\nconst senhaEnviada = msg.req?.body?.senha;\nif (!results || results.length === 0) {\n    msg.statusCode = 401;\n    msg.payload = { error: 'Usuário não encontrado' };\n    return [null, msg];\n}\nconst usuario = results[0];\nconst senhaValida = bcrypt.compareSync(senhaEnviada, usuario.senha_hash);\nif (!senhaValida) {\n    msg.statusCode = 401;\n    msg.payload = { error: 'Senha incorreta' };\n    return [null, msg];\n}\nconst token = Buffer.from(`${usuario.id}:${Date.now()}`).toString('base64');\nmsg.payload = { success: true, user: { id: usuario.id, nome: usuario.nome_completo, email: usuario.email, tipo: usuario.tipo }, token: token, redirect: usuario.tipo === 'admin' ? '/html/admin/inicio-admin.html' : usuario.tipo === 'medico' ? '/html/medico/inicio-medico.html' : usuario.tipo === 'funcionario' ? '/html/funcionario/inicio-funcionario.html' : '/html/paciente/inicio-paciente.html' };\nreturn [msg, null];",
         "outputs": 2,
         "x": 990,
         "y": 180,
         "wires": [
             [
-                "login-response"
+                "abd4d18053c2d03b"
             ],
-            []
+            [
+                "abd4d18053c2d03b"
+            ]
         ]
     },
     {
-        "id": "login-response",
+        "id": "abd4d18053c2d03b",
         "type": "http response",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Response",
-        "x": 1190,
-        "y": 180,
+        "x": 1240,
+        "y": 160,
         "wires": []
     },
     {
-        "id": "horarios-endpoint",
+        "id": "0879f1f5dd6dcb69",
         "type": "http in",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "GET /api/horarios",
-        "url": "/api/horarios",
+        "url": "/horarios",
         "method": "get",
         "x": 390,
         "y": 280,
         "wires": [
-            []
+            [
+                "d5606ea9f9090cc4"
+            ]
         ]
     },
     {
-        "id": "horarios-query",
+        "id": "d5606ea9f9090cc4",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Montar Query Horários",
-        "func": "const data = msg.req.query.data;\nconst especialidade = msg.req.query.especialidade;\nconst medico = msg.req.query.medico;\nlet sql = `SELECT h.id, h.data_disponivel, h.horario, m.nome as medico_nome, m.especialidade FROM horarios_disponiveis h JOIN medicos m ON h.medico_id = m.id WHERE h.disponivel = 1`;\nlet params = [];\nif (data) { sql += ` AND h.data_disponivel = ?`; params.push(data); }\nif (especialidade && especialidade !== '') { sql += ` AND m.especialidade = ?`; params.push(especialidade); }\nif (medico && medico !== '') { sql += ` AND m.id = ?`; params.push(medico); }\nsql += ` ORDER BY h.data_disponivel, h.horario`;\nmsg.topic = sql;\nmsg.params = params;\nreturn msg;",
-        "outputs": 1,
+        "func": "const q = msg.req.query || {};\nconst data = q.data;\nif (!data) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Informe a data desejada' };\n    return [null, msg];\n}\nconst p = data.split('-');\nconst ano = Number(p[0]);\nconst mes = Number(p[1]) - 1;\nconst dia = Number(p[2]) || 1;\nlet dias = Number(q.dias);\nif (!dias || dias < 1) {\n    dias = new Date(ano, mes + 1, 0).getDate() - dia + 1;\n}\ndias = Math.min(42, Math.max(1, dias));\nflow.set('agenda_ctx_' + msg._msgid, { data, esp: q.especialidade || '', med: q.medico || '', dias });\nlet sql = 'SELECT id, nome, especialidade FROM medicos WHERE ativo = 1';\nconst binds = [];\nif (q.especialidade) { sql += ' AND especialidade = ?'; binds.push(q.especialidade); }\nif (q.medico) { sql += ' AND id = ?'; binds.push(Number(q.medico)); }\nsql += ' ORDER BY nome';\nmsg.topic = sql;\nmsg.payload = binds;\nreturn msg;",
+        "outputs": 2,
         "x": 590,
         "y": 280,
         "wires": [
-            []
+            [
+                "f32efae9a69da7c7"
+            ],
+            [
+                "db11a97b2c25a47f"
+            ]
         ]
     },
     {
-        "id": "horarios-db",
+        "id": "f32efae9a69da7c7",
         "type": "mysql",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "mydb": "2ef5a3d6803a164a",
-        "name": "MySQL Horários",
+        "name": "MySQL Médicos",
         "x": 790,
-        "y": 280,
+        "y": 260,
         "wires": [
-            []
+            [
+                "horarios-prep-ocupados"
+            ]
         ]
     },
     {
-        "id": "horarios-response",
+        "id": "horarios-prep-ocupados",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
+        "name": "Buscar Ocupados",
+        "func": "const ctx = flow.get('agenda_ctx_' + msg._msgid) || {};\nconst medicos = Array.isArray(msg.payload) ? msg.payload : [];\nflow.set('agenda_medicos_' + msg._msgid, medicos);\nconst p = ctx.data.split('-');\nconst y = Number(p[0]);\nconst m = Number(p[1]) - 1;\nconst d0 = Number(p[2]) || 1;\nconst dias = ctx.dias || 31;\nconst fim = new Date(y, m, d0 + dias);\nconst dataFim = fim.getFullYear() + '-' + String(fim.getMonth() + 1).padStart(2, '0') + '-' + String(fim.getDate()).padStart(2, '0');\nmsg.topic = \"SELECT medico_id, DATE_FORMAT(data_consulta, '%Y-%m-%d') as data_consulta, TIME_FORMAT(horario, '%H:%i') as horario FROM consultas WHERE data_consulta >= ? AND data_consulta < ? AND status NOT IN ('cancelada')\";\nmsg.payload = [ctx.data, dataFim];\nreturn msg;",
+        "outputs": 1,
+        "x": 990,
+        "y": 260,
+        "wires": [
+            [
+                "horarios-mysql-ocupados"
+            ]
+        ]
+    },
+    {
+        "id": "horarios-mysql-ocupados",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Ocupados",
+        "x": 1190,
+        "y": 260,
+        "wires": [
+            [
+                "d23685b143fb16db"
+            ]
+        ]
+    },
+    {
+        "id": "d23685b143fb16db",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
         "name": "Formatar Response",
-        "func": "msg.payload = { success: true, horarios: msg.results.map(h => ({ id: h.id, data: h.data_disponivel, horario: h.horario.substring(0, 5), medico: h.medico_nome, especialidade: h.especialidade })) };\nreturn msg;",
+        "func": "const ctx = flow.get('agenda_ctx_' + msg._msgid) || {};\nconst medicos = flow.get('agenda_medicos_' + msg._msgid) || [];\nconst ocupRows = Array.isArray(msg.payload) ? msg.payload : [];\nflow.set('agenda_ctx_' + msg._msgid, null);\nflow.set('agenda_medicos_' + msg._msgid, null);\nif (!medicos.length) {\n  msg.payload = { success: true, horarios: [], medicos: [], aviso: 'Nenhum medico cadastrado. Cadastre medicos em Funcionario > Medicos ou execute vitacare-setup.sql.' };\n  return msg;\n}\nconst iso = (dt) => dt.getFullYear() + '-' + String(dt.getMonth() + 1).padStart(2, '0') + '-' + String(dt.getDate()).padStart(2, '0');\nconst ocup = new Set(ocupRows.map(o => o.medico_id + '|' + o.data_consulta + '|' + String(o.horario).substring(0, 5)));\nconst horas = ['08:00','08:30','09:00','09:30','10:00','10:30','11:00','11:30','14:00','14:30','15:00','15:30','16:00','16:30','17:00','17:30'];\nconst p = ctx.data.split('-');\nconst y0 = Number(p[0]);\nconst m0 = Number(p[1]) - 1;\nconst d0 = Number(p[2]) || 1;\nconst dias = ctx.dias || 31;\nconst lista = [];\nfor (let d = 0; d < dias; d++) {\n  const dt = new Date(y0, m0, d0 + d);\n  const dataStr = iso(dt);\n  medicos.forEach(m => {\n    horas.forEach(h => {\n      const key = m.id + '|' + dataStr + '|' + h;\n      lista.push({\n        id: key,\n        medico_id: m.id,\n        data: dataStr,\n        horario: h,\n        medico: m.nome,\n        especialidade: m.especialidade,\n        disponivel: !ocup.has(key)\n      });\n    });\n  });\n}\nmsg.payload = { success: true, horarios: lista, medicos: medicos.map(m => ({ id: m.id, nome: m.nome, especialidade: m.especialidade })) };\nreturn msg;",
         "outputs": 1,
         "x": 990,
         "y": 280,
         "wires": [
             [
-                "horarios-response-http"
+                "db11a97b2c25a47f"
             ]
         ]
     },
     {
-        "id": "horarios-response-http",
+        "id": "db11a97b2c25a47f",
         "type": "http response",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Response",
         "x": 1190,
         "y": 280,
         "wires": []
     },
     {
-        "id": "agendar-endpoint",
+        "id": "efe67d66232b2bcc",
         "type": "http in",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "POST /api/agendar",
-        "url": "/api/agendar",
+        "url": "/agendar",
         "method": "post",
         "x": 250,
         "y": 380,
         "wires": [
             [
-                "agendar-func"
+                "23094d0cf275098c"
             ]
         ]
     },
     {
-        "id": "agendar-func",
+        "id": "23094d0cf275098c",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Processar Agendamento",
-        "func": "const body = msg.req.body;\nif (!body.horario_id || !body.paciente_id) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Dados incompletos' };\n    return [null, msg];\n}\nmsg.topic = `SELECT h.medico_id, h.data_disponivel, h.horario, m.especialidade FROM horarios_disponiveis h JOIN medicos m ON h.medico_id = m.id WHERE h.id = ? AND h.disponivel = 1`;\nmsg.params = [body.horario_id];\nreturn [msg, null];",
+        "func": "const body = msg.req.body || {};\nif (!body.paciente_id || !body.medico_id || !body.data || !body.horario) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Dados incompletos (paciente, médico, data, horário)' };\n    return [null, msg];\n}\nflow.set('agendar_http_' + msg._msgid, { res: msg.res, req: msg.req });\nconst hora = String(body.horario).length === 5 ? body.horario + ':00' : body.horario;\nmsg.topic = \"SELECT id FROM consultas WHERE medico_id = ? AND data_consulta = ? AND horario = ? AND status NOT IN ('cancelada')\";\nmsg.payload = [body.medico_id, body.data, hora];\nreturn msg;",
         "outputs": 2,
         "x": 490,
         "y": 380,
         "wires": [
             [
-                "agendar-db-busca"
+                "032775cc866dad61"
             ],
-            []
-        ]
-    },
-    {
-        "id": "agendar-db-busca",
-        "type": "mysql",
-        "z": "0cf7741318acbd08",
-        "mydb": "2ef5a3d6803a164a",
-        "name": "MySQL Buscar Horário",
-        "x": 740,
-        "y": 380,
-        "wires": [
             [
-                "agendar-criar"
+                "080a78df0f581d30"
             ]
         ]
     },
     {
-        "id": "agendar-criar",
+        "id": "032775cc866dad61",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Verificar Conflito",
+        "x": 740,
+        "y": 380,
+        "wires": [
+            [
+                "4b597c1e1c8d9cd9"
+            ]
+        ]
+    },
+    {
+        "id": "4b597c1e1c8d9cd9",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Criar Consulta",
-        "func": "const horario = msg.results[0];\nconst body = msg.req.body;\nif (!horario) {\n    msg.statusCode = 404;\n    msg.payload = { error: 'Horário não disponível' };\n    return [null, msg];\n}\nmsg.topic = `INSERT INTO consultas (paciente_id, medico_id, especialidade, data_consulta, horario, status, convenio) VALUES (?, ?, ?, ?, ?, 'pendente', ?)`;\nmsg.params = [body.paciente_id, horario.medico_id, horario.especialidade, horario.data_disponivel, horario.horario, body.convenio || null];\nreturn [msg, null];",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nconst body = msg.req.body || {};\nif (rows.length > 0) {\n    msg.statusCode = 409;\n    msg.payload = { error: 'Este horário já está ocupado' };\n    return [null, msg];\n}\nconst esp = body.especialidade || '';\nconst hora = String(body.horario).length === 5 ? body.horario + ':00' : body.horario;\nmsg.topic = \"INSERT INTO consultas (paciente_id, medico_id, especialidade, data_consulta, horario, status, convenio) VALUES (?, ?, ?, ?, ?, 'pendente', ?)\";\nmsg.payload = [body.paciente_id, body.medico_id, esp, body.data, hora, body.convenio || null];\nreturn msg;",
         "outputs": 2,
         "x": 960,
         "y": 380,
         "wires": [
             [
-                "agendar-db-inserir"
+                "4a5ec4245ccb71ce"
             ],
-            []
+            [
+                "080a78df0f581d30"
+            ]
         ]
     },
     {
-        "id": "agendar-db-inserir",
+        "id": "4a5ec4245ccb71ce",
         "type": "mysql",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "mydb": "2ef5a3d6803a164a",
         "name": "MySQL Criar Consulta",
         "x": 1160,
         "y": 380,
         "wires": [
             [
-                "agendar-atualizar"
+                "d65775be8be54723"
             ]
         ]
     },
     {
-        "id": "agendar-atualizar",
+        "id": "d65775be8be54723",
         "type": "function",
-        "z": "0cf7741318acbd08",
-        "name": "Atualizar Disponibilidade",
-        "func": "const horarioId = msg.req.body.horario_id;\nmsg.topic = `UPDATE horarios_disponiveis SET disponivel = 0 WHERE id = ?`;\nmsg.params = [horarioId];\nreturn msg;",
-        "outputs": 1,
-        "x": 1410,
-        "y": 380,
-        "wires": [
-            [
-                "agendar-db-update"
-            ]
-        ]
-    },
-    {
-        "id": "agendar-db-update",
-        "type": "mysql",
-        "z": "0cf7741318acbd08",
-        "mydb": "2ef5a3d6803a164a",
-        "name": "MySQL Update Disponibilidade",
-        "x": 1670,
-        "y": 380,
-        "wires": [
-            [
-                "agendar-response"
-            ]
-        ]
-    },
-    {
-        "id": "agendar-response",
-        "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Success Response",
-        "func": "msg.payload = { success: true, message: 'Consulta agendada com sucesso', consulta_id: msg.results.insertId };\nreturn msg;",
+        "func": "flow.set('agendar_http_' + msg._msgid, null);\nconst r = msg.payload;\nconst consultaId = r?.insertId ?? null;\nmsg.statusCode = 201;\nmsg.headers = Object.assign({}, msg.headers, { 'Content-Type': 'application/json' });\nmsg.payload = { success: true, message: 'Consulta agendada com sucesso', consulta_id: consultaId };\nreturn msg;",
         "outputs": 1,
         "x": 1930,
         "y": 380,
         "wires": [
             [
-                "agendar-response-http"
+                "080a78df0f581d30"
             ]
         ]
     },
     {
-        "id": "agendar-response-http",
+        "id": "080a78df0f581d30",
         "type": "http response",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Response",
         "x": 2140,
         "y": 380,
         "wires": []
     },
     {
-        "id": "historico-endpoint",
+        "id": "b852970d7d8480c2",
         "type": "http in",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "GET /api/historico/:paciente_id",
-        "url": "/api/historico/*",
+        "url": "/historico/:paciente_id",
         "method": "get",
         "x": 320,
         "y": 480,
         "wires": [
             [
-                "historico-func"
+                "59227c5a280961cf"
             ]
         ]
     },
     {
-        "id": "historico-func",
+        "id": "59227c5a280961cf",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Buscar Histórico",
-        "func": "const paciente_id = msg.req.params.paciente_id;\nmsg.topic = `SELECT c.id, c.data_consulta, c.horario, c.especialidade, c.status, m.nome as medico_nome FROM consultas c JOIN medicos m ON c.medico_id = m.id WHERE c.paciente_id = ? ORDER BY c.data_consulta DESC`;\nmsg.params = [paciente_id];\nreturn msg;",
+        "func": "const paciente_id = msg.req.params.paciente_id;\nmsg.topic = `SELECT c.id, c.data_consulta, c.horario, c.especialidade, c.status, m.nome as medico_nome FROM consultas c JOIN medicos m ON c.medico_id = m.id WHERE c.paciente_id = ? ORDER BY c.data_consulta DESC`;\nmsg.payload = [paciente_id];\nreturn msg;",
         "outputs": 1,
         "x": 560,
         "y": 480,
         "wires": [
             [
-                "historico-db"
+                "d9d6da120a9dda24"
             ]
         ]
     },
     {
-        "id": "historico-db",
+        "id": "d9d6da120a9dda24",
         "type": "mysql",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "mydb": "2ef5a3d6803a164a",
         "name": "MySQL Histórico",
         "x": 790,
         "y": 480,
         "wires": [
             [
-                "historico-response"
+                "3abac983d95fab4d"
             ]
         ]
     },
     {
-        "id": "historico-response",
+        "id": "3abac983d95fab4d",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Formatar Response",
-        "func": "msg.payload = { success: true, consultas: msg.results.map(c => ({ id: c.id, data: c.data_consulta, horario: c.horario.substring(0, 5), especialidade: c.especialidade, medico: c.medico_nome, status: c.status })) };\nreturn msg;",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nmsg.payload = { success: true, consultas: rows.map(c => ({ id: c.id, data: c.data_consulta, horario: String(c.horario).substring(0, 5), especialidade: c.especialidade, medico: c.medico_nome, status: c.status })) };\nreturn msg;",
         "outputs": 1,
         "x": 1040,
         "y": 480,
         "wires": [
             [
-                "historico-response-http"
+                "86c9fee39e49b28f"
             ]
         ]
     },
     {
-        "id": "historico-response-http",
+        "id": "86c9fee39e49b28f",
         "type": "http response",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Response",
         "x": 1240,
         "y": 480,
         "wires": []
     },
     {
-        "id": "usuarios-endpoint",
+        "id": "227ff8be91cc7499",
         "type": "http in",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "GET /api/admin/usuarios",
-        "url": "/api/admin/usuarios",
+        "url": "/admin/usuarios",
         "method": "get",
         "x": 310,
         "y": 580,
         "wires": [
             [
-                "usuarios-query"
+                "2e3af35d80845372"
             ]
         ]
     },
     {
-        "id": "usuarios-query",
+        "id": "2e3af35d80845372",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Listar Usuários",
         "func": "msg.topic = `SELECT u.id, u.nome_completo, u.email, u.tipo, u.telefone, COALESCE(m.crm, '') as crm, COALESCE(m.especialidade, '') as especialidade FROM usuarios u LEFT JOIN medicos m ON u.id = m.usuario_id ORDER BY u.id`;\nreturn msg;",
         "outputs": 1,
@@ -475,120 +526,120 @@
         "y": 580,
         "wires": [
             [
-                "usuarios-db"
+                "10b213e4a7855192"
             ]
         ]
     },
     {
-        "id": "usuarios-db",
+        "id": "10b213e4a7855192",
         "type": "mysql",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "mydb": "2ef5a3d6803a164a",
         "name": "MySQL Usuários",
         "x": 790,
         "y": 580,
         "wires": [
             [
-                "usuarios-response"
+                "5ccde6dd66b61e03"
             ]
         ]
     },
     {
-        "id": "usuarios-response",
+        "id": "5ccde6dd66b61e03",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Formatar Response",
-        "func": "msg.payload = { success: true, usuarios: msg.results };\nreturn msg;",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nmsg.payload = { success: true, usuarios: rows };\nreturn msg;",
         "outputs": 1,
         "x": 1020,
         "y": 580,
         "wires": [
             [
-                "usuarios-response-http"
+                "f1f34648949c6010"
             ]
         ]
     },
     {
-        "id": "usuarios-response-http",
+        "id": "f1f34648949c6010",
         "type": "http response",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Response",
         "x": 1220,
         "y": 580,
         "wires": []
     },
     {
-        "id": "usuario-update-endpoint",
+        "id": "6458e44d252d49f2",
         "type": "http in",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "PUT /api/admin/usuarios/:id",
-        "url": "/api/admin/usuarios/*",
+        "url": "/admin/usuarios/:id",
         "method": "put",
         "x": 280,
         "y": 680,
         "wires": [
             [
-                "usuario-update-func"
+                "459d41acc40b37d6"
             ]
         ]
     },
     {
-        "id": "usuario-update-func",
+        "id": "459d41acc40b37d6",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Atualizar Tipo Usuário",
-        "func": "const id = msg.req.params.id;\nconst tipo = msg.req.body.tipo;\nmsg.topic = `UPDATE usuarios SET tipo = ? WHERE id = ?`;\nmsg.params = [tipo, id];\nreturn msg;",
+        "func": "const id = msg.req.params.id;\nconst tipo = msg.req.body.tipo;\nmsg.topic = `UPDATE usuarios SET tipo = ? WHERE id = ?`;\nmsg.payload = [tipo, id];\nreturn msg;",
         "outputs": 1,
         "x": 590,
         "y": 680,
         "wires": [
             [
-                "usuario-update-db"
+                "22dbf59cc5a27393"
             ]
         ]
     },
     {
-        "id": "usuario-update-db",
+        "id": "22dbf59cc5a27393",
         "type": "mysql",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "mydb": "2ef5a3d6803a164a",
         "name": "MySQL Update",
         "x": 790,
         "y": 680,
         "wires": [
             [
-                "usuario-update-response"
+                "c3335e30147cff61"
             ]
         ]
     },
     {
-        "id": "usuario-update-response",
+        "id": "c3335e30147cff61",
         "type": "http response",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Response",
         "x": 990,
         "y": 680,
         "wires": []
     },
     {
-        "id": "parametros-endpoint",
+        "id": "757abc2efcfa05d6",
         "type": "http in",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "GET /api/admin/parametros",
-        "url": "/api/admin/parametros",
+        "url": "/admin/parametros",
         "method": "get",
         "x": 300,
         "y": 780,
         "wires": [
             [
-                "parametros-query"
+                "ab5d90ac03521234"
             ]
         ]
     },
     {
-        "id": "parametros-query",
+        "id": "ab5d90ac03521234",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Buscar Parâmetros",
         "func": "msg.topic = `SELECT chave, valor FROM parametros_sistema`;\nreturn msg;",
         "outputs": 1,
@@ -596,192 +647,247 @@
         "y": 780,
         "wires": [
             [
-                "parametros-db"
+                "62227b17c0aae1fe"
             ]
         ]
     },
     {
-        "id": "parametros-db",
+        "id": "62227b17c0aae1fe",
         "type": "mysql",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "mydb": "2ef5a3d6803a164a",
         "name": "MySQL Parâmetros",
         "x": 750,
         "y": 780,
         "wires": [
             [
-                "parametros-format"
+                "b028ac48a80cc713"
             ]
         ]
     },
     {
-        "id": "parametros-format",
+        "id": "b028ac48a80cc713",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Formatar Parâmetros",
-        "func": "const params = {};\nmsg.results.forEach(p => { params[p.chave] = p.valor; });\nmsg.payload = { success: true, parametros: params };\nreturn msg;",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nconst params = {};\nrows.forEach(p => { params[p.chave] = p.valor; });\nmsg.payload = { success: true, parametros: params };\nreturn msg;",
         "outputs": 1,
         "x": 990,
         "y": 780,
         "wires": [
             [
-                "parametros-response"
+                "beba4b98e1c4befa"
             ]
         ]
     },
     {
-        "id": "parametros-response",
+        "id": "beba4b98e1c4befa",
         "type": "http response",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Response",
         "x": 1200,
         "y": 780,
         "wires": []
     },
     {
-        "id": "parametros-update-endpoint",
+        "id": "b3c1830ca4a46376",
         "type": "http in",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "POST /api/admin/parametros",
-        "url": "/api/admin/parametros",
+        "url": "/admin/parametros",
         "method": "post",
         "x": 390,
         "y": 880,
         "wires": [
             [
-                "parametros-update-func"
+                "9b53c2114b0620f7"
             ]
         ]
     },
     {
-        "id": "parametros-update-func",
+        "id": "9b53c2114b0620f7",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Atualizar Parâmetros",
-        "func": "const params = msg.req.body;\nconst queries = [];\nfor (const [chave, valor] of Object.entries(params)) {\n    queries.push({ topic: `INSERT INTO parametros_sistema (chave, valor) VALUES (?, ?) ON DUPLICATE KEY UPDATE valor = VALUES(valor)`, params: [chave, valor] });\n}\nmsg.queries = queries;\nreturn msg;",
-        "outputs": 1,
+        "func": "const body = msg.req.body || {};\nconst keys = Object.keys(body);\nif (keys.length === 0) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Nenhum parâmetro no corpo' };\n    return [null, msg];\n}\nconst esc = (v) => String(v).replace(/'/g, \"''\");\nconst vals = keys.map((k) => `('${esc(k)}', '${esc(body[k])}')`).join(', ');\nmsg.topic = `INSERT INTO parametros_sistema (chave, valor) VALUES ${vals} ON DUPLICATE KEY UPDATE valor = VALUES(valor)`;\ndelete msg.params;\nreturn [msg, null];",
+        "outputs": 2,
         "x": 660,
         "y": 880,
         "wires": [
-            []
-        ]
-    },
-    {
-        "id": "validar-endpoint",
-        "type": "http in",
-        "z": "0cf7741318acbd08",
-        "name": "GET /api/validar/pendentes",
-        "url": "/api/validar/pendentes",
-        "method": "get",
-        "x": 290,
-        "y": 980,
-        "wires": [
             [
-                "validar-query"
+                "f84cb3b517edfa3a"
+            ],
+            [
+                "d8866f1efdd337fc"
             ]
         ]
     },
     {
-        "id": "validar-query",
+        "id": "f84cb3b517edfa3a",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Atualizar Parâmetros",
+        "x": 900,
+        "y": 880,
+        "wires": [
+            [
+                "e1bfeb907b6f7a29"
+            ]
+        ]
+    },
+    {
+        "id": "e1bfeb907b6f7a29",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
+        "name": "Resposta OK Parâmetros",
+        "func": "msg.statusCode = 200;\nmsg.payload = { success: true, message: 'Parâmetros atualizados' };\nreturn msg;",
+        "outputs": 1,
+        "x": 1120,
+        "y": 880,
+        "wires": [
+            [
+                "0ec75507c7a21ce4"
+            ]
+        ]
+    },
+    {
+        "id": "0ec75507c7a21ce4",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response Parâmetros POST",
+        "x": 1340,
+        "y": 880,
+        "wires": []
+    },
+    {
+        "id": "d8866f1efdd337fc",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response Parâmetros Erro",
+        "x": 900,
+        "y": 960,
+        "wires": []
+    },
+    {
+        "id": "89267f7be9dd2887",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "GET /api/validar/pendentes",
+        "url": "/validar/pendentes",
+        "method": "get",
+        "x": 290,
+        "y": 1000,
+        "wires": [
+            [
+                "86fe91abf3d6620e"
+            ]
+        ]
+    },
+    {
+        "id": "86fe91abf3d6620e",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
         "name": "Buscar Pendentes",
         "func": "msg.topic = `SELECT c.id, u.nome_completo as paciente, c.data_consulta, c.horario, m.nome as medico, c.especialidade FROM consultas c JOIN usuarios u ON c.paciente_id = u.id JOIN medicos m ON c.medico_id = m.id WHERE c.status = 'pendente' ORDER BY c.data_consulta, c.horario`;\nreturn msg;",
         "outputs": 1,
         "x": 550,
-        "y": 980,
+        "y": 1000,
         "wires": [
             [
-                "validar-db"
+                "91e1b004988d9d03"
             ]
         ]
     },
     {
-        "id": "validar-db",
+        "id": "91e1b004988d9d03",
         "type": "mysql",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "mydb": "2ef5a3d6803a164a",
         "name": "MySQL Pendentes",
         "x": 770,
-        "y": 980,
+        "y": 1000,
         "wires": [
             [
-                "validar-response"
+                "7d1c01bf150ca725"
             ]
         ]
     },
     {
-        "id": "validar-response",
+        "id": "7d1c01bf150ca725",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Formatar Response",
-        "func": "msg.payload = { success: true, pendentes: msg.results.map(c => ({ id: c.id, paciente: c.paciente, data: c.data_consulta, horario: c.horario.substring(0, 5), medico: c.medico, especialidade: c.especialidade })) };\nreturn msg;",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nmsg.payload = { success: true, pendentes: rows.map(c => ({ id: c.id, paciente: c.paciente, data: c.data_consulta ? String(c.data_consulta).slice(0, 10) : c.data_consulta, horario: String(c.horario).substring(0, 5), medico: c.medico, especialidade: c.especialidade })) };\nreturn msg;",
         "outputs": 1,
         "x": 990,
-        "y": 980,
+        "y": 1000,
         "wires": [
             [
-                "validar-response-http"
+                "e8da7151a45268ab"
             ]
         ]
     },
     {
-        "id": "validar-response-http",
+        "id": "e8da7151a45268ab",
         "type": "http response",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Response",
         "x": 1190,
-        "y": 980,
+        "y": 1000,
         "wires": []
     },
     {
-        "id": "validar-confirmar-endpoint",
+        "id": "1ebb6ccd551cd83b",
         "type": "http in",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "POST /api/validar/confirmar",
-        "url": "/api/validar/confirmar",
+        "url": "/validar/confirmar",
         "method": "post",
         "x": 340,
         "y": 1080,
         "wires": [
             [
-                "validar-confirmar-func"
+                "5d313dac2c092b6b"
             ]
         ]
     },
     {
-        "id": "validar-confirmar-func",
+        "id": "5d313dac2c092b6b",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Confirmar Consulta",
-        "func": "const consulta_id = msg.req.body.consulta_id;\nconst acao = msg.req.body.acao;\nconst novoStatus = acao === 'confirmar' ? 'confirmada' : 'cancelada';\nmsg.topic = `UPDATE consultas SET status = ? WHERE id = ?`;\nmsg.params = [novoStatus, consulta_id];\nreturn msg;",
-        "outputs": 1,
+        "func": "const body = msg.req.body || {};\nconst consulta_id = body.consulta_id;\nconst acao = body.acao;\nif (!consulta_id) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Informe consulta_id' };\n    return [null, msg];\n}\nconst novoStatus = acao === 'confirmar' ? 'confirmada' : 'cancelada';\nmsg.topic = 'UPDATE consultas SET status = ? WHERE id = ?';\nmsg.payload = [novoStatus, consulta_id];\nreturn msg;",
+        "outputs": 2,
         "x": 590,
         "y": 1080,
         "wires": [
             [
-                "validar-confirmar-db"
+                "d0e29262d4d28dea"
+            ],
+            [
+                "a8555f6ff0aff293"
             ]
         ]
     },
     {
-        "id": "validar-confirmar-db",
+        "id": "d0e29262d4d28dea",
         "type": "mysql",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "mydb": "2ef5a3d6803a164a",
         "name": "MySQL Update",
         "x": 790,
         "y": 1080,
         "wires": [
             [
-                "validar-confirmar-response"
+                "f4f484d55604e723"
             ]
         ]
     },
     {
-        "id": "validar-confirmar-response",
+        "id": "f4f484d55604e723",
         "type": "function",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Success Response",
         "func": "msg.payload = { success: true, message: 'Consulta atualizada com sucesso' };\nreturn msg;",
         "outputs": 1,
@@ -789,26 +895,1259 @@
         "y": 1080,
         "wires": [
             [
-                "validar-confirmar-http"
+                "a8555f6ff0aff293"
             ]
         ]
     },
     {
-        "id": "validar-confirmar-http",
+        "id": "a8555f6ff0aff293",
         "type": "http response",
-        "z": "0cf7741318acbd08",
+        "z": "e7926830b1bd7c7d",
         "name": "Response",
         "x": 1190,
         "y": 1080,
         "wires": []
     },
     {
-        "id": "00bf9ff0e6fabce5",
-        "type": "global-config",
-        "env": [],
-        "modules": {
-            "node-red-node-serialport": "2.0.3",
-            "node-red-node-mysql": "3.0.0"
-        }
+        "id": "api-pacientes-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "GET /api/pacientes",
+        "url": "/pacientes",
+        "method": "get",
+        "x": 280,
+        "y": 1160,
+        "wires": [
+            [
+                "api-pacientes-q"
+            ]
+        ]
+    },
+    {
+        "id": "api-pacientes-q",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Listar Pacientes",
+        "func": "msg.topic = \"SELECT id, nome_completo, email, telefone FROM usuarios WHERE tipo = 'paciente' AND ativo = 1 ORDER BY nome_completo\";\nreturn msg;",
+        "outputs": 1,
+        "x": 520,
+        "y": 1160,
+        "wires": [
+            [
+                "api-pacientes-db"
+            ]
+        ]
+    },
+    {
+        "id": "api-pacientes-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Pacientes",
+        "x": 750,
+        "y": 1160,
+        "wires": [
+            [
+                "api-pacientes-fmt"
+            ]
+        ]
+    },
+    {
+        "id": "api-pacientes-fmt",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Formatar Pacientes",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nmsg.payload = { success: true, pacientes: rows };\nreturn msg;",
+        "outputs": 1,
+        "x": 980,
+        "y": 1160,
+        "wires": [
+            [
+                "api-pacientes-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-pacientes-res",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response",
+        "x": 1190,
+        "y": 1160,
+        "wires": []
+    },
+    {
+        "id": "api-medicos-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "GET /api/medicos",
+        "url": "/medicos",
+        "method": "get",
+        "x": 280,
+        "y": 1240,
+        "wires": [
+            [
+                "api-medicos-q"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-q",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Listar Médicos",
+        "func": "const uid = Number(msg.req.query.usuario_id);\nif (uid) {\n    msg._medicoMe = true;\n    msg.topic = \"SELECT m.id, m.nome, m.especialidade, m.crm, m.email FROM medicos m WHERE m.ativo = 1 AND (m.usuario_id = ? OR LOWER(m.email) = (SELECT LOWER(email) FROM usuarios WHERE id = ? LIMIT 1)) LIMIT 1\";\n    msg.payload = [uid, uid];\n} else {\n    msg.topic = 'SELECT id, nome, especialidade, crm, email, ativo FROM medicos WHERE ativo = 1 ORDER BY nome';\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 520,
+        "y": 1240,
+        "wires": [
+            [
+                "api-medicos-db"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Médicos Lista",
+        "x": 750,
+        "y": 1240,
+        "wires": [
+            [
+                "api-medicos-fmt"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-fmt",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Formatar Médicos",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nif (msg._medicoMe) {\n    if (!rows.length) { msg.statusCode = 404; msg.payload = { error: 'Médico não vinculado ao usuário' }; return msg; }\n    msg.payload = { success: true, medico: rows[0] };\n} else {\n    msg.payload = { success: true, medicos: rows };\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 980,
+        "y": 1240,
+        "wires": [
+            [
+                "api-medicos-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-res",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response",
+        "x": 1190,
+        "y": 1240,
+        "wires": []
+    },
+    {
+        "id": "api-consultas-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "GET /api/consultas",
+        "url": "/consultas",
+        "method": "get",
+        "x": 290,
+        "y": 1320,
+        "wires": [
+            [
+                "api-consultas-q"
+            ]
+        ]
+    },
+    {
+        "id": "api-consultas-q",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Listar Consultas",
+        "func": "const q = msg.req.query || {};\nlet sql = \"SELECT c.id, c.paciente_id, DATE_FORMAT(c.data_consulta, '%Y-%m-%d') as data_consulta, TIME_FORMAT(c.horario, '%H:%i') as horario, c.especialidade, c.status, c.convenio, u.nome_completo as paciente, m.nome as medico, m.id as medico_id FROM consultas c JOIN usuarios u ON c.paciente_id = u.id JOIN medicos m ON c.medico_id = m.id WHERE 1=1\";\nconst binds = [];\nif (q.medico_id) { sql += ' AND c.medico_id = ?'; binds.push(Number(q.medico_id)); }\nif (q.paciente_id) { sql += ' AND c.paciente_id = ?'; binds.push(Number(q.paciente_id)); }\nif (q.status) { sql += ' AND c.status = ?'; binds.push(q.status); }\nif (q.desde) { sql += ' AND c.data_consulta >= ?'; binds.push(q.desde); }\nsql += ' ORDER BY c.data_consulta, c.horario';\nmsg.topic = sql;\nmsg.payload = binds;\nreturn msg;",
+        "outputs": 1,
+        "x": 540,
+        "y": 1320,
+        "wires": [
+            [
+                "api-consultas-db"
+            ]
+        ]
+    },
+    {
+        "id": "api-consultas-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Consultas",
+        "x": 770,
+        "y": 1320,
+        "wires": [
+            [
+                "api-consultas-fmt"
+            ]
+        ]
+    },
+    {
+        "id": "api-consultas-fmt",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Formatar Consultas",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nmsg.payload = { success: true, consultas: rows.map(c => ({ id: c.id, paciente_id: c.paciente_id, data: c.data_consulta, horario: String(c.horario).substring(0, 5), especialidade: c.especialidade, status: c.status, convenio: c.convenio || '', paciente: c.paciente, medico: c.medico, medico_id: c.medico_id })) };\nreturn msg;",
+        "outputs": 1,
+        "x": 1000,
+        "y": 1320,
+        "wires": [
+            [
+                "api-consultas-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-consultas-res",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response",
+        "x": 1210,
+        "y": 1320,
+        "wires": []
+    },
+    {
+        "id": "api-medico-me-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "GET /api/medico/me",
+        "url": "/medico/me",
+        "method": "get",
+        "x": 280,
+        "y": 1400,
+        "wires": [
+            [
+                "api-medico-me-q"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-me-q",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Buscar Médico Logado",
+        "func": "const uid = Number(msg.req.query.usuario_id);\nif (!uid) { msg.statusCode = 400; msg.payload = { error: 'Informe usuario_id' }; return msg; }\nmsg.topic = \"SELECT m.id, m.nome, m.especialidade, m.crm, m.email FROM medicos m WHERE m.ativo = 1 AND (m.usuario_id = ? OR LOWER(m.email) = (SELECT LOWER(email) FROM usuarios WHERE id = ? LIMIT 1)) LIMIT 1\";\nmsg.payload = [uid, uid];\nreturn msg;",
+        "outputs": 1,
+        "x": 520,
+        "y": 1400,
+        "wires": [
+            [
+                "api-medico-me-db"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-me-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Médico Me",
+        "x": 750,
+        "y": 1400,
+        "wires": [
+            [
+                "api-medico-me-fmt"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-me-fmt",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Formatar Médico Me",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nif (!rows.length) { msg.statusCode = 404; msg.payload = { error: 'Médico não vinculado ao usuário' }; return msg; }\nmsg.payload = { success: true, medico: rows[0] };\nreturn msg;",
+        "outputs": 1,
+        "x": 980,
+        "y": 1400,
+        "wires": [
+            [
+                "api-medico-me-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-me-res",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response",
+        "x": 1190,
+        "y": 1400,
+        "wires": []
+    },
+    {
+        "id": "api-medico-save-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "PUT /api/medico/perfil",
+        "url": "/medico/perfil",
+        "method": "put",
+        "x": 290,
+        "y": 1480,
+        "wires": [
+            [
+                "api-medico-save-prep"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-save-post",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "POST /api/medico/perfil",
+        "url": "/medico/perfil",
+        "method": "post",
+        "x": 300,
+        "y": 1520,
+        "wires": [
+            [
+                "api-medico-save-prep"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-save-prep",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Preparar Salvar",
+        "func": "const body = msg.req.body || {};\nconst uid = Number(body.usuario_id);\nconst crm = String(body.crm || '').trim();\nconst esp = String(body.especialidade || '').trim();\nif (!uid || !crm || !esp) { msg.statusCode = 400; msg.payload = { error: 'Informe usuario_id, crm e especialidade' }; return msg; }\nflow.set('medico_save_ctx_' + msg._msgid, { uid, crm, esp });\nmsg.topic = \"SELECT m.id FROM medicos m WHERE m.usuario_id = ? OR LOWER(m.email) = (SELECT LOWER(email) FROM usuarios WHERE id = ? LIMIT 1) LIMIT 1\";\nmsg.payload = [uid, uid];\nreturn msg;",
+        "outputs": 1,
+        "x": 530,
+        "y": 1480,
+        "wires": [
+            [
+                "api-medico-save-find"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-save-find",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Buscar Médico",
+        "x": 760,
+        "y": 1480,
+        "wires": [
+            [
+                "api-medico-save-upsert"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-save-upsert",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Update ou Insert",
+        "func": "const ctx = flow.get('medico_save_ctx_' + msg._msgid) || {};\nconst rows = Array.isArray(msg.payload) ? msg.payload : [];\nif (rows.length && rows[0].id) {\n    msg.topic = 'UPDATE medicos SET crm = ?, especialidade = ?, usuario_id = ? WHERE id = ?';\n    msg.payload = [ctx.crm, ctx.esp, ctx.uid, rows[0].id];\n} else {\n    msg.topic = 'INSERT INTO medicos (usuario_id, nome, especialidade, crm, email, ativo) SELECT id, nome_completo, ?, ?, email, 1 FROM usuarios WHERE id = ?';\n    msg.payload = [ctx.esp, ctx.crm, ctx.uid];\n}\nreturn msg;",
+        "outputs": 1,
+        "x": 990,
+        "y": 1480,
+        "wires": [
+            [
+                "api-medico-save-db"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-save-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Salvar Médico",
+        "x": 1210,
+        "y": 1480,
+        "wires": [
+            [
+                "api-medico-save-user"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-save-user",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Atualizar Usuário",
+        "func": "const ctx = flow.get('medico_save_ctx_' + msg._msgid) || {};\nflow.set('medico_save_ctx_' + msg._msgid, null);\nmsg.topic = 'UPDATE usuarios SET crm = ?, especialidade = ? WHERE id = ?';\nmsg.payload = [ctx.crm, ctx.esp, ctx.uid];\nreturn msg;",
+        "outputs": 1,
+        "x": 530,
+        "y": 1540,
+        "wires": [
+            [
+                "api-medico-save-user-db"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-save-user-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Usuário",
+        "x": 760,
+        "y": 1540,
+        "wires": [
+            [
+                "api-medico-save-ok"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-save-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Resposta Salvar",
+        "func": "msg.payload = { success: true, message: 'Perfil profissional salvo com sucesso' };\nreturn msg;",
+        "outputs": 1,
+        "x": 990,
+        "y": 1540,
+        "wires": [
+            [
+                "api-medico-save-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-medico-save-res",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response",
+        "x": 1210,
+        "y": 1540,
+        "wires": []
+    },
+    {
+        "id": "api-medicos-post-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "POST /api/medicos",
+        "url": "/medicos",
+        "method": "post",
+        "x": 290,
+        "y": 1620,
+        "wires": [
+            [
+                "api-medicos-post-prep"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-post-prep",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Validar Novo Médico",
+        "func": "const bcrypt = global.get('bcrypt') || global.get('bcryptjs');\nif (!bcrypt) { msg.statusCode = 500; msg.payload = { error: 'bcryptjs nao carregado' }; return [null, msg]; }\nconst body = msg.req.body || {};\nconst nome = String(body.nome || '').trim();\nconst email = String(body.email || '').trim().toLowerCase();\nconst crm = String(body.crm || '').trim();\nconst esp = String(body.especialidade || '').trim();\nconst senha = String(body.senha || 'VitaCare2026');\nif (!nome || !email || !crm || !esp) { msg.statusCode = 400; msg.payload = { error: 'Informe nome, e-mail, CRM e especialidade' }; return [null, msg]; }\nflow.set('medico_novo_' + msg._msgid, { nome, email, crm, esp, senhaHash: bcrypt.hashSync(senha, 10) });\nmsg.topic = 'SELECT id FROM usuarios WHERE LOWER(email) = ? LIMIT 1';\nmsg.payload = [email];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 530,
+        "y": 1620,
+        "wires": [
+            [
+                "api-medicos-post-check"
+            ],
+            [
+                "api-medicos-post-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-post-check",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Verificar Email",
+        "x": 760,
+        "y": 1620,
+        "wires": [
+            [
+                "api-medicos-post-user"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-post-user",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Criar Usuário ou Usar Existente",
+        "func": "const ctx = flow.get('medico_novo_' + msg._msgid) || {};\nconst rows = Array.isArray(msg.payload) ? msg.payload : [];\nif (rows.length) {\n    msg._userId = rows[0].id;\n    msg.topic = 'SELECT id FROM medicos WHERE usuario_id = ? OR LOWER(email) = ? LIMIT 1';\n    msg.payload = [rows[0].id, ctx.email];\n    return msg;\n}\nmsg.topic = 'INSERT INTO usuarios (nome_completo, email, senha_hash, tipo, crm, especialidade) VALUES (?, ?, ?, ?, ?, ?)';\nmsg.payload = [ctx.nome, ctx.email, ctx.senhaHash, 'medico', ctx.crm, ctx.esp];\nmsg._criarUsuario = true;\nreturn msg;",
+        "outputs": 1,
+        "x": 1000,
+        "y": 1620,
+        "wires": [
+            [
+                "api-medicos-post-user-db"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-post-user-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Usuário Médico",
+        "x": 1230,
+        "y": 1620,
+        "wires": [
+            [
+                "api-medicos-post-after-user"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-post-after-user",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Após Usuário",
+        "func": "const ctx = flow.get('medico_novo_' + msg._msgid) || {};\nif (msg._criarUsuario) {\n    const r = msg.payload;\n    msg._userId = (r && r.insertId) || (Array.isArray(r) && r[0] && r[0].insertId);\n}\nconst rows = Array.isArray(msg.payload) ? msg.payload : [];\nif (!msg._criarUsuario && rows.length) {\n    msg.statusCode = 409;\n    msg.payload = { error: 'Este e-mail já possui cadastro de médico' };\n    return [null, msg];\n}\nif (!msg._userId) { msg.statusCode = 500; msg.payload = { error: 'Falha ao criar usuário' }; return [null, msg]; }\nmsg.topic = 'INSERT INTO medicos (usuario_id, nome, especialidade, crm, email, ativo) VALUES (?, ?, ?, ?, ?, 1)';\nmsg.payload = [msg._userId, ctx.nome, ctx.esp, ctx.crm, ctx.email];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 530,
+        "y": 1700,
+        "wires": [
+            [
+                "api-medicos-post-insert"
+            ],
+            [
+                "api-medicos-post-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-post-insert",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Inserir Médico",
+        "x": 760,
+        "y": 1700,
+        "wires": [
+            [
+                "api-medicos-post-ok"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-post-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Resposta Novo Médico",
+        "func": "flow.set('medico_novo_' + msg._msgid, null);\nmsg.statusCode = 201;\nmsg.payload = { success: true, message: 'Médico incluído na equipe' };\nreturn msg;",
+        "outputs": 1,
+        "x": 1000,
+        "y": 1700,
+        "wires": [
+            [
+                "api-medicos-post-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-medicos-post-res",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response",
+        "x": 1230,
+        "y": 1780,
+        "wires": []
+    },
+    {
+        "id": "api-contato-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "POST /api/contato",
+        "url": "/contato",
+        "method": "post",
+        "x": 280,
+        "y": 1860,
+        "wires": [
+            [
+                "api-contato-prep"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-prep",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Validar Contato",
+        "func": "const body = msg.req.body || {};\nconst nome = String(body.nome || '').trim();\nconst email = String(body.email || '').trim().toLowerCase();\nconst mensagem = String(body.mensagem || '').trim();\nconst motivo = String(body.motivo || body.tipoCaso || '').trim();\nconst motivos = ['duvidas', 'erros', 'sugestoes', 'suporte', 'agendamento'];\nif (!nome || !email || !mensagem || !motivo) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Preencha motivo, nome, e-mail e mensagem.' };\n    return [null, msg];\n}\nif (!motivos.includes(motivo)) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Motivo de contato invalido.' };\n    return [null, msg];\n}\nif (!/^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$/.test(email)) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'E-mail invalido.' };\n    return [null, msg];\n}\nconst uid = body.usuario_id ? Number(body.usuario_id) : null;\nmsg.topic = 'INSERT INTO mensagens_contato (usuario_id, tipo_perfil, motivo, nome, email, mensagem) VALUES (?, ?, ?, ?, ?, ?)';\nmsg.payload = [uid || null, body.tipo_perfil || null, motivo, nome, email, mensagem];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 520,
+        "y": 1860,
+        "wires": [
+            [
+                "api-contato-db"
+            ],
+            [
+                "api-contato-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Contato",
+        "x": 750,
+        "y": 1860,
+        "wires": [
+            [
+                "api-contato-ok"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Resposta Contato",
+        "func": "const r = msg.payload;\nconst id = (r && r.insertId) || (Array.isArray(r) && r[0] && r[0].insertId) || null;\nmsg.statusCode = 201;\nmsg.payload = { success: true, message: 'Mensagem enviada. A equipe de recepcao foi notificada.', id: id };\nreturn msg;",
+        "outputs": 1,
+        "x": 980,
+        "y": 1860,
+        "wires": [
+            [
+                "api-contato-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-res",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response",
+        "x": 1190,
+        "y": 1860,
+        "wires": []
+    },
+    {
+        "id": "api-contato-list-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "GET /api/contato/mensagens",
+        "url": "/contato/mensagens",
+        "method": "get",
+        "x": 300,
+        "y": 1940,
+        "wires": [
+            [
+                "api-contato-list-q"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-list-q",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Listar Mensagens",
+        "func": "const q = msg.req.query || {};\nlet sql = \"SELECT id, motivo, nome, email, mensagem, tipo_perfil, lida, DATE_FORMAT(created_at, '%Y-%m-%d %H:%i') as criado_em FROM mensagens_contato\";\nif (q.apenas_nao_lidas === '1' || q.apenas_nao_lidas === 'true') sql += ' WHERE lida = 0';\nsql += ' ORDER BY lida ASC, created_at DESC LIMIT 100';\nmsg.topic = sql;\nmsg.payload = [];\nreturn msg;",
+        "outputs": 1,
+        "x": 530,
+        "y": 1940,
+        "wires": [
+            [
+                "api-contato-list-db"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-list-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Listar Contato",
+        "x": 760,
+        "y": 1940,
+        "wires": [
+            [
+                "api-contato-list-fmt"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-list-fmt",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Formatar Lista",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nconst naoLidas = rows.filter(m => !Number(m.lida)).length;\nmsg.payload = { success: true, mensagens: rows, nao_lidas: naoLidas };\nreturn msg;",
+        "outputs": 1,
+        "x": 990,
+        "y": 1940,
+        "wires": [
+            [
+                "api-contato-list-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-list-res",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response",
+        "x": 1210,
+        "y": 1940,
+        "wires": []
+    },
+    {
+        "id": "api-contato-lida-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "PUT /api/contato/mensagens/lida",
+        "url": "/contato/mensagens/lida",
+        "method": "put",
+        "x": 310,
+        "y": 2020,
+        "wires": [
+            [
+                "api-contato-lida-prep"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-lida-prep",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Marcar Lida",
+        "func": "const id = Number((msg.req.body || {}).id);\nif (!id) { msg.statusCode = 400; msg.payload = { error: 'Informe o id da mensagem' }; return [null, msg]; }\nmsg.topic = 'UPDATE mensagens_contato SET lida = 1 WHERE id = ?';\nmsg.payload = [id];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 530,
+        "y": 2020,
+        "wires": [
+            [
+                "api-contato-lida-db"
+            ],
+            [
+                "api-contato-list-res"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-lida-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Marcar Lida",
+        "x": 760,
+        "y": 2020,
+        "wires": [
+            [
+                "api-contato-lida-ok"
+            ]
+        ]
+    },
+    {
+        "id": "api-contato-lida-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Resposta Lida",
+        "func": "msg.payload = { success: true, message: 'Mensagem marcada como lida' };\nreturn msg;",
+        "outputs": 1,
+        "x": 990,
+        "y": 2020,
+        "wires": [
+            [
+                "api-contato-list-res"
+            ]
+        ]
+    },
+    {
+        "id": "senha-alterar-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "POST /api/senha/alterar",
+        "url": "/senha/alterar",
+        "method": "post",
+        "x": 320,
+        "y": 2120,
+        "wires": [
+            [
+                "senha-alterar-prep"
+            ]
+        ]
+    },
+    {
+        "id": "senha-alterar-prep",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Preparar Alterar Senha",
+        "func": "const bcrypt = global.get('bcrypt') || global.get('bcryptjs');\nif (!bcrypt) {\n    msg.statusCode = 500;\n    msg.payload = { error: 'bcryptjs nao carregado. Reinicie o Node-RED apos npm install.' };\n    return [null, msg];\n}\nconst body = msg.req.body || {};\nconst email = String(body.email || '').trim().toLowerCase();\nconst senha = String(body.senha || body.nova_senha || '');\nif (!email) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'Informe o e-mail' };\n    return [null, msg];\n}\nif (!senha || senha.length < 6) {\n    msg.statusCode = 400;\n    msg.payload = { error: 'A senha deve ter pelo menos 6 caracteres' };\n    return [null, msg];\n}\nconst senhaHash = bcrypt.hashSync(senha, 10);\nmsg.topic = 'UPDATE usuarios SET senha_hash = ? WHERE LOWER(email) = ? AND ativo = 1';\nmsg.payload = [senhaHash, email];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 560,
+        "y": 2120,
+        "wires": [
+            [
+                "senha-alterar-db"
+            ],
+            [
+                "senha-alterar-res"
+            ]
+        ]
+    },
+    {
+        "id": "senha-alterar-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "MySQL Alterar Senha",
+        "x": 800,
+        "y": 2120,
+        "wires": [
+            [
+                "senha-alterar-ok"
+            ]
+        ]
+    },
+    {
+        "id": "senha-alterar-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Resposta Alterar Senha",
+        "func": "const r = msg.payload;\nconst affected = (r && r.affectedRows) || (Array.isArray(r) && r[0] && r[0].affectedRows) || 0;\nif (!affected) {\n    msg.statusCode = 404;\n    msg.payload = { error: 'E-mail nao encontrado ou conta inativa' };\n    return [null, msg];\n}\nmsg.statusCode = 200;\nmsg.headers = Object.assign({}, msg.headers, { 'Content-Type': 'application/json' });\nmsg.payload = { success: true, message: 'Senha alterada com sucesso' };\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 1020,
+        "y": 2120,
+        "wires": [
+            [
+                "senha-alterar-res"
+            ],
+            [
+                "senha-alterar-res"
+            ]
+        ]
+    },
+    {
+        "id": "senha-alterar-res",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response",
+        "x": 1230,
+        "y": 2120,
+        "wires": []
+    },
+    {
+        "id": "pf-pac-get-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "GET /api/paciente/perfil",
+        "url": "/paciente/perfil",
+        "method": "get",
+        "x": 280,
+        "y": 2180,
+        "wires": [
+            [
+                "pf-pac-get-prep"
+            ]
+        ]
+    },
+    {
+        "id": "pf-pac-get-prep",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Paciente GET prep",
+        "func": "const uid = Number(msg.req.query.usuario_id);\nif (!uid) { msg.statusCode = 400; msg.payload = { error: 'Informe usuario_id' }; return [null, msg]; }\nmsg.topic = \"SELECT id, nome_completo AS nome, email, COALESCE(telefone,'') AS telefone FROM usuarios WHERE id = ? AND tipo = 'paciente' AND ativo = 1 LIMIT 1\";\nmsg.payload = [uid];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 500,
+        "y": 2180,
+        "wires": [
+            [
+                "pf-pac-get-db"
+            ],
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-pac-get-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "Paciente GET db",
+        "x": 720,
+        "y": 2180,
+        "wires": [
+            [
+                "pf-pac-get-ok"
+            ]
+        ]
+    },
+    {
+        "id": "pf-pac-get-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Paciente GET ok",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nif (!rows.length) { msg.statusCode = 404; msg.payload = { error: 'Paciente nao encontrado' }; return [null, msg]; }\nconst u = rows[0];\nmsg.statusCode = 200;\nmsg.payload = { success: true, perfil: { id: u.id, nome: u.nome, email: u.email, telefone: u.telefone || '' } };\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 940,
+        "y": 2180,
+        "wires": [
+            [
+                "pf-perfil-res"
+            ],
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-pac-put-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "PUT /api/paciente/perfil",
+        "url": "/paciente/perfil",
+        "method": "put",
+        "x": 280,
+        "y": 2260,
+        "wires": [
+            [
+                "pf-pac-save-prep"
+            ]
+        ]
+    },
+    {
+        "id": "pf-pac-post-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "POST /api/paciente/perfil",
+        "url": "/paciente/perfil",
+        "method": "post",
+        "x": 290,
+        "y": 2300,
+        "wires": [
+            [
+                "pf-pac-save-prep"
+            ]
+        ]
+    },
+    {
+        "id": "pf-pac-save-prep",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Paciente SAVE prep",
+        "func": "const body = msg.req.body || {};\nconst uid = Number(body.usuario_id);\nconst nome = String(body.nome || '').trim();\nconst telefone = String(body.telefone || '').trim();\nif (!uid) { msg.statusCode = 400; msg.payload = { error: 'Informe usuario_id' }; return [null, msg]; }\nif (!nome || nome.length < 2) { msg.statusCode = 400; msg.payload = { error: 'Informe o nome completo' }; return [null, msg]; }\nflow.set('pf_ctx_' + msg._msgid, { uid, nome, telefone });\nmsg.topic = \"UPDATE usuarios SET nome_completo = ?, telefone = ? WHERE id = ? AND tipo = 'paciente' AND ativo = 1\";\nmsg.payload = [nome, telefone || null, uid];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 510,
+        "y": 2280,
+        "wires": [
+            [
+                "pf-pac-save-db"
+            ],
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-pac-save-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "Paciente SAVE db",
+        "x": 730,
+        "y": 2280,
+        "wires": [
+            [
+                "pf-pac-save-ok"
+            ]
+        ]
+    },
+    {
+        "id": "pf-pac-save-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Paciente SAVE ok",
+        "func": "const ctx = flow.get('pf_ctx_' + msg._msgid) || {};\nflow.set('pf_ctx_' + msg._msgid, null);\nconst r = msg.payload;\nconst n = (r && r.affectedRows) || (Array.isArray(r) && r[0] && r[0].affectedRows) || 0;\nif (!n) { msg.statusCode = 404; msg.payload = { error: 'Paciente nao encontrado' }; return [null, msg]; }\nmsg.topic = 'SELECT email FROM usuarios WHERE id = ? LIMIT 1';\nmsg.payload = [ctx.uid];\nmsg.pfCtx = ctx;\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 950,
+        "y": 2280,
+        "wires": [
+            [
+                "pf-pac-save-mail"
+            ],
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-pac-save-mail",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "Paciente SAVE email",
+        "x": 1170,
+        "y": 2280,
+        "wires": [
+            [
+                "pf-pac-save-json"
+            ]
+        ]
+    },
+    {
+        "id": "pf-pac-save-json",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Paciente SAVE json",
+        "func": "const ctx = msg.pfCtx || {};\nconst rows = Array.isArray(msg.payload) ? msg.payload : [];\nconst email = rows.length ? rows[0].email : '';\nmsg.statusCode = 200;\nmsg.payload = { success: true, message: 'Perfil atualizado com sucesso', perfil: { id: ctx.uid, nome: ctx.nome, email, telefone: ctx.telefone || '' } };\nreturn msg;",
+        "outputs": 1,
+        "x": 950,
+        "y": 2340,
+        "wires": [
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-get-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "GET /api/funcionario/perfil",
+        "url": "/funcionario/perfil",
+        "method": "get",
+        "x": 290,
+        "y": 2420,
+        "wires": [
+            [
+                "pf-func-get-prep"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-get-prep",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Funcionario GET prep",
+        "func": "const uid = Number(msg.req.query.usuario_id);\nif (!uid) { msg.statusCode = 400; msg.payload = { error: 'Informe usuario_id' }; return [null, msg]; }\nmsg.topic = \"SELECT id, nome_completo AS nome, email, COALESCE(telefone,'') AS telefone FROM usuarios WHERE id = ? AND tipo IN ('funcionario','admin') AND ativo = 1 LIMIT 1\";\nmsg.payload = [uid];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 520,
+        "y": 2420,
+        "wires": [
+            [
+                "pf-func-get-db"
+            ],
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-get-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "Funcionario GET db",
+        "x": 740,
+        "y": 2420,
+        "wires": [
+            [
+                "pf-func-get-ok"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-get-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Funcionario GET ok",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nif (!rows.length) { msg.statusCode = 404; msg.payload = { error: 'Perfil nao encontrado' }; return [null, msg]; }\nconst u = rows[0];\nmsg.statusCode = 200;\nmsg.payload = { success: true, perfil: { id: u.id, nome: u.nome, email: u.email, telefone: u.telefone || '' } };\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 960,
+        "y": 2420,
+        "wires": [
+            [
+                "pf-perfil-res"
+            ],
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-put-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "PUT /api/funcionario/perfil",
+        "url": "/funcionario/perfil",
+        "method": "put",
+        "x": 290,
+        "y": 2500,
+        "wires": [
+            [
+                "pf-func-save-prep"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-post-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "POST /api/funcionario/perfil",
+        "url": "/funcionario/perfil",
+        "method": "post",
+        "x": 300,
+        "y": 2540,
+        "wires": [
+            [
+                "pf-func-save-prep"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-save-prep",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Funcionario SAVE prep",
+        "func": "const body = msg.req.body || {};\nconst uid = Number(body.usuario_id);\nconst nome = String(body.nome || '').trim();\nconst telefone = String(body.telefone || '').trim();\nif (!uid) { msg.statusCode = 400; msg.payload = { error: 'Informe usuario_id' }; return [null, msg]; }\nif (!nome || nome.length < 2) { msg.statusCode = 400; msg.payload = { error: 'Informe o nome completo' }; return [null, msg]; }\nflow.set('pf_ctx_' + msg._msgid, { uid, nome, telefone });\nmsg.topic = \"UPDATE usuarios SET nome_completo = ?, telefone = ? WHERE id = ? AND tipo IN ('funcionario','admin') AND ativo = 1\";\nmsg.payload = [nome, telefone || null, uid];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 520,
+        "y": 2520,
+        "wires": [
+            [
+                "pf-func-save-db"
+            ],
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-save-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "Funcionario SAVE db",
+        "x": 740,
+        "y": 2520,
+        "wires": [
+            [
+                "pf-func-save-ok"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-save-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Funcionario SAVE ok",
+        "func": "const ctx = flow.get('pf_ctx_' + msg._msgid) || {};\nflow.set('pf_ctx_' + msg._msgid, null);\nconst r = msg.payload;\nconst n = (r && r.affectedRows) || (Array.isArray(r) && r[0] && r[0].affectedRows) || 0;\nif (!n) { msg.statusCode = 404; msg.payload = { error: 'Perfil nao encontrado' }; return [null, msg]; }\nmsg.topic = 'SELECT email FROM usuarios WHERE id = ? LIMIT 1';\nmsg.payload = [ctx.uid];\nmsg.pfCtx = ctx;\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 960,
+        "y": 2520,
+        "wires": [
+            [
+                "pf-func-save-mail"
+            ],
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-save-mail",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "Funcionario SAVE email",
+        "x": 1180,
+        "y": 2520,
+        "wires": [
+            [
+                "pf-func-save-json"
+            ]
+        ]
+    },
+    {
+        "id": "pf-func-save-json",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Funcionario SAVE json",
+        "func": "const ctx = msg.pfCtx || {};\nconst rows = Array.isArray(msg.payload) ? msg.payload : [];\nconst email = rows.length ? rows[0].email : '';\nmsg.statusCode = 200;\nmsg.payload = { success: true, message: 'Perfil atualizado com sucesso', perfil: { id: ctx.uid, nome: ctx.nome, email, telefone: ctx.telefone || '' } };\nreturn msg;",
+        "outputs": 1,
+        "x": 960,
+        "y": 2580,
+        "wires": [
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-med-get-in",
+        "type": "http in",
+        "z": "e7926830b1bd7c7d",
+        "name": "GET /api/medico/perfil",
+        "url": "/medico/perfil",
+        "method": "get",
+        "x": 280,
+        "y": 2660,
+        "wires": [
+            [
+                "pf-med-get-prep"
+            ]
+        ]
+    },
+    {
+        "id": "pf-med-get-prep",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Medico GET prep",
+        "func": "const uid = Number(msg.req.query.usuario_id);\nif (!uid) { msg.statusCode = 400; msg.payload = { error: 'Informe usuario_id' }; return [null, msg]; }\nmsg.topic = \"SELECT u.id, u.nome_completo AS nome, u.email, COALESCE(u.telefone,'') AS telefone, COALESCE(m.crm,u.crm,'') AS crm, COALESCE(m.especialidade,u.especialidade,'') AS especialidade FROM usuarios u LEFT JOIN medicos m ON m.usuario_id=u.id AND m.ativo=1 WHERE u.id=? AND u.tipo='medico' AND u.ativo=1 LIMIT 1\";\nmsg.payload = [uid];\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 510,
+        "y": 2660,
+        "wires": [
+            [
+                "pf-med-get-db"
+            ],
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-med-get-db",
+        "type": "mysql",
+        "z": "e7926830b1bd7c7d",
+        "mydb": "2ef5a3d6803a164a",
+        "name": "Medico GET db",
+        "x": 730,
+        "y": 2660,
+        "wires": [
+            [
+                "pf-med-get-ok"
+            ]
+        ]
+    },
+    {
+        "id": "pf-med-get-ok",
+        "type": "function",
+        "z": "e7926830b1bd7c7d",
+        "name": "Medico GET ok",
+        "func": "const rows = Array.isArray(msg.payload) ? msg.payload : [];\nif (!rows.length) { msg.statusCode = 404; msg.payload = { error: 'Medico nao encontrado' }; return [null, msg]; }\nconst u = rows[0];\nmsg.statusCode = 200;\nmsg.payload = { success: true, perfil: { id: u.id, nome: u.nome, email: u.email, telefone: u.telefone||'', crm: u.crm||'', especialidade: u.especialidade||'' } };\nreturn [msg, null];",
+        "outputs": 2,
+        "x": 950,
+        "y": 2660,
+        "wires": [
+            [
+                "pf-perfil-res"
+            ],
+            [
+                "pf-perfil-res"
+            ]
+        ]
+    },
+    {
+        "id": "pf-perfil-res",
+        "type": "http response",
+        "z": "e7926830b1bd7c7d",
+        "name": "Response Perfil",
+        "x": 1200,
+        "y": 2400,
+        "wires": []
     }
 ]
