@@ -1,108 +1,200 @@
--- Criar o banco de dados
-CREATE DATABASE IF NOT EXISTS vitacare;
-USE vitacare;
+CREATE DATABASE IF NOT EXISTS `vitacare`
+  DEFAULT CHARACTER SET utf8mb4
+  COLLATE utf8mb4_0900_ai_ci;
 
--- Tabela de usuários
-CREATE TABLE usuarios (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    nome_completo VARCHAR(100) NOT NULL,
-    email VARCHAR(100) UNIQUE NOT NULL,
-    senha_hash VARCHAR(255) NOT NULL,
-    tipo ENUM('paciente', 'funcionario', 'medico', 'admin') DEFAULT 'paciente',
-    telefone VARCHAR(20),
-    data_nascimento DATE,
-    crm VARCHAR(20),
-    especialidade VARCHAR(50),
-    ativo BOOLEAN DEFAULT TRUE,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-);
+USE `vitacare`;
 
--- Tabela de médicos
-CREATE TABLE medicos (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    usuario_id INT UNIQUE,
-    nome VARCHAR(100) NOT NULL,
-    especialidade VARCHAR(50) NOT NULL,
-    crm VARCHAR(20) UNIQUE NOT NULL,
-    email VARCHAR(100),
-    ativo BOOLEAN DEFAULT TRUE,
-    FOREIGN KEY (usuario_id) REFERENCES usuarios(id) ON DELETE CASCADE
-);
+SET NAMES utf8mb4;
+SET time_zone = '+00:00';
 
--- Tabela de consultas
-CREATE TABLE consultas (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    paciente_id INT NOT NULL,
-    medico_id INT NOT NULL,
-    especialidade VARCHAR(50) NOT NULL,
-    data_consulta DATE NOT NULL,
-    horario TIME NOT NULL,
-    status ENUM('pendente', 'confirmada', 'realizada', 'cancelada') DEFAULT 'pendente',
-    convenio VARCHAR(50),
-    observacoes TEXT,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-    FOREIGN KEY (paciente_id) REFERENCES usuarios(id),
-    FOREIGN KEY (medico_id) REFERENCES medicos(id)
-);
+SET FOREIGN_KEY_CHECKS = 0;
+SET UNIQUE_CHECKS = 0;
+SET SQL_MODE = 'NO_AUTO_VALUE_ON_ZERO';
 
--- Tabela de histórico médico
-CREATE TABLE historico_medico (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    paciente_id INT NOT NULL,
-    medico_id INT NOT NULL,
-    consulta_id INT NOT NULL,
-    diagnostico TEXT,
-    prescricao TEXT,
-    observacoes TEXT,
-    data_atendimento DATE NOT NULL,
-    FOREIGN KEY (paciente_id) REFERENCES usuarios(id),
-    FOREIGN KEY (medico_id) REFERENCES medicos(id),
-    FOREIGN KEY (consulta_id) REFERENCES consultas(id)
-);
+-- =========================================================
+-- Tabela: usuarios
+-- =========================================================
+DROP TABLE IF EXISTS `usuarios`;
 
--- Tabela de horários disponíveis
-CREATE TABLE horarios_disponiveis (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    medico_id INT NOT NULL,
-    data_disponivel DATE NOT NULL,
-    horario TIME NOT NULL,
-    disponivel BOOLEAN DEFAULT TRUE,
-    FOREIGN KEY (medico_id) REFERENCES medicos(id),
-    UNIQUE KEY unique_horario (medico_id, data_disponivel, horario)
-);
+CREATE TABLE `usuarios` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `nome_completo` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `senha_hash` VARCHAR(255) NOT NULL,
+  `tipo` ENUM('paciente','funcionario','medico','admin') NOT NULL DEFAULT 'paciente',
+  `telefone` VARCHAR(20) DEFAULT NULL,
+  `data_nascimento` DATE DEFAULT NULL,
+  `crm` VARCHAR(20) DEFAULT NULL,
+  `especialidade` VARCHAR(50) DEFAULT NULL,
+  `ativo` TINYINT(1) NOT NULL DEFAULT 1,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_usuarios_email` (`email`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Tabela de parâmetros do sistema
-CREATE TABLE parametros_sistema (
-    id INT PRIMARY KEY AUTO_INCREMENT,
-    chave VARCHAR(50) UNIQUE NOT NULL,
-    valor TEXT NOT NULL,
-    descricao VARCHAR(200)
-);
+INSERT INTO `usuarios` (
+  `id`, `nome_completo`, `email`, `senha_hash`, `tipo`, `telefone`,
+  `data_nascimento`, `crm`, `especialidade`, `ativo`, `created_at`, `updated_at`
+) VALUES
+(2, 'RAFAEL RUBIA OLIVEIRA CARDOSO', 'rafaelrubia62@gmail.com', '$2a$10$IXS8P4ALHqXENNNft0amrOPYsXaKUJOIXTtob9yGhm1SeAfPpscYq', 'paciente', '(16) 16988184175', '2007-12-03', NULL, NULL, 1, '2026-05-22 01:52:52', '2026-05-22 01:52:52'),
+(4, 'Médico Teste', 'medico@gmail.com', '$2a$10$wQBYt4qAA80sl1g9HOvuj.eww5UWgwaetyJY9rGeG7FNIB6Q1CM.i', 'medico', '(11) 90000-0003', NULL, '123456-SP', 'Clínico Geral', 1, '2026-05-28 21:53:06', '2026-05-28 21:54:45'),
+(5, 'Funcionário Teste', 'funcionario@gmail.com', '$2a$10$V4TYnT5ZCwXlITm.isrHr.x3D0CTmfESRrw5FXjTtJ.fOWqoFP/H6', 'funcionario', '(11) 90000-0002', NULL, NULL, NULL, 1, '2026-05-28 21:53:06', '2026-05-28 21:55:28'),
+(6, 'Paciente Teste', 'paciente@gmail.com', '$2a$10$88KVkNzs9WZuVMy/zPRn4.Ci1YTR5DoIMdY7Jw.sEn/T.gcbvXGVO', 'paciente', '(11) 90000-0001', NULL, NULL, NULL, 1, '2026-05-28 21:53:06', '2026-05-28 21:54:15'),
+(7, 'lucas', 'lucas@gmail.com', '$2a$10$vBEVuDs7N.lf/kPnbo4zJe4kQFkTc6p478h78DsyhIWg/DUKOCje.', 'medico', NULL, NULL, '12543-SP', 'Cardiologia', 1, '2026-05-28 22:33:00', '2026-05-28 22:33:00');
 
--- Inserir dados iniciais
-INSERT INTO parametros_sistema (chave, valor, descricao) VALUES
-('horario_abertura', '08:00', 'Horário de abertura da unidade'),
-('horario_fechamento', '18:00', 'Horário de fechamento da unidade'),
-('especialidades', 'Cardiologia,Dermatologia,Ortopedia,Clínico Geral,Pediatria', 'Lista de especialidades'),
-('convenios', 'SUS,Particular,Plano parceiro', 'Lista de convênios aceitos');
+-- =========================================================
+-- Tabela: medicos
+-- =========================================================
+DROP TABLE IF EXISTS `medicos`;
 
--- Usuário admin padrão (senha: admin123)
-INSERT INTO usuarios (nome_completo, email, senha_hash, tipo) VALUES
-('Administrador', 'admin@vitacare.local', '$2b$10$dontuserealhashhere', 'admin');
+CREATE TABLE `medicos` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `usuario_id` INT DEFAULT NULL,
+  `nome` VARCHAR(100) NOT NULL,
+  `especialidade` VARCHAR(50) NOT NULL,
+  `crm` VARCHAR(20) NOT NULL,
+  `email` VARCHAR(100) DEFAULT NULL,
+  `ativo` TINYINT(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_medicos_crm` (`crm`),
+  UNIQUE KEY `uk_medicos_usuario_id` (`usuario_id`),
+  CONSTRAINT `fk_medicos_usuarios`
+    FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+    ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 
--- Médicos padrão
-INSERT INTO medicos (nome, especialidade, crm, email, ativo) VALUES
-('Dra. Ana Beatriz', 'Cardiologia', '12345-SP', 'ana.beatriz@vitacare.local', TRUE),
-('Dr. Carlos Mendes', 'Ortopedia', '67890-SP', 'carlos.mendes@vitacare.local', TRUE),
-('Dra. Juliana Souza', 'Dermatologia', '54321-SP', 'juliana.souza@vitacare.local', TRUE),
-('Dr. Roberto Alves', 'Clínico Geral', '98765-SP', 'roberto.alves@vitacare.local', TRUE);
+INSERT INTO `medicos` (
+  `id`, `usuario_id`, `nome`, `especialidade`, `crm`, `email`, `ativo`
+) VALUES
+(5, 4, 'Médico Teste', 'Clínico Geral', '123456-SP', 'medico@gmail.com', 1),
+(6, 7, 'lucas', 'Cardiologia', '12543-SP', 'lucas@gmail.com', 1);
 
--- Horários padrão
-INSERT INTO horarios_disponiveis (medico_id, data_disponivel, horario, disponivel) VALUES
-(1, '2026-04-15', '08:00:00', TRUE),
-(1, '2026-04-15', '09:30:00', TRUE),
-(1, '2026-04-15', '11:00:00', TRUE),
-(2, '2026-04-15', '14:00:00', TRUE),
-(2, '2026-04-15', '15:30:00', TRUE);
+-- =========================================================
+-- Tabela: consultas
+-- =========================================================
+DROP TABLE IF EXISTS `consultas`;
+
+CREATE TABLE `consultas` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `paciente_id` INT NOT NULL,
+  `medico_id` INT NOT NULL,
+  `especialidade` VARCHAR(50) NOT NULL,
+  `data_consulta` DATE NOT NULL,
+  `horario` TIME NOT NULL,
+  `status` ENUM('pendente','confirmada','realizada','cancelada') NOT NULL DEFAULT 'pendente',
+  `convenio` VARCHAR(50) DEFAULT NULL,
+  `observacoes` TEXT DEFAULT NULL,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  `updated_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_consultas_paciente_id` (`paciente_id`),
+  KEY `idx_consultas_medico_id` (`medico_id`),
+  CONSTRAINT `fk_consultas_usuarios`
+    FOREIGN KEY (`paciente_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `fk_consultas_medicos`
+    FOREIGN KEY (`medico_id`) REFERENCES `medicos` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `consultas` (
+  `id`, `paciente_id`, `medico_id`, `especialidade`, `data_consulta`, `horario`,
+  `status`, `convenio`, `observacoes`, `created_at`, `updated_at`
+) VALUES
+(1, 6, 5, 'Clínico Geral', '2026-05-28', '08:00:00', 'confirmada', NULL, NULL, '2026-05-28 22:29:13', '2026-05-28 22:30:01'),
+(2, 6, 5, 'Clínico Geral', '2026-05-28', '09:00:00', 'cancelada', NULL, NULL, '2026-05-28 22:29:40', '2026-05-28 22:30:03'),
+(3, 6, 6, 'Cardiologia', '2026-05-30', '08:30:00', 'pendente', NULL, NULL, '2026-05-28 22:35:38', '2026-05-28 22:35:38');
+
+-- =========================================================
+-- Tabela: historico_medico
+-- =========================================================
+DROP TABLE IF EXISTS `historico_medico`;
+
+CREATE TABLE `historico_medico` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `paciente_id` INT NOT NULL,
+  `medico_id` INT NOT NULL,
+  `consulta_id` INT NOT NULL,
+  `diagnostico` TEXT DEFAULT NULL,
+  `prescricao` TEXT DEFAULT NULL,
+  `observacoes` TEXT DEFAULT NULL,
+  `data_atendimento` DATE NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `idx_historico_paciente_id` (`paciente_id`),
+  KEY `idx_historico_medico_id` (`medico_id`),
+  KEY `idx_historico_consulta_id` (`consulta_id`),
+  CONSTRAINT `fk_historico_usuarios`
+    FOREIGN KEY (`paciente_id`) REFERENCES `usuarios` (`id`),
+  CONSTRAINT `fk_historico_medicos`
+    FOREIGN KEY (`medico_id`) REFERENCES `medicos` (`id`),
+  CONSTRAINT `fk_historico_consultas`
+    FOREIGN KEY (`consulta_id`) REFERENCES `consultas` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- =========================================================
+-- Tabela: horarios_disponiveis
+-- =========================================================
+DROP TABLE IF EXISTS `horarios_disponiveis`;
+
+CREATE TABLE `horarios_disponiveis` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `medico_id` INT NOT NULL,
+  `data_disponivel` DATE NOT NULL,
+  `horario` TIME NOT NULL,
+  `disponivel` TINYINT(1) NOT NULL DEFAULT 1,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_horario_medico_data_hora` (`medico_id`, `data_disponivel`, `horario`),
+  CONSTRAINT `fk_horarios_medicos`
+    FOREIGN KEY (`medico_id`) REFERENCES `medicos` (`id`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+-- =========================================================
+-- Tabela: mensagens_contato
+-- =========================================================
+DROP TABLE IF EXISTS `mensagens_contato`;
+
+CREATE TABLE `mensagens_contato` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `usuario_id` INT DEFAULT NULL,
+  `tipo_perfil` VARCHAR(20) DEFAULT NULL,
+  `motivo` VARCHAR(50) NOT NULL,
+  `nome` VARCHAR(100) NOT NULL,
+  `email` VARCHAR(100) NOT NULL,
+  `mensagem` TEXT NOT NULL,
+  `lida` TINYINT(1) NOT NULL DEFAULT 0,
+  `created_at` TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+  PRIMARY KEY (`id`),
+  KEY `idx_mensagens_usuario_id` (`usuario_id`),
+  CONSTRAINT `fk_mensagens_usuarios`
+    FOREIGN KEY (`usuario_id`) REFERENCES `usuarios` (`id`)
+    ON DELETE SET NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `mensagens_contato` (
+  `id`, `usuario_id`, `tipo_perfil`, `motivo`, `nome`, `email`, `mensagem`, `lida`, `created_at`
+) VALUES
+(1, 5, 'funcionario', 'suporte', 'Funcionário Teste', 'funcionario@gmail.com', 'dsfdfsdfdfsdfdfs', 1, '2026-05-28 22:27:31');
+
+-- =========================================================
+-- Tabela: parametros_sistema
+-- =========================================================
+DROP TABLE IF EXISTS `parametros_sistema`;
+
+CREATE TABLE `parametros_sistema` (
+  `id` INT NOT NULL AUTO_INCREMENT,
+  `chave` VARCHAR(50) NOT NULL,
+  `valor` TEXT NOT NULL,
+  `descricao` VARCHAR(200) DEFAULT NULL,
+  PRIMARY KEY (`id`),
+  UNIQUE KEY `uk_parametros_chave` (`chave`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+INSERT INTO `parametros_sistema` (
+  `id`, `chave`, `valor`, `descricao`
+) VALUES
+(1, 'horario_abertura', '08:00', 'Horário de abertura da unidade'),
+(2, 'horario_fechamento', '18:00', 'Horário de fechamento da unidade'),
+(3, 'especialidades', 'Cardiologia,Dermatologia,Ortopedia,Clínico Geral,Pediatria', 'Lista de especialidades'),
+(4, 'convenios', 'SUS,Particular,Plano parceiro', 'Lista de convênios aceitos');
+
+SET FOREIGN_KEY_CHECKS = 1;
+SET UNIQUE_CHECKS = 1;
